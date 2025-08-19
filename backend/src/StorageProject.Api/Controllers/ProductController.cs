@@ -49,7 +49,6 @@ namespace StorageProject.Api.Controllers
         #region GetByID
         [SwaggerResponse((int)HttpStatusCode.OK, "Return Product")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Product ID Error")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
@@ -119,10 +118,10 @@ namespace StorageProject.Api.Controllers
 
                 if (result.IsConflict())
                     return Conflict(result);
-                if (!result.IsSuccess)
+                if (result.IsInvalid())
                     return BadRequest(result);
 
-                return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -131,6 +130,33 @@ namespace StorageProject.Api.Controllers
         }
         #endregion
 
+        #region UpdatePatch
+
+        [SwaggerResponse((int)HttpStatusCode.OK, "Quantity changed sucessfully")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
+        [HttpPatch]
+        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO quantityDTO)
+        {
+            try
+            {
+                var result = await _productService.UpdateQuantityAsync(quantityDTO);
+
+                if (!result.IsInvalid())
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "An unexpected error occurred." });
+            }
+        }
+
+        #endregion
+
+        #region Delete
         [SwaggerResponse((int)HttpStatusCode.OK, "Product Deleted")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for delete Product")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
@@ -153,5 +179,6 @@ namespace StorageProject.Api.Controllers
                 return StatusCode(500, new { Message = "An unexpected error occurred." });
             }
         }
+        #endregion
     }
 }

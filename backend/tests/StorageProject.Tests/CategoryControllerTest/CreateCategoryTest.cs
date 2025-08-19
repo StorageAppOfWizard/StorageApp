@@ -16,11 +16,11 @@ namespace StorageProject.Tests.CategoryControllerTest
         public async Task CreateCategory_OkResult()
         {
             // Arrange
-            var category = new CreateCategoryDTO { Name = "TestCategory" };
-            var categoryOutput = new CategoryDTO { Id = Guid.NewGuid(), Name = "TestCategory" };
-            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(category)).ReturnsAsync(Result.Success(categoryOutput));
+            var input = new CreateCategoryDTO { Name = "TestCategory" };
+            var output = new CategoryDTO { Id = Guid.NewGuid(), Name = "TestCategory" };
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(Result.Success(output));
             // Act
-            var result = await _fixture.Controller.Create(category);
+            var result = await _fixture.Controller.Create(input);
             // Assert
             var objectResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(201, objectResult.StatusCode);
@@ -29,10 +29,10 @@ namespace StorageProject.Tests.CategoryControllerTest
         public async Task CreateCategory_ConflictResult()
         {
             // Arrange
-            var category = new CreateCategoryDTO { Name = "TestCategory" };
-            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(category)).ReturnsAsync(Result.Conflict());
+            var input = new CreateCategoryDTO { Name = "TestCategory" };
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(Result.Conflict());
             // Act
-            var result = await _fixture.Controller.Create(category);
+            var result = await _fixture.Controller.Create(input);
             // Assert
             var objectResult = Assert.IsType<ConflictObjectResult>(result);
             Assert.Equal(409, objectResult.StatusCode);
@@ -41,10 +41,10 @@ namespace StorageProject.Tests.CategoryControllerTest
         public async Task CreateCategory_BadRequestResult()
         {
             // Arrange
-            var category = new CreateCategoryDTO { Name = "10" }; // Invalid name
-            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(category)).ReturnsAsync(Result.Invalid());
+            var input = new CreateCategoryDTO { Name = "10" }; // Invalid name
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(Result.Invalid());
             // Act
-            var result = await _fixture.Controller.Create(category);
+            var result = await _fixture.Controller.Create(input);
             // Assert
             var objectResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, objectResult.StatusCode);

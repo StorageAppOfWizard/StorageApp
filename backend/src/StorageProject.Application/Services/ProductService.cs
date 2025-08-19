@@ -64,6 +64,18 @@ namespace StorageProject.Application.Services
             return entity.ToDTO();
         }
 
+        public async Task<Result> UpdateQuantityAsync(UpdateProductQuantityDTO quantityDTO)
+        {
+            var entity = await _unitOfWork.ProductRepository.GetById(quantityDTO.Id);
+            if (entity == null)
+                return Result.NotFound("Not Found Product");
+
+            quantityDTO.ToEntity(entity);
+            await _unitOfWork.CommitAsync();
+
+            return Result.Success();
+        }
+
         public async Task<Result> RemoveAsync(Guid id)
         {
             var product = await _unitOfWork.ProductRepository.GetById(id);
