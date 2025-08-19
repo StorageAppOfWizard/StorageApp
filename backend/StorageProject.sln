@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Domain", "StorageProject.Domain\StorageProject.Domain.csproj", "{EC00641A-E5F3-4731-9A5F-3EDCD61B7036}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Domain", "src\StorageProject.Domain\StorageProject.Domain.csproj", "{EC00641A-E5F3-4731-9A5F-3EDCD61B7036}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Application", "StorageProject.Application\StorageProject.Application.csproj", "{18E0917A-BFC7-4126-AC55-FEAAA6D49641}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Application", "src\StorageProject.Application\StorageProject.Application.csproj", "{18E0917A-BFC7-4126-AC55-FEAAA6D49641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Infrastructure", "StorageProject.Infrastructure\StorageProject.Infrastructure.csproj", "{D42DCE47-39BC-4E51-BCBA-5485A938BFDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Infrastructure", "src\StorageProject.Infrastructure\StorageProject.Infrastructure.csproj", "{D42DCE47-39BC-4E51-BCBA-5485A938BFDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Api", "StorageProject.Api\StorageProject.Api.csproj", "{C640383A-E020-4695-8B9D-E6A3D920756D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Api", "src\StorageProject.Api\StorageProject.Api.csproj", "{C640383A-E020-4695-8B9D-E6A3D920756D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Tests", "StorageProject.Tests\StorageProject.Tests.csproj", "{271C92B1-CEC5-43B3-8F14-E228B897862F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Tests", "tests\StorageProject.Tests\StorageProject.Tests.csproj", "{271C92B1-CEC5-43B3-8F14-E228B897862F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4596D26-0B53-4044-AFE2-D5BEE994F241}"
 EndProject

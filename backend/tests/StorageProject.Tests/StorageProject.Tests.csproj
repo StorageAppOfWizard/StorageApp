@@ -18,9 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StorageProject.Api\StorageProject.Api.csproj" />
-    <ProjectReference Include="..\StorageProject.Application\StorageProject.Application.csproj" />
+    <ProjectReference Include="..\..\src\StorageProject.Api\StorageProject.Api.csproj" />
+    <ProjectReference Include="..\..\src\StorageProject.Application\StorageProject.Application.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <Using Include="Xunit" />
