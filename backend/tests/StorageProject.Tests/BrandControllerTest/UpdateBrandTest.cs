@@ -14,7 +14,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task UpdateBrand_OkResult()
+        public async Task UpdateBrand_WhenBrandExistsAndFieldsAreCorrect_ReturnOkResult()
         {
             //Arrange
             var brand = new UpdateBrandDTO { Name = "TesteBrand", Id = Guid.NewGuid() };
@@ -30,7 +30,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task UpdateBrand_ConflicResult()
+        public async Task UpdateBrand_WhenBrandAlreadyExists_ReturnConflicResult()
         {
             //Arrange
             var brand = new UpdateBrandDTO { Name = "TesteBrand" };
@@ -45,7 +45,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task UpdateBrand_BadRequestResult()
+        public async Task UpdateBrand_WhenFieldsAreNotCorrect_ReturnBadRequestResult()
         {
             //Arrange
             var brand = new UpdateBrandDTO { Name = "10", Id = Guid.NewGuid() };
@@ -60,7 +60,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task UpdateBrand_NotFoundResult()
+        public async Task UpdateBrand_WhenBrandDoesNotExist_ReturnNotFoundResult()
         {
             //Arrange
             var brand = new UpdateBrandDTO { Name = "TesteBrand", Id = Guid.NewGuid() };

@@ -18,7 +18,7 @@ namespace StorageProject.Tests.ProductControllerTest
 
 
         [Fact]
-        public async Task CreateProduct_ReturnOK()
+        public async Task CreateProduct_WhenAllFieldsAreCorrect_ReturnOkResult()
         {
             //Arrange
             var input = new CreateProductDTO {
@@ -52,7 +52,7 @@ namespace StorageProject.Tests.ProductControllerTest
         }
 
         [Fact]
-        public async Task CreateProduct_ReturnBadRequest()
+        public async Task CreateProduct_WhenFieldsAreNotCorrect_ReturnBadRequestResult()
         {
             //Arrange
             var input = new CreateProductDTO
@@ -75,7 +75,7 @@ namespace StorageProject.Tests.ProductControllerTest
         }
 
         [Fact]
-        public async Task CreateProduct_ReturnConflict()
+        public async Task CreateProduct_WhenProductAlreadyExists_ReturnConflictResult()
         {
             //Arrange
             var input = new CreateProductDTO

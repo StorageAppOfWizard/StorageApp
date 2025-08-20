@@ -20,7 +20,7 @@ namespace StorageProject.Tests.ProductControllerTest
         }
 
         [Fact]
-        public async Task DeleteProduct_OkResult()
+        public async Task DeleteProduct_WhenIdExist_ReturnOkResult()
         {
             //Arrange
             var ProductId = Guid.NewGuid();
@@ -36,7 +36,7 @@ namespace StorageProject.Tests.ProductControllerTest
 
 
         [Fact]
-        public async Task DeleteProduct_NotFoundResult()
+        public async Task DeleteProduct_WhenIdDoesNotExist_NotFoundResult()
         {
             //Arrange
             var ProductId = Guid.NewGuid();

@@ -15,7 +15,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task CreateBrand_OkResult()
+        public async Task CreateBrand_WhenAllFieldsAreCorrect_ReturnOkResult()
         {
             //Arrange
             var brand = new CreateBrandDTO { Name = "TesteBrand" };
@@ -32,7 +32,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task CreateBrand_ConflicResult()
+        public async Task CreateBrand_WhenProductAlreadyExist_ReturnConflicResult()
         {
             //Arrange
             var brand = new CreateBrandDTO { Name = "TesteBrand" };
@@ -47,7 +47,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task CreateBrand_BadRequestResult()
+        public async Task CreateBrand_WhenFieldsAreNotCorrect_ReturnBadRequestResult()
         {
             //Arrange
             var brand = new CreateBrandDTO { Name = "10" };

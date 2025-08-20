@@ -16,7 +16,7 @@ namespace StorageProject.Tests.BrandControllerTest
 
 
         [Fact]
-        public async Task GetAllBrands_OkResult()
+        public async Task GetAllBrands_WhenBrandsExist_ReturnOkResult()
         {
             //Arrange
             var fakeList = new List<BrandDTO> { 
@@ -35,7 +35,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task GetAllBrands_NotFoundResult()
+        public async Task GetAllBrands_WhenBrandsDoesNotExist_ReturnNotFoundResult()
         {
             //Arrange
             _fixture.BrandServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(Result.NotFound("Brands Not Found"));

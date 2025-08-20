@@ -12,7 +12,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             _fixture = fixture;
         }
         [Fact]
-        public async Task DeleteCategory_OkResult()
+        public async Task DeleteCategory_WhenIdExist_ReturnOkResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -25,7 +25,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task DeleteCategory_NotFoundResult()
+        public async Task DeleteCategory_WhenIdDoesNotExist_ReturnNotFoundResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -39,7 +39,7 @@ namespace StorageProject.Tests.CategoryControllerTest
 
 
         [Fact]
-        public async Task DeleteCategory_InternalServerErrorResult()
+        public async Task DeleteCategory_ReturnInternalServerErrorResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
