@@ -16,7 +16,7 @@ namespace StorageProject.Application.Services
         }
 
 
-        public async Task<Result<IEnumerable<ProductDTO>>> GetAllAsync()
+        public async Task<Result<List<ProductDTO>>> GetAllAsync()
         {
             var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync();
 

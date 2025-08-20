@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\.github\\workflows",
+    "\\backend"
   ],
-  "SelectedNode": "\\StorageProject.sln",
+  "SelectedNode": "\\backend\\StorageProject.sln",
   "PreviewInSolutionExplorer": false
 }

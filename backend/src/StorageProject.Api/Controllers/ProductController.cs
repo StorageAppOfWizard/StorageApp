@@ -134,6 +134,7 @@ namespace StorageProject.Api.Controllers
 
         [SwaggerResponse((int)HttpStatusCode.OK, "Quantity changed sucessfully")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPatch]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO quantityDTO)
         {
@@ -141,7 +142,7 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _productService.UpdateQuantityAsync(quantityDTO);
 
-                if (!result.IsInvalid())
+                if (result.IsInvalid())
                 {
                     return BadRequest(result);
                 }
@@ -158,7 +159,6 @@ namespace StorageProject.Api.Controllers
 
         #region Delete
         [SwaggerResponse((int)HttpStatusCode.OK, "Product Deleted")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for delete Product")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpDelete("{id:Guid}")]
