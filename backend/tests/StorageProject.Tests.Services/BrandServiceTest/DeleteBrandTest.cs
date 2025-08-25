@@ -1,9 +1,8 @@
-﻿using StorageProject.Domain.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Result;
+using Moq;
+using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
+using StorageProject.Application.DTOs.Brand;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.BrandServiceTest
 {
@@ -21,6 +20,16 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         public async Task DeleteBrand_WhenIdIsAvailable_DeleBrand()
         {
             //Arrange
-            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.);
+            var brand = new Brand { Id = Guid.NewGuid(), Name ="Teste", Products = []};   
+            
+            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetById(brand.Id, cancellationToken)).ReturnsAsync(brand);
+
+            //Act
+            var result = await _fixture.Service.RemoveAsync(brand.Id);
+
+            //Arrange
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
+        }
     }
 }
