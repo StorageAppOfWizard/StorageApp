@@ -13,7 +13,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             _fixture = fixture;
         }
         [Fact]
-        public async Task GetAllCategory_OkResult()
+        public async Task GetAllCategory_WhenCategoriesExist_ReturnOkResult()
         {
             // Arrange
             var fakeList = new List<CategoryDTO> {
@@ -29,7 +29,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             Assert.Equal(200, objectResult.StatusCode);
         }
         [Fact]
-        public async Task GetAllCategory_NotFoundResult()
+        public async Task GetAllCategory_WhenCategoriesDoesNotExist_ReturnNotFoundResult()
         {
             // Arrange
             _fixture.CategoryServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(Result.NotFound());
@@ -41,7 +41,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task GetAllCategory_InternalServerErrorResult()
+        public async Task GetAllCategory_ReturnInternalServerErrorResult()
         {
             // Arrange
             _fixture.CategoryServiceMock.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("Unexpected Error"));

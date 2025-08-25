@@ -14,7 +14,7 @@ namespace StorageProject.Tests.BrandControllerTest
         }
 
         [Fact]
-        public async Task DeleteBrand_OkResult()
+        public async Task DeleteBrand_WhenIdExist_ReturnOkResult()
         {
             //Arrange
             var brandId= Guid.NewGuid();
@@ -30,7 +30,7 @@ namespace StorageProject.Tests.BrandControllerTest
 
 
         [Fact]
-        public async Task DeleteBrand_NotFoundResult()
+        public async Task DeleteBrand_WhenIdDoesNotExist_ReturnNotFoundResult()
         {
             //Arrange
             var brandId = Guid.NewGuid();

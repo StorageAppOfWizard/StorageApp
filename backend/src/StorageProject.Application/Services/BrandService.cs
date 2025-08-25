@@ -2,6 +2,7 @@
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Brand;
 using StorageProject.Application.Mappers;
+using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
 namespace StorageProject.Application.Services
@@ -41,12 +42,14 @@ namespace StorageProject.Application.Services
         public async Task<Result<BrandDTO>> CreateAsync(CreateBrandDTO createBrandDTO)
         {
             var entity = createBrandDTO.ToEntity();
-
             var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(entity.Name);
-            
+            var validation = new BrandValidator().Validate(createBrandDTO);
+
             if(existingBrand != null)
                return Result.Conflict($"Brand with the name '{existingBrand.Name}' already exists.");
-            
+
+            if (!validation.IsValid)
+                return Result.Invalid();
 
             var brand = await _unitOfWork.BrandRepository.Create(entity);
 

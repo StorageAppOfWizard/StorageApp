@@ -12,8 +12,9 @@ namespace StorageProject.Tests.CategoryControllerTest
         {
             _fixture = fixture;
         }
+
         [Fact]
-        public async Task CreateCategory_OkResult()
+        public async Task CreateCategory_WhenAllFieldsAreCorrect_ReturnOkResult()
         {
             // Arrange
             var input = new CreateCategoryDTO { Name = "TestCategory" };
@@ -26,7 +27,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             Assert.Equal(201, objectResult.StatusCode);
         }
         [Fact]
-        public async Task CreateCategory_ConflictResult()
+        public async Task CreateCategory_WhenProductAlreadyExist_ReturnConflictResult()
         {
             // Arrange
             var input = new CreateCategoryDTO { Name = "TestCategory" };
@@ -38,7 +39,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             Assert.Equal(409, objectResult.StatusCode);
         }
         [Fact]
-        public async Task CreateCategory_BadRequestResult()
+        public async Task CreateCategory_WhenFieldsAreNotCorrect_ReturnBadRequestResult()
         {
             // Arrange
             var input = new CreateCategoryDTO { Name = "10" }; // Invalid name
@@ -48,6 +49,18 @@ namespace StorageProject.Tests.CategoryControllerTest
             // Assert
             var objectResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(400, objectResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreateCategory_ReturnInternalServerError()
+        {
+            var input = new CreateCategoryDTO { Name = "Teste" };
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ThrowsAsync(new Exception("An Error occurred"));
+            // Act
+            var result = await _fixture.Controller.Create(input);
+            // Assert
+            var objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(500, objectResult.StatusCode);
         }
     }
 }

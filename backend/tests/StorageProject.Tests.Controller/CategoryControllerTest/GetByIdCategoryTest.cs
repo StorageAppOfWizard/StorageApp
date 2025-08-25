@@ -18,7 +18,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             _fixture = fixture;
         }
         [Fact]
-        public async Task GetByIdCategory_OkResult()
+        public async Task GetByIdCategory_WhenCategoryExist_ReturnOkResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -31,7 +31,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             Assert.Equal(200, objectResult.StatusCode);
         }
         [Fact]
-        public async Task GetByIdCategory_NotFoundResult()
+        public async Task GetByIdCategory_WhenCategoryDoesNotExist_ReturnNotFoundResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -43,7 +43,7 @@ namespace StorageProject.Tests.CategoryControllerTest
             Assert.Equal(404, objectResult.StatusCode);
         }
         [Fact]
-        public async Task GetByIdCategory_InternalServerErrorResult()
+        public async Task GetByIdCategory_ReturnInternalServerErrorResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();

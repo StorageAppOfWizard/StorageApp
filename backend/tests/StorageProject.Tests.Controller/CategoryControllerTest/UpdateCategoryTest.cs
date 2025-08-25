@@ -14,7 +14,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task UpdateCategory_OkResult()
+        public async Task UpdateCategory_WhenCategoryExistsAndFieldsAreCorrect_ReturnOkResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -29,7 +29,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task UpdateCategory_ConflictResult()
+        public async Task UpdateCategory_WhenCategoryAlreadyExist_ReturnConflictResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -43,7 +43,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task UpdateCategory_BadRequestResult()
+        public async Task UpdateCategory_WhenFieldsAreNotCorrect_ReturnBadRequestResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -57,7 +57,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task UpdateCategory_NotFoundResult()
+        public async Task UpdateCategory_WhenCategoryDoesNotExist_ReturnNotFoundResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -71,7 +71,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         }
 
         [Fact]
-        public async Task UpdateCategory_InternalServerErrorResult()
+        public async Task UpdateCategory_ReturnInternalServerErrorResult()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
