@@ -31,7 +31,9 @@ namespace StorageProject.Infrastructure.Repositories
        
 
         public async Task<T> GetById(Guid id, CancellationToken cancellationToken = default)
-        => await _dbSet.FirstOrDefaultAsync(e=>e.Id == id, cancellationToken);
+            => await _dbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        
+
 
 
         public void Update(T entity, CancellationToken cancellationToken = default)

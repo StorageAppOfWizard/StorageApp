@@ -42,9 +42,9 @@ namespace StorageProject.Api.Controllers
             {
                 return StatusCode(500, new { Message = "An unexpected error occurred." });
             }
+        }
             #endregion
 
-        }
         #region GetByID
         [SwaggerResponse((int)HttpStatusCode.OK, "Return all Brands")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brand Not Found")]
@@ -69,7 +69,6 @@ namespace StorageProject.Api.Controllers
         }
         #endregion
 
-
         #region Create   
         [SwaggerResponse((int)HttpStatusCode.OK, "Brand Created")]
         [SwaggerResponse((int)HttpStatusCode.Conflict, "Brand already exist")]
@@ -80,16 +79,11 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var brandValidator = await _brandValidator.ValidateAsync(createBrandDTO);
-
-                if (!brandValidator.IsValid)
-                    return BadRequest(brandValidator.ToDictionary());
-
                 var result = await _brandService.CreateAsync(createBrandDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
-                if (!result.IsSuccess)
+                if (result.IsInvalid() || !result.IsSuccess)
                     return BadRequest(result);
 
                 return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
@@ -101,7 +95,6 @@ namespace StorageProject.Api.Controllers
         }
         #endregion
 
-
         #region Update
         [SwaggerResponse((int)HttpStatusCode.OK, "Brand Updated")]
         [SwaggerResponse((int)HttpStatusCode.Conflict, "Brand already exist")]
@@ -112,18 +105,15 @@ namespace StorageProject.Api.Controllers
         public async Task<IActionResult> Update([FromBody] UpdateBrandDTO updateBrandDTO)
         {
             try
-            {
-                var brandValidator = await _brandValidator.ValidateAsync(updateBrandDTO);
-
-                if (!brandValidator.IsValid)
-                    return BadRequest(brandValidator.ToDictionary());
-
+            { 
                 var result = await _brandService.UpdateAsync(updateBrandDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
                 if (result.IsNotFound())
                     return NotFound(result);
+                if(result.IsInvalid() || !result.IsSuccess)
+                    return BadRequest(result.Errors);
 
                 return Ok(result);
             }
@@ -157,8 +147,8 @@ namespace StorageProject.Api.Controllers
                 return StatusCode(500, new { Message = "An unexpected error occurred." });
             }
 
-            #endregion
         }
+            #endregion
     }
 }
 
