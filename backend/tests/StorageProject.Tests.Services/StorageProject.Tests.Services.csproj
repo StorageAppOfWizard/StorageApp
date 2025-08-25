@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\StorageProject.Application\StorageProject.Application.csproj" />
-    <ProjectReference Include="..\src\StorageProject.Infrastructure\StorageProject.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\StorageProject.Application\StorageProject.Application.csproj" />
+    <ProjectReference Include="..\..\src\StorageProject.Domain\StorageProject.Domain.csproj" />
+    <ProjectReference Include="..\..\src\StorageProject.Infrastructure\StorageProject.Infrastructure.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <Using Include="Xunit" />
