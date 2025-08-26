@@ -68,7 +68,7 @@ namespace StorageProject.Application.Services
             if (entity is null)
                 return Result.NotFound("Brand Not Found");
 
-            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(entity.Name);
+            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(updateBrandDTO.Name);
             if (existingBrand != null)
                 return Result.Conflict($"Brand with the name {existingBrand.Name} already exists.");
 
