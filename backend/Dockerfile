@@ -2,23 +2,27 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5000
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY StorageProject.sln .
 COPY ["src/StorageProject.Api/StorageProject.Api.csproj", "src/StorageProject.Api/"]
 COPY ["src/StorageProject.Application/StorageProject.Application.csproj", "src/StorageProject.Application/"]
 COPY ["src/StorageProject.Domain/StorageProject.Domain.csproj", "src/StorageProject.Domain/"]
 COPY ["src/StorageProject.Infrastructure/StorageProject.Infrastructure.csproj", "src/StorageProject.Infrastructure/"]
+COPY ["tests/StorageProject.Tests.Controller/StorageProject.Tests.Controller.csproj", "tests/StorageProject.Tests.Controller/"]
+COPY ["tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj", "tests/StorageProject.Tests.Services/"]
 
-RUN dotnet restore "./src/StorageProject.Api/StorageProject.Api.csproj"
+RUN dotnet restore "./StorageProject.sln"
 COPY . .
+
+RUN dotnet test "StorageProject.sln" --no-restore --verbosity normal --collect:"XPlat Code Coverage"
+
 WORKDIR "/src/src/StorageProject.Api"
 RUN dotnet build "./StorageProject.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
