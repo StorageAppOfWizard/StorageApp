@@ -38,9 +38,9 @@ namespace StorageProject.Api.Controllers
                 return Ok(result);
 
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
             #endregion
@@ -48,7 +48,6 @@ namespace StorageProject.Api.Controllers
         #region GetByID
         [SwaggerResponse((int)HttpStatusCode.OK, "Return all Brands")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brand Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Brand ID Error")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById(Guid id)
@@ -56,15 +55,15 @@ namespace StorageProject.Api.Controllers
             try
             {
                 var result = await _brandService.GetByIdAsync(id);
-                if (!result.IsSuccess)
-                {
+                if (result.IsNotFound())
+                
                     return NotFound(result.Errors);
-                }
+                
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -151,4 +150,5 @@ namespace StorageProject.Api.Controllers
             #endregion
     }
 }
+
 

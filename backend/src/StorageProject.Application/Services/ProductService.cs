@@ -2,7 +2,7 @@
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Product;
 using StorageProject.Application.Mappers;
-
+using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
 namespace StorageProject.Application.Services
@@ -24,14 +24,30 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Products NotFound");
             
             var dto = products.Select(product => product.ToDTO()).ToList();
-
             return dto;
+        }
+
+        public async Task<Result<ProductDTO>> GetByIdAsync(Guid id)
+        {
+            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(id);
+
+            if (entity is null)
+                return Result.NotFound("Not Found Product");
+
+            return Result<ProductDTO>.Success(entity.ToDTO());
         }
 
         public async Task <Result<ProductDTO>>CreateAsync(CreateProductDTO createProductDTO)
         {
-            var entity = createProductDTO.ToEntity();
+            var validator = new ProductValidator().Validate(createProductDTO);
+            if (!validator.IsValid)
+                return Result.Invalid();
 
+            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(createProductDTO.Name);
+            if (existingProduct is not null)
+                return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
+
+            var entity = createProductDTO.ToEntity();
             await _unitOfWork.ProductRepository.Create(entity);
             await _unitOfWork.CommitAsync();
 
@@ -40,25 +56,21 @@ namespace StorageProject.Application.Services
             return created.ToDTO();
         }
 
-        public async Task<Result<ProductDTO>> GetByIdAsync(Guid id)
-        {
-            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(id);
-
-            if (entity == null)
-                return Result.NotFound("Not Found Product");
-
-            return Result<ProductDTO>.Success(entity.ToDTO());
-        }
-
         public async Task<Result<ProductDTO>> UpdateAsync(UpdateProductDTO changeProductDTO)
         {
-            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(changeProductDTO.Id);
+            var validator = new ProductValidator().Validate(changeProductDTO);
+            if (!validator.IsValid)
+                return Result.Invalid();
 
-            if (entity == null)
+            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(changeProductDTO.Name);
+            if (existingProduct is not null)
+                return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
+
+            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(changeProductDTO.Id);
+            if (entity is null)
                 return Result.NotFound("Not Found Product");
 
             changeProductDTO.ToEntity(entity);
-
             await _unitOfWork.CommitAsync();//The EF detect the tracking, don't need .Update() function
 
             return entity.ToDTO();
@@ -67,9 +79,6 @@ namespace StorageProject.Application.Services
         public async Task<Result> UpdateQuantityAsync(UpdateProductQuantityDTO quantityDTO)
         {
             var entity = await _unitOfWork.ProductRepository.GetById(quantityDTO.Id);
-            if (entity == null)
-                return Result.NotFound("Not Found Product");
-
             quantityDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();
 

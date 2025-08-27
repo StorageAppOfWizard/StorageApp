@@ -40,9 +40,9 @@ namespace StorageProject.Api.Controllers
                 return Ok(result);
 
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -58,15 +58,15 @@ namespace StorageProject.Api.Controllers
             try
             {
                 var result = await _categoryService.GetByIdAsync(id);
-                if (!result.IsSuccess)
-                {
+
+                if (result.IsNotFound())
                     return NotFound(result.Errors);
-                }
+                
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -82,23 +82,18 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var categoryValidator = await _categoryValidator.ValidateAsync(createCategoryDTO);
-
-                if (!categoryValidator.IsValid)
-                    return BadRequest(categoryValidator.ToDictionary());
-
-                var result = await _categoryService.CreateAsync(createCategoryDTO);
+               var result = await _categoryService.CreateAsync(createCategoryDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
-                if (!result.IsSuccess)
+                if (result.IsInvalid())
                     return BadRequest(result);
 
                 return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -115,23 +110,20 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var categoryValidator = await _categoryValidator.ValidateAsync(updateCategoryDTO);
-
-                if (!categoryValidator.IsValid)
-                    return BadRequest(categoryValidator.ToDictionary());
-
                 var result = await _categoryService.UpdateAsync(updateCategoryDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
+                if (result.IsInvalid())
+                    return BadRequest(result);
                 if (result.IsNotFound())
                     return NotFound(result);
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
 
         }
@@ -148,16 +140,15 @@ namespace StorageProject.Api.Controllers
             try
             {
                 var result = await _categoryService.RemoveAsync(id);
-                if (!result.IsSuccess)
-                {
+                if (result.IsNotFound())
                     return NotFound(result.Errors);
-                }
+                
                 return Ok(result);
 
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An Unexpected Error" });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion

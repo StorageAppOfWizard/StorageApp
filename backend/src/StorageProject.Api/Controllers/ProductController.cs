@@ -39,9 +39,9 @@ namespace StorageProject.Api.Controllers
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -62,9 +62,9 @@ namespace StorageProject.Api.Controllers
                 }
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -79,21 +79,18 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var productValidator = await _productValidator.ValidateAsync(createProductDTO);
-
-                if (!productValidator.IsValid)
-                    return BadRequest(productValidator.ToDictionary());
-
                 var result = await _productService.CreateAsync(createProductDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
+                if(result.IsInvalid())
+                    return BadRequest(result.Errors);
 
                 return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -109,23 +106,20 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var productValidator = await _productValidator.ValidateAsync(updateProductDTO);
-
-                if (!productValidator.IsValid)
-                    return BadRequest(productValidator.ToDictionary());
-
                 var result = await _productService.UpdateAsync(updateProductDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
                 if (result.IsInvalid())
-                    return BadRequest(result);
+                    return BadRequest(result.Errors);
+                if(result.IsNotFound())
+                    return NotFound(result);
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -143,15 +137,13 @@ namespace StorageProject.Api.Controllers
                 var result = await _productService.UpdateQuantityAsync(quantityDTO);
 
                 if (result.IsInvalid())
-                {
-                    return BadRequest(result);
-                }
-
+                   return BadRequest(result);
+                
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
 
@@ -168,15 +160,14 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _productService.RemoveAsync(id);
                 if (result.IsNotFound())
-                {
                     return NotFound(result.Errors);
-                }
+                
                 return Ok(result);
 
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion

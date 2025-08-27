@@ -8,12 +8,12 @@ using System.Runtime.CompilerServices;
 
 namespace StorageProject.Tests.Services.BrandServiceTest
 {
-    public class CreateBrandTest : IClassFixture<BrandServiceFixture>
+    public class CreateCategoryTest : IClassFixture<BrandServiceFixture>
     {
         private readonly BrandServiceFixture _fixture;
 
         private readonly CancellationToken cancellationToken = CancellationToken.None;
-        public CreateBrandTest(BrandServiceFixture fixture)
+        public CreateCategoryTest(BrandServiceFixture fixture)
         {
             _fixture = fixture;
         }

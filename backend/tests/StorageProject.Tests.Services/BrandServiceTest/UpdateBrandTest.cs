@@ -5,11 +5,11 @@ using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.BrandServiceTest
 {
-    public class UpdateBrandTest : IClassFixture<BrandServiceFixture>
+    public class UpdateCategoryTest : IClassFixture<BrandServiceFixture>
     {
         private readonly BrandServiceFixture _fixture;
         private readonly CancellationToken cancellationToken = CancellationToken.None;
-        public UpdateBrandTest(BrandServiceFixture fixture)
+        public UpdateCategoryTest(BrandServiceFixture fixture)
         {
             _fixture = fixture;
         }

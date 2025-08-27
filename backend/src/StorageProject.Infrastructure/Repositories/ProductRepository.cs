@@ -32,5 +32,11 @@ namespace StorageProject.Infrastructure.Repositories
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
         }
+
+
+        public async Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            return await _context.Products.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken);
+        }
     }
 }
