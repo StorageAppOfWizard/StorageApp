@@ -28,20 +28,22 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageQuantity = 20)
         {
             try
             {
-                var result = await _productService.GetAllAsync();
+                var result = await _productService.GetAllAsync(page, pageQuantity);
 
                 if (result.IsNotFound())
                     return NotFound(result);
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -62,15 +64,15 @@ namespace StorageProject.Api.Controllers
                 }
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
 
         #region Create
-        [SwaggerResponse((int)HttpStatusCode.OK, "Product Created")]
+        [SwaggerResponse((int)HttpStatusCode.Created, "Product Created")]
         [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Product")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
@@ -79,21 +81,18 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var productValidator = await _productValidator.ValidateAsync(createProductDTO);
-
-                if (!productValidator.IsValid)
-                    return BadRequest(productValidator.ToDictionary());
-
                 var result = await _productService.CreateAsync(createProductDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
+                if (result.IsInvalid())
+                    return BadRequest(result.Errors);
 
-                return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
+                return CreatedAtAction(nameof(Create), result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -109,23 +108,20 @@ namespace StorageProject.Api.Controllers
         {
             try
             {
-                var productValidator = await _productValidator.ValidateAsync(updateProductDTO);
-
-                if (!productValidator.IsValid)
-                    return BadRequest(productValidator.ToDictionary());
-
                 var result = await _productService.UpdateAsync(updateProductDTO);
 
                 if (result.IsConflict())
                     return Conflict(result);
                 if (result.IsInvalid())
-                    return BadRequest(result);
+                    return BadRequest(result.Errors);
+                if (result.IsNotFound())
+                    return NotFound(result);
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion
@@ -143,15 +139,13 @@ namespace StorageProject.Api.Controllers
                 var result = await _productService.UpdateQuantityAsync(quantityDTO);
 
                 if (result.IsInvalid())
-                {
                     return BadRequest(result);
-                }
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
 
@@ -168,15 +162,14 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _productService.RemoveAsync(id);
                 if (result.IsNotFound())
-                {
                     return NotFound(result.Errors);
-                }
+
                 return Ok(result);
 
             }
-            catch (Exception)
+            catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred." });
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion

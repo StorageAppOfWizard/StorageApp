@@ -18,8 +18,7 @@ namespace StorageProject.Tests.CategoryControllerTest
         {
             // Arrange
             var input = new CreateCategoryDTO { Name = "TestCategory" };
-            var output = new CategoryDTO { Id = Guid.NewGuid(), Name = "TestCategory" };
-            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(Result.Success(output));
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ReturnsAsync(Result.SuccessWithMessage($"{input.Name} created!"));
             // Act
             var result = await _fixture.Controller.Create(input);
             // Assert

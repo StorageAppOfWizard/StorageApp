@@ -2,6 +2,7 @@
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Category;
 using StorageProject.Application.Mappers;
+using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
 namespace StorageProject.Application.Services
@@ -19,7 +20,7 @@ namespace StorageProject.Application.Services
         {
             var entity = await _unitOfWork.CategoryRepository.GetAll();
 
-            if (entity == null || !entity.Any())
+            if (entity is null)
                 return Result<List<CategoryDTO>>.NotFound("No categories found.");
 
             return Result.Success(entity.Select(b => b.ToDTO()).ToList());
@@ -32,45 +33,48 @@ namespace StorageProject.Application.Services
 
             var entity = await _unitOfWork.CategoryRepository.GetById(id);
 
-            if (entity == null)
+            if (entity is null)
                 return Result.NotFound("Category not found");
 
             return Result.Success(entity.ToDTO());
         }
 
-        public async Task<Result<CategoryDTO>> CreateAsync(CreateCategoryDTO createCategoryDTO)
+        public async Task<Result> CreateAsync(CreateCategoryDTO createCategoryDTO)
         {
-            var entity = createCategoryDTO.ToEntity();
+            var validation = new CategoryValidator().Validate(createCategoryDTO);
+            if (!validation.IsValid)
+                return Result.Invalid();
 
-            var existingCategory = await _unitOfWork.CategoryRepository.GetByNameAsync(entity.Name);
-
-            if (existingCategory != null)
+            var existingCategory = await _unitOfWork.CategoryRepository.GetByNameAsync(createCategoryDTO.Name);
+            if (existingCategory is not null)
                 return Result.Conflict($"Category with the name {existingCategory.Name} already exists.");
 
-
+            var entity = createCategoryDTO.ToEntity();
             var result = await _unitOfWork.CategoryRepository.Create(entity);
 
             await _unitOfWork.CommitAsync();
-
-            return Result.Success(result.ToDTO(), "Category Created");
+            return Result.SuccessWithMessage($"{createCategoryDTO.Name} created!");
         }
 
         public async Task<Result> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
         {
+
+            var validation = new CategoryValidator().Validate(updateCategoryDTO);
+            if (!validation.IsValid)
+                return Result.Invalid();
+
             var entity = await _unitOfWork.CategoryRepository.GetById(updateCategoryDTO.Id);
             if (entity is null)
-                return Result.NotFound("Category not found");
+                return Result.NotFound("Category not found"); 
 
-            updateCategoryDTO.ToEntity(entity);
-
-            var existingCategory = await _unitOfWork.CategoryRepository.GetByNameAsync(entity.Name);
-
-            if (existingCategory != null)
+            var existingCategory = await _unitOfWork.CategoryRepository.GetByNameAsync(updateCategoryDTO.Name);
+            if (existingCategory is not null)
                 return Result.Conflict($"Category with the name {existingCategory.Name} already exists.");
 
+            updateCategoryDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();
 
-            return Result.SuccessWithMessage("Category updated successfully.");
+            return Result.SuccessWithMessage($"{updateCategoryDTO.Name} changed");
 
         }
 
@@ -81,7 +85,7 @@ namespace StorageProject.Application.Services
 
             var entity = await _unitOfWork.CategoryRepository.GetById(id);
 
-            if (entity == null)
+            if (entity is null)
                 return Result.NotFound("Category not found");
 
             _unitOfWork.CategoryRepository.Delete(entity);

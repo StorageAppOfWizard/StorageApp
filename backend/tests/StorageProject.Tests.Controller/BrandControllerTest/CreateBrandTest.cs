@@ -21,7 +21,7 @@ namespace StorageProject.Tests.BrandControllerTest
             var brand = new CreateBrandDTO { Name = "TesteBrand" };
             var brandOutput = new BrandDTO { Id = Guid.NewGuid(), Name = "TesteBrand" };
 
-            _fixture.BrandServiceMock.Setup(s => s.CreateAsync(brand)).ReturnsAsync(Result.Success(brandOutput));
+            _fixture.BrandServiceMock.Setup(s => s.CreateAsync(brand)).ReturnsAsync(Result.SuccessWithMessage(""));
 
             //Act
             var result = await _fixture.Controller.Create(brand);

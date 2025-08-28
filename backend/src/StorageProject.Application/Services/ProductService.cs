@@ -2,7 +2,7 @@
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Product;
 using StorageProject.Application.Mappers;
-
+using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
 namespace StorageProject.Application.Services
@@ -16,60 +16,68 @@ namespace StorageProject.Application.Services
         }
 
 
-        public async Task<Result<List<ProductDTO>>> GetAllAsync()
+        public async Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync();
+
+            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
 
             if (!products.Any())
                 return Result.NotFound("Products NotFound");
-            
+
             var dto = products.Select(product => product.ToDTO()).ToList();
-
             return dto;
-        }
-
-        public async Task <Result<ProductDTO>>CreateAsync(CreateProductDTO createProductDTO)
-        {
-            var entity = createProductDTO.ToEntity();
-
-            await _unitOfWork.ProductRepository.Create(entity);
-            await _unitOfWork.CommitAsync();
-
-            var created = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(entity.Id);
-
-            return created.ToDTO();
         }
 
         public async Task<Result<ProductDTO>> GetByIdAsync(Guid id)
         {
             var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(id);
 
-            if (entity == null)
+            if (entity is null)
                 return Result.NotFound("Not Found Product");
 
             return Result<ProductDTO>.Success(entity.ToDTO());
         }
 
-        public async Task<Result<ProductDTO>> UpdateAsync(UpdateProductDTO changeProductDTO)
+        public async Task<Result> CreateAsync(CreateProductDTO createProductDTO)
         {
-            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(changeProductDTO.Id);
+            var validator = new ProductValidator().Validate(createProductDTO);
+            if (!validator.IsValid)
+                return Result.Invalid();
 
-            if (entity == null)
+            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(createProductDTO.Name);
+            if (existingProduct is not null)
+                return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
+
+            var entity = createProductDTO.ToEntity();
+            await _unitOfWork.ProductRepository.Create(entity);
+            await _unitOfWork.CommitAsync();
+
+            return Result.SuccessWithMessage($"{createProductDTO.Name} Created");
+        }
+
+        public async Task<Result> UpdateAsync(UpdateProductDTO updateProductDTO)
+        {
+            var validator = new ProductValidator().Validate(updateProductDTO);
+            if (!validator.IsValid)
+                return Result.Invalid();
+
+            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(updateProductDTO.Name);
+            if (existingProduct is not null)
+                return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
+
+            var entity = await _unitOfWork.ProductRepository.GetById(updateProductDTO.Id);
+            if (entity is null)
                 return Result.NotFound("Not Found Product");
 
-            changeProductDTO.ToEntity(entity);
-
+            updateProductDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();//The EF detect the tracking, don't need .Update() function
 
-            return entity.ToDTO();
+            return Result.SuccessWithMessage($"{updateProductDTO.Name} changed");
         }
 
         public async Task<Result> UpdateQuantityAsync(UpdateProductQuantityDTO quantityDTO)
         {
             var entity = await _unitOfWork.ProductRepository.GetById(quantityDTO.Id);
-            if (entity == null)
-                return Result.NotFound("Not Found Product");
-
             quantityDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();
 

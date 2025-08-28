@@ -14,14 +14,14 @@ namespace StorageProject.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllWithIncludesAsync(int skip = 0, int take = 40, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Product>> GetAllWithIncludesAsync(int page,  int pageQuantity, CancellationToken cancellationToken = default)
         {
             return await _context.Products
                     .Include(p => p.Brand)
                     .Include(p => p.Category)
                     .AsNoTracking()
-                    .Skip(skip)
-                    .Take(take)
+                    .Skip((page-1) * pageQuantity)
+                    .Take(pageQuantity)
                     .ToListAsync(cancellationToken)??Enumerable.Empty<Product>();
         }
 
@@ -31,6 +31,12 @@ namespace StorageProject.Infrastructure.Repositories
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
+        }
+
+
+        public async Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            return await _context.Products.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken);
         }
     }
 }

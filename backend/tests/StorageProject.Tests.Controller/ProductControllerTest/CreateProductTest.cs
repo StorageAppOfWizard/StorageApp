@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StorageProject.Application.DTOs.Category;
 using StorageProject.Application.DTOs.Product;
 
 namespace StorageProject.Tests.ProductControllerTest
@@ -26,22 +27,10 @@ namespace StorageProject.Tests.ProductControllerTest
                 CategoryId = Guid.NewGuid(),
                 Description = "Test",
                 Name = "Test",
-                Quantity= 100 
+                Quantity= 100
             };
 
-            var output = new ProductDTO
-            {
-                Id = Guid.NewGuid(),
-                Name = input.Name,
-                Quantity = input.Quantity,
-                Description = input.Description,
-                BrandId = input.BrandId,
-                CategoryId = input.CategoryId,
-                BrandName = "Test",
-                CategoryName = "Test"
-            };
-
-            _fixture.ProductServiceMock.Setup(c => c.CreateAsync(input)).ReturnsAsync(Result.Success(output));
+            _fixture.ProductServiceMock.Setup(c => c.CreateAsync(input)).ReturnsAsync(Result.SuccessWithMessage($"{input.Name} created!"));
 
             //Act
             var result = await _fixture.Controller.Create(input);

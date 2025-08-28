@@ -22,11 +22,11 @@ namespace StorageProject.Infrastructure.Repositories
         }
 
 
-        public async Task<IEnumerable<T>> GetAll(int skip, int take, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T>> GetAll(int page, int pageQuantity, CancellationToken cancellationToken = default)
         =>await _dbSet
             .AsNoTracking()
-            .Skip(skip)
-            .Take(take)
+            .Skip(page * pageQuantity)
+            .Take(pageQuantity)
             .ToListAsync(cancellationToken);
        
 
