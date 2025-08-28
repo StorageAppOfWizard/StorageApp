@@ -37,7 +37,7 @@ namespace StorageProject.Application.Services
             return Result<ProductDTO>.Success(entity.ToDTO());
         }
 
-        public async Task <Result<ProductDTO>>CreateAsync(CreateProductDTO createProductDTO)
+        public async Task <Result>CreateAsync(CreateProductDTO createProductDTO)
         {
             var validator = new ProductValidator().Validate(createProductDTO);
             if (!validator.IsValid)
@@ -51,29 +51,27 @@ namespace StorageProject.Application.Services
             await _unitOfWork.ProductRepository.Create(entity);
             await _unitOfWork.CommitAsync();
 
-            var created = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(entity.Id);
-
-            return created.ToDTO();
+            return Result.SuccessWithMessage($"{createProductDTO.Name} Created");
         }
 
-        public async Task<Result<ProductDTO>> UpdateAsync(UpdateProductDTO changeProductDTO)
+        public async Task<Result> UpdateAsync(UpdateProductDTO updateProductDTO)
         {
-            var validator = new ProductValidator().Validate(changeProductDTO);
+            var validator = new ProductValidator().Validate(updateProductDTO);
             if (!validator.IsValid)
                 return Result.Invalid();
 
-            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(changeProductDTO.Name);
+            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(updateProductDTO.Name);
             if (existingProduct is not null)
                 return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
 
-            var entity = await _unitOfWork.ProductRepository.GetByIdWithIncludesAsync(changeProductDTO.Id);
+            var entity = await _unitOfWork.ProductRepository.GetById(updateProductDTO.Id);
             if (entity is null)
                 return Result.NotFound("Not Found Product");
 
-            changeProductDTO.ToEntity(entity);
+            updateProductDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();//The EF detect the tracking, don't need .Update() function
 
-            return entity.ToDTO();
+            return Result.SuccessWithMessage($"{updateProductDTO.Name} changed");
         }
 
         public async Task<Result> UpdateQuantityAsync(UpdateProductQuantityDTO quantityDTO)

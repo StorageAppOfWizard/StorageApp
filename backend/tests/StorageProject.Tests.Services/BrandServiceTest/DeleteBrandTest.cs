@@ -17,7 +17,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
 
         [Fact]
-        public async Task DeleteBrand_WhenIdIsAvailable_DeleBrand()
+        public async Task DeleteBrand_WhenIdIsAvailable_DeleteBrand()
         {
             //Arrange
             var brand = new Brand { Id = Guid.NewGuid(), Name ="Teste", Products = []};   
@@ -33,7 +33,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
 
         [Fact]
-        public async Task DeleteBrand_WhenIdIsUnavailable_ErrorDeleBrand()
+        public async Task DeleteBrand_WhenIdIsUnavailable_ErrorDeleteBrand()
         {
             //Arrange
             var brand = new Brand { Id = Guid.NewGuid(), Name = "Teste", Products = [] };

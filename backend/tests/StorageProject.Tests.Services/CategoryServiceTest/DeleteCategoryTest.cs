@@ -4,26 +4,28 @@ using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.CategoryServiceTest
 {
-    public class DeleteCategoryTest :IClassFixture<ProductServiceFixture>
+    public class DeleteCategoryTest :IClassFixture<CategoryServiceFixture>
     {
-        private readonly ProductServiceFixture _fixture;
+        private readonly CategoryServiceFixture _fixture;
         private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-        public DeleteCategoryTest(ProductServiceFixture fixture)
+        public DeleteCategoryTest(CategoryServiceFixture fixture)
         {
             _fixture = fixture;
         }
 
+
+
         [Fact]
-        public async Task DeleteCategory_WhenIdIsAvailable_DeleCategory()
+        public async Task DeleteCategory_WhenIdIsAvailable_DeleteCategory()
         {
             //Arrange
-            var Category = new Category { Id = Guid.NewGuid(), Name ="Teste", Products = []};   
+            var category = new Category { Id = Guid.NewGuid(), Name ="Teste"};   
             
-            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetById(Category.Id, cancellationToken)).ReturnsAsync(Category);
+            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetById(category.Id, cancellationToken)).ReturnsAsync(category);
 
             //Act
-            var result = await _fixture.Service.RemoveAsync(Category.Id);
+            var result = await _fixture.Service.RemoveAsync(category.Id);
 
             //Arrange
             Assert.True(result.IsSuccess);
@@ -31,15 +33,15 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         }
 
         [Fact]
-        public async Task DeleteCategory_WhenIdIsUnavailable_ErrorDeleCategory()
+        public async Task DeleteCategory_WhenIdIsUnavailable_ErrorDeleteCategory()
         {
             //Arrange
-            var Category = new Category { Id = Guid.NewGuid(), Name = "Teste", Products = [] };
+            var category = new Category { Id = Guid.NewGuid(), Name = "Teste"};
 
-            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetById(Category.Id, cancellationToken)).ReturnsAsync(value: null);
+            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetById(category.Id, cancellationToken)).ReturnsAsync(value: null);
 
             //Act
-            var result = await _fixture.Service.RemoveAsync(Category.Id);
+            var result = await _fixture.Service.RemoveAsync(category.Id);
 
             //Arrange
             Assert.False(result.IsSuccess);

@@ -39,9 +39,8 @@ namespace StorageProject.Tests.Services.BrandServiceTest
             var result = await _fixture.Service.CreateAsync(dto);
 
             //Arrange
-            var objectResult = Assert.IsType<BrandDTO>(result.Value);
-
-            Assert.Equal(dto.Name, objectResult.Name);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
         }
 
         [Theory]
@@ -49,7 +48,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         [InlineData("a")]
         [InlineData("this name is wayyyyyyyyyyyyyyyyyyyyy too long for a brand name that should be max 20 chars...")]
 
-        public async Task CreateBrand_WhenNameFieldIsIncorret_InvalidName(string invalidName)
+        public async Task CreateBrand_WhenNameFieldIsIncorret_ErrorBrandCreated(string invalidName)
         {
             //Arrange
             var dto = new CreateBrandDTO { Name = invalidName };

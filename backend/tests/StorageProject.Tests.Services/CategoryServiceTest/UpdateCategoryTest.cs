@@ -5,11 +5,11 @@ using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.CategoryServiceTest
 {
-    public class UpdateCategoryTest : IClassFixture<ProductServiceFixture>
+    public class UpdateCategoryTest : IClassFixture<CategoryServiceFixture>
     {
-        private readonly ProductServiceFixture _fixture;
+        private readonly CategoryServiceFixture _fixture;
         private readonly CancellationToken cancellationToken = CancellationToken.None;
-        public UpdateCategoryTest(ProductServiceFixture fixture)
+        public UpdateCategoryTest(CategoryServiceFixture fixture)
         {
             _fixture = fixture;
         }
@@ -19,8 +19,8 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         {
             //Arrange
             var dto = new UpdateCategoryDTO { Name = "TesteUpdate", Id = Guid.NewGuid() };
-            var CategoryDto = new CategoryDTO { Id = dto.Id, Name = dto.Name };
-            var newCategory = new Category { Id = CategoryDto.Id, Name = CategoryDto.Name };
+            var categoryDto = new CategoryDTO { Id = dto.Id, Name = dto.Name };
+            var newCategory = new Category { Id = categoryDto.Id, Name = categoryDto.Name };
 
             _fixture.UnitOfWorkMock.Setup(c => c.
                 CategoryRepository.GetByNameAsync(dto.Name, cancellationToken))
@@ -36,7 +36,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         }
 
         [Fact]
-        public async Task UpdateCategory_WhenConflictExist_CategoryNotUpdated()
+        public async Task UpdateCategory_WhenConflictExist_ErrorCategoryUpdated()
         {
             //Arrange
             var dto = new UpdateCategoryDTO { Id = Guid.NewGuid(), Name = "TesteUpdate" };
@@ -55,7 +55,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
             Assert.Equal(ResultStatus.Conflict, result.Status);
         }
 
-        public async Task UpdateCategory_WhenCategoryNotExist_CategoryNotUpdated()
+        public async Task UpdateCategory_WhenCategoryNotExist_ErrorCategoryUpdated()
         {
             //Arrange
             var dto = new UpdateCategoryDTO { Id = Guid.NewGuid(), Name = "TesteUpdate" };
@@ -75,8 +75,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         [InlineData("")]
         [InlineData("a")]
         [InlineData("this name is wayyyyyyyyyyyyyyyyyyyyy too long for a Category name that should be max 20 chars...")]
-
-        public async Task UpdateCategory_WhenNameFieldIsIncorret_InvalidName(string invalidName)
+        public async Task UpdateCategory_WhenNameFieldIsIncorret_ErrorCategoryUpdated(string invalidName)
         {
             //Arrange
             var dto = new UpdateCategoryDTO { Name = invalidName, Id = Guid.NewGuid() };

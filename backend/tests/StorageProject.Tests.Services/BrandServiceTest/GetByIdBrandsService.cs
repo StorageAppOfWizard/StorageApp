@@ -28,7 +28,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
         
         [Fact]
-        public async Task GuidBrandById_WhenIdNoExist_ReturnBrand()
+        public async Task GuidBrandById_WhenIdNoExist_ErrorReturnBrand()
         {
             //Arrange
             var brand = new Brand { Id = Guid.NewGuid(), Name = "Teste" };

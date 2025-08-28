@@ -36,7 +36,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
 
         [Fact]
-        public async Task GetAllBrand_WhenBrandsNoExist_ReturnAllBrands()
+        public async Task GetAllBrand_WhenBrandsNoExist_ErrorReturnAllBrands()
         {
             //Arrange
 

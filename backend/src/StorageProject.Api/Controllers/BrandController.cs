@@ -85,7 +85,7 @@ namespace StorageProject.Api.Controllers
                 if (result.IsInvalid() || !result.IsSuccess)
                     return BadRequest(result);
 
-                return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
+                return CreatedAtAction(nameof(Create),result);
             }
             catch (Exception)
             {

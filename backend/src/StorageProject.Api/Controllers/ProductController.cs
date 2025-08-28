@@ -70,7 +70,7 @@ namespace StorageProject.Api.Controllers
         #endregion
 
         #region Create
-        [SwaggerResponse((int)HttpStatusCode.OK, "Product Created")]
+        [SwaggerResponse((int)HttpStatusCode.Created, "Product Created")]
         [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Product")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
@@ -86,7 +86,7 @@ namespace StorageProject.Api.Controllers
                 if(result.IsInvalid())
                     return BadRequest(result.Errors);
 
-                return CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result);
+                return CreatedAtAction(nameof(Create), result);
             }
             catch (Exception message)
             {

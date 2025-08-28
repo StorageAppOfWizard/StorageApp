@@ -1,15 +1,16 @@
-﻿using Moq;
+﻿using Ardalis.Result;
+using Moq;
 using StorageProject.Application.DTOs.Category;
 using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.CategoryServiceTest
 {
-    public class CreateProductTest : IClassFixture<ProductServiceFixture>
+    public class CreateCategoryTest : IClassFixture<CategoryServiceFixture>
     {
-        private readonly ProductServiceFixture _fixture;
+        private readonly CategoryServiceFixture _fixture;
 
         private readonly CancellationToken cancellationToken = CancellationToken.None;
-        public CreateProductTest(ProductServiceFixture fixture)
+        public CreateCategoryTest(CategoryServiceFixture fixture)
         {
             _fixture = fixture;
         }
@@ -35,17 +36,15 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
             var result = await _fixture.Service.CreateAsync(dto);
 
             //Arrange
-            var objectResult = Assert.IsType<CategoryDTO>(result.Value);
-
-            Assert.Equal(dto.Name, objectResult.Name);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData("a")]
         [InlineData("this name is wayyyyyyyyyyyyyyyyyyyyy too long for a Category name that should be max 20 chars...")]
-
-        public async Task CreateCategory_WhenNameFieldIsIncorret_InvalidName(string invalidName)
+        public async Task CreateCategory_WhenNameFieldIsIncorret_ErrorBrandCreated(string invalidName)
         {
             //Arrange
             var dto = new CreateCategoryDTO { Name = invalidName };

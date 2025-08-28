@@ -4,11 +4,11 @@ using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.CategoryServiceTest
 {
-    public class GetAllCategoriesServiceTest : IClassFixture<ProductServiceFixture>
+    public class GetAllCategoriesServiceTest : IClassFixture<CategoryServiceFixture>
     {
-        private readonly ProductServiceFixture _fixture;
+        private readonly CategoryServiceFixture _fixture;
         private readonly CancellationToken cancellationToken = CancellationToken.None;
-        public GetAllCategoriesServiceTest(ProductServiceFixture fixture)
+        public GetAllCategoriesServiceTest(CategoryServiceFixture fixture)
         {
             _fixture = fixture;
         }
@@ -35,7 +35,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         }
 
         [Fact]
-        public async Task GetAllCategory_WhenCategorysNoExist_ReturnAllCategorys()
+        public async Task GetAllCategory_WhenCategorysNoExist_ErrorReturnAllCategorys()
         {
             //Arrange
 

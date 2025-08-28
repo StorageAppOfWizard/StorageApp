@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Ardalis.Result;
+using Moq;
 using StorageProject.Application.DTOs.Product;
 using StorageProject.Domain.Entity;
 
@@ -26,14 +27,19 @@ namespace StorageProject.Tests.Services.ProductServiceTest
                 BrandId = Guid.NewGuid(), 
                 CategoryId = Guid.NewGuid(),
                 Description="",
-                Quantity=0,
+                Quantity=10,
             };
 
             var newProduct = new Product { 
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
-                
+                BrandId = dto.BrandId,
+                CategoryId = dto.CategoryId,
+                Description = dto.Description,
+                Quantity = dto.Quantity,  
             };
+
+
             _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetByNameAsync(dto.Name, cancellationToken)).ReturnsAsync(value: null);
             _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.Create(It.IsAny<Product>(), cancellationToken)).ReturnsAsync(newProduct);
             _fixture.UnitOfWorkMock.Setup(c => c.CommitAsync());
@@ -42,9 +48,8 @@ namespace StorageProject.Tests.Services.ProductServiceTest
             var result = await _fixture.Service.CreateAsync(dto);
 
             //Arrange
-            var objectResult = Assert.IsType<ProductDTO>(result.Value);
-
-            Assert.Equal(dto.Name, objectResult.Name);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
         }
 
         [Theory]
@@ -52,7 +57,7 @@ namespace StorageProject.Tests.Services.ProductServiceTest
         [InlineData("a")]
         [InlineData("this name is wayyyyyyyyyyyyyyyyyyyyy too long for a Product name that should be max 20 chars...")]
 
-        public async Task CreateProduct_WhenNameFieldIsIncorret_InvalidName(string invalidName)
+        public async Task CreateProduct_WhenNameFieldIsIncorret_ErrorProductCreated(string invalidName)
         {
             //Arrange
             var dto = new CreateProductDTO { Name = invalidName };

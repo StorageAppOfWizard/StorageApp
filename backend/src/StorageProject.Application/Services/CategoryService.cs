@@ -39,7 +39,7 @@ namespace StorageProject.Application.Services
             return Result.Success(entity.ToDTO());
         }
 
-        public async Task<Result<CategoryDTO>> CreateAsync(CreateCategoryDTO createCategoryDTO)
+        public async Task<Result> CreateAsync(CreateCategoryDTO createCategoryDTO)
         {
             var validation = new CategoryValidator().Validate(createCategoryDTO);
             if (!validation.IsValid)
@@ -53,7 +53,7 @@ namespace StorageProject.Application.Services
             var result = await _unitOfWork.CategoryRepository.Create(entity);
 
             await _unitOfWork.CommitAsync();
-            return Result.Success(result.ToDTO(), "Category Created");
+            return Result.SuccessWithMessage($"{createCategoryDTO.Name} created!");
         }
 
         public async Task<Result> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
@@ -74,7 +74,7 @@ namespace StorageProject.Application.Services
             updateCategoryDTO.ToEntity(entity);
             await _unitOfWork.CommitAsync();
 
-            return Result.SuccessWithMessage("Category updated successfully.");
+            return Result.SuccessWithMessage($"{updateCategoryDTO.Name} changed");
 
         }
 

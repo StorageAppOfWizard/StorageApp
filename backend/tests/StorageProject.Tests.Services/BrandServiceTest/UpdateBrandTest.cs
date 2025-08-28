@@ -36,7 +36,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
 
         [Fact]
-        public async Task UpdateBrand_WhenConflictExist_BrandNotUpdated()
+        public async Task UpdateBrand_WhenConflictExist_ErrorBrandUpdated()
         {
             //Arrange
             var dto = new UpdateBrandDTO { Id = Guid.NewGuid(), Name = "TesteUpdate" };
@@ -55,7 +55,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
             Assert.Equal(ResultStatus.Conflict, result.Status);
         }
 
-        public async Task UpdateBrand_WhenBrandNotExist_BrandNotUpdated()
+        public async Task UpdateBrand_WhenBrandNotExist_ErrorBrandUpdated()
         {
             //Arrange
             var dto = new UpdateBrandDTO { Id = Guid.NewGuid(), Name = "TesteUpdate" };
@@ -76,7 +76,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         [InlineData("a")]
         [InlineData("this name is wayyyyyyyyyyyyyyyyyyyyy too long for a brand name that should be max 20 chars...")]
 
-        public async Task UpdateBrand_WhenNameFieldIsIncorret_InvalidName(string invalidName)
+        public async Task UpdateBrand_WhenNameFieldIsIncorret_ErrorBrandUpdated(string invalidName)
         {
             //Arrange
             var dto = new UpdateBrandDTO { Name = invalidName, Id = Guid.NewGuid() };
