@@ -16,13 +16,14 @@ namespace StorageProject.Application.Services
         }
 
 
-        public async Task<Result<List<ProductDTO>>> GetAllAsync()
+        public async Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync();
+
+            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
 
             if (!products.Any())
                 return Result.NotFound("Products NotFound");
-            
+
             var dto = products.Select(product => product.ToDTO()).ToList();
             return dto;
         }
@@ -37,7 +38,7 @@ namespace StorageProject.Application.Services
             return Result<ProductDTO>.Success(entity.ToDTO());
         }
 
-        public async Task <Result>CreateAsync(CreateProductDTO createProductDTO)
+        public async Task<Result> CreateAsync(CreateProductDTO createProductDTO)
         {
             var validator = new ProductValidator().Validate(createProductDTO);
             if (!validator.IsValid)

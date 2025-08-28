@@ -28,11 +28,13 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageQuantity = 20)
         {
             try
             {
-                var result = await _productService.GetAllAsync();
+                var result = await _productService.GetAllAsync(page, pageQuantity);
 
                 if (result.IsNotFound())
                     return NotFound(result);
@@ -83,7 +85,7 @@ namespace StorageProject.Api.Controllers
 
                 if (result.IsConflict())
                     return Conflict(result);
-                if(result.IsInvalid())
+                if (result.IsInvalid())
                     return BadRequest(result.Errors);
 
                 return CreatedAtAction(nameof(Create), result);
@@ -112,7 +114,7 @@ namespace StorageProject.Api.Controllers
                     return Conflict(result);
                 if (result.IsInvalid())
                     return BadRequest(result.Errors);
-                if(result.IsNotFound())
+                if (result.IsNotFound())
                     return NotFound(result);
 
                 return Ok(result);
@@ -137,8 +139,8 @@ namespace StorageProject.Api.Controllers
                 var result = await _productService.UpdateQuantityAsync(quantityDTO);
 
                 if (result.IsInvalid())
-                   return BadRequest(result);
-                
+                    return BadRequest(result);
+
                 return Ok(result);
             }
             catch (Exception message)
@@ -161,7 +163,7 @@ namespace StorageProject.Api.Controllers
                 var result = await _productService.RemoveAsync(id);
                 if (result.IsNotFound())
                     return NotFound(result.Errors);
-                
+
                 return Ok(result);
 
             }

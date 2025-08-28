@@ -10,7 +10,7 @@ namespace StorageProject.Application.Contracts
             throw new NotImplementedException();
         }
 
-        Task<Result<List<ProductDTO>>> GetAllAsync();
+        Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity);
         Task<Result<ProductDTO>> GetByIdAsync(Guid id);
         Task<Result> CreateAsync(CreateProductDTO createProductDTO);
         Task<Result> UpdateAsync(UpdateProductDTO changeProductDTO);
