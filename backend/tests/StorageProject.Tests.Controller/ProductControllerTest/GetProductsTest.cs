@@ -44,7 +44,7 @@ namespace StorageProject.Tests.ProductControllerTest
                 },
             };
 
-            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync()).ReturnsAsync(Result.Success(fakeList));
+            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.Success(fakeList));
 
             //Act
             var result = await _fixture.Controller.Get();
@@ -60,7 +60,7 @@ namespace StorageProject.Tests.ProductControllerTest
             var fakeList = new List<ProductDTO> {
             };
 
-            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync()).ReturnsAsync(Result.NotFound("Products Not Found"));
+            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.NotFound("Products Not Found"));
 
             //Act
             var result = await _fixture.Controller.Get();
@@ -74,7 +74,7 @@ namespace StorageProject.Tests.ProductControllerTest
         public async Task GetAllProducts_ReturnsInternalServerError()
         {
 
-            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync()).ThrowsAsync(new Exception("An Error Ocurred"));
+            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("An Error Ocurred"));
 
             //Act
             var result = await _fixture.Controller.Get();

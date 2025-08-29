@@ -43,7 +43,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                throw new Exception(message.Message);
             }
         }
         #endregion
@@ -66,7 +66,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                return StatusCode(500, new { Message = message });
             }
         }
         #endregion
@@ -92,7 +92,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                return StatusCode(500, new { Message = message });
             }
         }
         #endregion
@@ -121,7 +121,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                return StatusCode(500, new { Message = message });
             }
         }
         #endregion
@@ -145,7 +145,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                return StatusCode(500, new { Message = message });
             }
         }
 
@@ -169,7 +169,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
+                return StatusCode(500, new { Message = message });
             }
         }
         #endregion

@@ -72,7 +72,7 @@ namespace StorageProject.Tests.ProductControllerTest
         {
             //Arrange
             var ProductId = Guid.NewGuid();
-            _fixture.ProductServiceMock.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("Unexpected Error"));
+            _fixture.ProductServiceMock.Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("Unexpected Error"));
             //Act
             var result = await _fixture.Controller.GetById(ProductId);
             //Assert

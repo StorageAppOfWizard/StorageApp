@@ -23,7 +23,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
                 new Category { Name = "Teste2",Id = Guid.NewGuid() },
             };
 
-            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(list);
+            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(cancellationToken)).ReturnsAsync(list);
 
             //Act
             var result = await _fixture.Service.GetAllAsync();
@@ -39,7 +39,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         {
             //Arrange
 
-            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(value:null);
+            _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(cancellationToken)).ReturnsAsync(value:null);
 
             //Act
             var result = await _fixture.Service.GetAllAsync();

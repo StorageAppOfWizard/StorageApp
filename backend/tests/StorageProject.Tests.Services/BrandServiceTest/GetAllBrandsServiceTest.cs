@@ -24,7 +24,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
                 new Brand { Name = "Teste2",Id = Guid.NewGuid() },
             };
 
-            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(list);
+            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(cancellationToken)).ReturnsAsync(list);
 
             //Act
             var result = await _fixture.Service.GetAllAsync();
@@ -40,7 +40,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         {
             //Arrange
 
-            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(value:null);
+            _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(cancellationToken)).ReturnsAsync(value:null);
 
             //Act
             var result = await _fixture.Service.GetAllAsync();

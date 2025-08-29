@@ -35,7 +35,7 @@ namespace StorageProject.Tests.Services.ProductServiceTest
             _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetAllWithIncludesAsync(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(list);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
             Assert.True(result.IsSuccess);
@@ -48,10 +48,10 @@ namespace StorageProject.Tests.Services.ProductServiceTest
         {
             //Arrange
 
-            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetAll(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(value:null);
+            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetAll(cancellationToken)).ReturnsAsync(value:null);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
             Assert.False(result.IsSuccess);
