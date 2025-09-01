@@ -14,7 +14,6 @@ namespace StorageProject.Api.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private readonly CategoryValidator _categoryValidator = new CategoryValidator();
 
         public CategoryController(ICategoryService categoryService)
         {

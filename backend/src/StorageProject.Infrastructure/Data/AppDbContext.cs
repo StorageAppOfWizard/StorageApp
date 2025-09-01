@@ -14,6 +14,7 @@ namespace StorageProject.Infrasctructure.Data
         public DbSet<Category> Categories{ get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()

@@ -13,7 +13,6 @@ namespace StorageProject.Api.Controllers
     public class BrandController : Controller
     {
         private readonly IBrandService _brandService;
-        private readonly BrandValidator _brandValidator = new BrandValidator();
 
 
         public BrandController(IBrandService brandService)

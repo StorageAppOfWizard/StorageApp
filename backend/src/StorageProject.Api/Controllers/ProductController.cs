@@ -15,7 +15,6 @@ namespace StorageProject.Api.Controllers
     {
 
         private readonly IProductService _productService;
-        private readonly ProductValidator _productValidator = new ProductValidator();
 
         public ProductController(IProductService productService)
         {

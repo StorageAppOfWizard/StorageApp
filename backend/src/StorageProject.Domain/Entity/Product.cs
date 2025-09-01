@@ -23,8 +23,6 @@ namespace StorageProject.Domain.Entity
         {
             Name = name;
             Description = description;
-            //Brand = brand;
-            //Category = category;
             BrandId = brand.Id;
             CategoryId = category.Id;
             Quantity = quantity;
