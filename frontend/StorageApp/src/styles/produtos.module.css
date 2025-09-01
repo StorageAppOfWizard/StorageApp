@@ -131,16 +131,6 @@
     cursor: pointer;
 }
 
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 6px solid rgba(255, 255, 255, 0.3);
-    border-top-color: var(--cor-800);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 10px;
-}
-
 @keyframes spin {
     to {
         transform: rotate(360deg);

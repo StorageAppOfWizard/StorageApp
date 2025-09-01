@@ -9,9 +9,9 @@ const api = axios.create({
 });
 
 //Função para buscar o produto
-export const getProducts = async (limit = 15) => {
+export const getProducts = async (limit = 15, signal) => {
     try {
-        const response = await api.get(`/products?limit=${limit}`);
+        const response = await api.get(`/products?limit=${limit}`, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) {
@@ -24,9 +24,9 @@ export const getProducts = async (limit = 15) => {
 };
 
 //Função para buscar um produto por ID
-export const getProductsById = async (id) => {
+export const getProductsById = async (id, signal) => {
     try {
-        const response = await api.get(`/products/${id}`);
+        const response = await api.get(`/products/${id}`, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) {
@@ -37,3 +37,19 @@ export const getProductsById = async (id) => {
         throw error;
     }
 }
+
+ 
+// Função para criar um produto
+export const createProduct = async (productData, signal) => {
+    try {
+        const response = await api.post(`/products/add`, productData, { signal });
+        return response.data;
+    } catch (error) {
+        if (axios.isCancel(error)) {
+            console.log(`Requisição de criação de produto cancelada`, error);
+            return null;
+        }
+        console.error("Erro ao criar produto:", error);
+        throw error;
+    }
+};
