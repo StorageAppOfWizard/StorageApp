@@ -18,7 +18,6 @@ namespace StorageProject.Application.Extensions
                    {
                        Identifier = e.PropertyName,
                        ErrorMessage = e.ErrorMessage,
-                       ErrorCode = e.ErrorCode
                    })
                    .ToList();
 

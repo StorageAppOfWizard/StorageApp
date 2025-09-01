@@ -112,7 +112,7 @@ namespace StorageProject.Api.Controllers
                 if (result.IsNotFound())
                     return NotFound(result);
                 if(result.IsInvalid() || !result.IsSuccess)
-                    return BadRequest(result.Errors);
+                    return BadRequest(result);
 
                 return Ok(result);
             }

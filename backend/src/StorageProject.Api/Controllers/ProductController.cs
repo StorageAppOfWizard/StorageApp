@@ -86,7 +86,7 @@ namespace StorageProject.Api.Controllers
                 if (result.IsConflict())
                     return Conflict(result);
                 if (result.IsInvalid())
-                    return BadRequest(result.Errors);
+                    return BadRequest(result);
 
                 return CreatedAtAction(nameof(Create), result);
             }
@@ -113,7 +113,7 @@ namespace StorageProject.Api.Controllers
                 if (result.IsConflict())
                     return Conflict(result);
                 if (result.IsInvalid())
-                    return BadRequest(result.Errors);
+                    return BadRequest(result);
                 if (result.IsNotFound())
                     return NotFound(result);
 
