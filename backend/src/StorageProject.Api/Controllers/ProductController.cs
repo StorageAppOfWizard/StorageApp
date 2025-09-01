@@ -43,7 +43,7 @@ namespace StorageProject.Api.Controllers
             }
             catch (Exception message)
             {
-                throw new Exception(message.Message);
+                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
             }
         }
         #endregion

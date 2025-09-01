@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
+using StorageProject.Application.DTOs.Brand;
 using StorageProject.Application.DTOs.Product;
+using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
@@ -40,9 +42,9 @@ namespace StorageProject.Application.Services
 
         public async Task<Result> CreateAsync(CreateProductDTO createProductDTO)
         {
-            var validator = new ProductValidator().Validate(createProductDTO);
-            if (!validator.IsValid)
-                return Result.Invalid();
+            var validation = createProductDTO.ToValidateErrors(new ProductValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(createProductDTO.Name);
             if (existingProduct is not null)
@@ -57,9 +59,9 @@ namespace StorageProject.Application.Services
 
         public async Task<Result> UpdateAsync(UpdateProductDTO updateProductDTO)
         {
-            var validator = new ProductValidator().Validate(updateProductDTO);
-            if (!validator.IsValid)
-                return Result.Invalid();
+            var validation = updateProductDTO.ToValidateErrors(new ProductValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(updateProductDTO.Name);
             if (existingProduct is not null)

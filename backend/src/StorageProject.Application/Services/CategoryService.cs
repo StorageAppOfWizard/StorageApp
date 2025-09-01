@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Category;
+using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
@@ -41,9 +42,9 @@ namespace StorageProject.Application.Services
 
         public async Task<Result> CreateAsync(CreateCategoryDTO createCategoryDTO)
         {
-            var validation = new CategoryValidator().Validate(createCategoryDTO);
-            if (!validation.IsValid)
-                return Result.Invalid();
+            var validation = createCategoryDTO.ToValidateErrors(new CategoryValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var existingCategory = await _unitOfWork.CategoryRepository.GetByNameAsync(createCategoryDTO.Name);
             if (existingCategory is not null)
@@ -59,9 +60,9 @@ namespace StorageProject.Application.Services
         public async Task<Result> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
         {
 
-            var validation = new CategoryValidator().Validate(updateCategoryDTO);
-            if (!validation.IsValid)
-                return Result.Invalid();
+            var validation = updateCategoryDTO.ToValidateErrors(new CategoryValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var entity = await _unitOfWork.CategoryRepository.GetById(updateCategoryDTO.Id);
             if (entity is null)

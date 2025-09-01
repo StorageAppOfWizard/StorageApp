@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Brand;
+using StorageProject.Application.DTOs.Category;
+using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
@@ -41,9 +43,9 @@ namespace StorageProject.Application.Services
 
         public async Task<Result> CreateAsync(CreateBrandDTO createBrandDTO)
         {
-            var validation = new BrandValidator().Validate(createBrandDTO);
-            if (!validation.IsValid)
-                return Result.Invalid();
+            var validation = createBrandDTO.ToValidateErrors(new BrandValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(createBrandDTO.Name);
             if(existingBrand != null)
@@ -60,9 +62,9 @@ namespace StorageProject.Application.Services
         public async Task<Result> UpdateAsync(UpdateBrandDTO updateBrandDTO)
         {
 
-            var validation = new BrandValidator().Validate(updateBrandDTO);
-            if (!validation.IsValid)
-                return Result.Invalid();
+            var validation = updateBrandDTO.ToValidateErrors(new BrandValidator());
+            if (validation.Any())
+                return Result.Invalid(validation);
 
             var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(updateBrandDTO.Name);
             if (existingBrand != null)
