@@ -1,6 +1,6 @@
 // src/hooks/useApi.js
 import { useState, useEffect } from "react";
-import { getProducts } from "../services/api";
+import { getProducts } from "../services/productService";
 
 export const useApi = (endpoint, limit = 15) => {
   const [data, setData] = useState(null);
