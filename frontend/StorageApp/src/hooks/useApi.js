@@ -1,6 +1,5 @@
-// src/hooks/useApi.js
 import { useState, useEffect } from "react";
-import { getProducts } from "../services/productService";
+import { getProducts, getBrands, getCategories } from "../services/productService";
 
 export const useApi = (endpoint, limit = 15) => {
   const [data, setData] = useState(null);
@@ -13,31 +12,33 @@ export const useApi = (endpoint, limit = 15) => {
 
     const fetchData = async () => {
       try {
+        setLoading(true);
+        let response;
         if (endpoint === "products") {
-          const response = await getProducts(limit, controller.signal);
-          if (isMounted) {
+          response = await getProducts(limit, controller.signal);
+          if (isMounted && response) {
             const mappedProducts = response.products.map((product) => ({
               ...product,
               brand: getRandomBrand(),
-              stock: Math.floor(Math.random() * 500), 
+              stock: Math.floor(Math.random() * 500),
             }));
             setData(mappedProducts);
-            setLoading(false);
           }
+        } else if (endpoint === "brands") {
+          response = await getBrands(controller.signal);
+          if (isMounted) setData(response);
+        } else if (endpoint === "categories") {
+          response = await getCategories(controller.signal);
+          if (isMounted) setData(response);
         } else {
-          const response = await getProducts(limit, controller.signal);
-          if (isMounted) {
-            setData(response);
-            setLoading(false);
-          }
+          throw new Error("Endpoint não suportado");
         }
       } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log(`Requisição ${endpoint} cancelada`);
-        } else if (isMounted) {
+        if (!axios.isCancel(error) && isMounted) {
           setError(`Erro ao carregar dados: ${error.message}`);
-          setLoading(false);
         }
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
 

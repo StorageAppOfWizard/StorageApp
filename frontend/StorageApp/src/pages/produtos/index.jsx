@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Header from "../../components/Header";
 import { useApi } from "../../hooks/useApi";
-
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import styles from "../../styles/produtos.module.css";
-import { Edit } from "lucide-react";
+import { Edit, Plus, Trash } from "lucide-react";
+import { Link } from 'react-router-dom';
+
 
 export default function Produtos() {
   const { data: products, loading, error } = useApi("products", 10);
@@ -15,8 +16,8 @@ export default function Produtos() {
     console.log(`Novo estoque para produto ${productId}: ${newStock}`);
   };
 
-  if (loading) return <ProductTableSkeleton />
-  
+  if (loading) return <ProductTableSkeleton />;
+
   if (error) return (
     <div style={{ marginTop: "60px", padding: "20px" }}>
       <p className={styles.error}>{error}</p>
@@ -25,6 +26,7 @@ export default function Produtos() {
 
   return (
     <>
+      {/* Depois criar o usuario da conta (funcionamento) */}
       <Header profileName="Luiz" />
       <div style={{ marginTop: "60px", padding: "20px" }}>
         <div className={styles.container}>
@@ -38,7 +40,11 @@ export default function Produtos() {
                 <option>Filtrar</option>
               </select>
               <button className={styles.export}>Exportar</button>
-              <button className={styles.addProduct}>+ Produto</button>
+              <Link to="/produtos/criar">
+                <button className={styles.addProduct}>
+                  <Plus size={16} /> Produto
+                </button>
+              </Link>
             </div>
           </div>
           <table className={styles.productTable}>
@@ -105,8 +111,12 @@ export default function Produtos() {
                     ></span>
                   </td>
                   <td>
-                    <span className={styles.actionIcon}>✏️</span>
-                    <span className={styles.actionIcon}>🗑️</span>
+                    <span className={styles.actionIcon}>
+                      <Edit size={18} />
+                    </span>
+                    <span className={styles.actionIcon}>
+                      <Trash size={18} />
+                    </span>
                   </td>
                 </tr>
               ))}
