@@ -4,6 +4,8 @@ import styles from '../../styles/header.module.css';
 import { ChevronDown } from 'lucide-react';
 import { headerData } from '../../data/menuItems';
 
+//Tem que criar as condições para criar o usuario
+
 export default function Header({ profileName = "", overrideTitle, overrideIcon }) {
   const location = useLocation();
   const navigate = useNavigate();

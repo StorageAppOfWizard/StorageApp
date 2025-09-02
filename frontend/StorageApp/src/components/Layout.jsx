@@ -7,7 +7,7 @@ export default function Layout() {
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar />
       <div style={{ flex: 1, marginLeft: "165px" }}>
-        <Header />
+        <Header profileName="Luiz"/>
         <main style={{ padding: "60px 20px 20px", minHeight: "calc(100vh - 60px)" }}>
           <Outlet />
         </main>
