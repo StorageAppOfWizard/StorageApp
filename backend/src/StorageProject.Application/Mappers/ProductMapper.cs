@@ -32,7 +32,8 @@ namespace StorageProject.Application.Mappers
                 Description = dto.Description,
                 Quantity = dto.Quantity,
                 BrandId = dto.BrandId,
-                CategoryId = dto.CategoryId
+                CategoryId = dto.CategoryId,
+                
             };
         }
 
@@ -44,6 +45,7 @@ namespace StorageProject.Application.Mappers
             product.Quantity = dto.Quantity;
             product.BrandId = dto.BrandId;
             product.CategoryId = dto.CategoryId;
+
 
         }
 

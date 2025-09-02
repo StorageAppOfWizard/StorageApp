@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Brand;
-using StorageProject.Application.DTOs.Category;
 using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
@@ -23,7 +22,7 @@ namespace StorageProject.Application.Services
             var entity = await _unitOfWork.BrandRepository.GetAll();
 
             if (entity == null || !entity.Any())
-                return Result.NotFound("No brands found.");
+                return Result.NotFound("No brands found");
             
             return Result.Success(entity.Select(b => b.ToDTO()).ToList());
         }
@@ -35,7 +34,7 @@ namespace StorageProject.Application.Services
 
             var entity = await _unitOfWork.BrandRepository.GetById(id);
 
-            if (entity == null)
+            if (entity is null)
                 return Result.NotFound("Brand not found");
             
             return Result.Success(entity.ToDTO());

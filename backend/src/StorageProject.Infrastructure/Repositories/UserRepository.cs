@@ -16,11 +16,8 @@ namespace StorageProject.Infrastructure.Repositories
 
         public async Task<User> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
-            if (name == "" || name == null)
-            {
-                throw new ArgumentNullException(nameof(name), "Brand name cannot be null or empty.");
-            }
-            return await _context.Users.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken);
+            return await _context.Users.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken)
+                ?? throw new ArgumentNullException(nameof(name), $"Brand {name} cannot be null or empty."); ;
         }
     }
 }
