@@ -1,23 +1,61 @@
+//Diminuir a quantidade de itens nessa pagina
+
 import { useState } from "react";
-import Header from "../../components/Header";
+import { useNavigate, Link } from "react-router-dom";
 import { useApi } from "../../hooks/useApi";
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import styles from "../../styles/produtos.module.css";
-import { Edit, Plus, Trash } from "lucide-react";
-import { Link } from 'react-router-dom';
-
+import { Edit, Plus, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
+import { deleteProduct } from "../../services/productService";
 
 export default function Produtos() {
-  const { data: products, loading, error } = useApi("products", 10);
+  const navigate = useNavigate();
+  const { data: products, loading, error } = useApi("products", 15);
   const [editableStock, setEditableStock] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   const handleStockEdit = (productId, newStock) => {
-    setEditableStock(null);
-    console.log(`Novo estoque para produto ${productId}: ${newStock}`);
+    const stockNum = parseInt(newStock, 10);
+    if (isNaN(stockNum) || stockNum < 0) {
+      toast.error("Estoque inválido! Use um número positivo.");
+      setEditableStock(null);
+      return;
+    }
+    try {
+      console.log(`Novo estoque para produto ${productId}: ${stockNum}`);
+      setEditableStock(null);
+      toast.success("Estoque atualizado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao atualizar estoque: " + error.message);
+    }
+  };
+
+  const handleEdit = (productId) => {
+    navigate(`/produtos/edit/${productId}`);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (productToDelete) {
+      try {
+        await deleteProduct(productToDelete.id);
+        toast.success(`Produto ${productToDelete.title} excluído com sucesso!`);
+        setShowDeleteModal(false);
+        window.location.reload();
+      } catch (error) {
+        toast.error("Erro ao excluir produto: " + error.message);
+        setShowDeleteModal(false);
+      }
+    }
+  };
+
+  const handleDelete = (product) => {
+    setProductToDelete(product);
+    setShowDeleteModal(true);
   };
 
   if (loading) return <ProductTableSkeleton />;
-
   if (error) return (
     <div style={{ marginTop: "60px", padding: "20px" }}>
       <p className={styles.error}>{error}</p>
@@ -25,9 +63,7 @@ export default function Produtos() {
   );
 
   return (
-    <>
-      {/* Depois criar o usuario da conta (funcionamento) */}
-      <Header profileName="Luiz" />
+    <div>
       <div style={{ marginTop: "60px", padding: "20px" }}>
         <div className={styles.container}>
           <div className={styles.header}>
@@ -40,7 +76,7 @@ export default function Produtos() {
                 <option>Filtrar</option>
               </select>
               <button className={styles.export}>Exportar</button>
-              <Link to="/produtos/criar">
+              <Link to="/criar">
                 <button className={styles.addProduct}>
                   <Plus size={16} /> Produto
                 </button>
@@ -88,7 +124,6 @@ export default function Produtos() {
                         className={styles.stockInput}
                         min="0"
                       />
-
                     ) : (
                       <span
                         className={styles.stockValue}
@@ -111,12 +146,8 @@ export default function Produtos() {
                     ></span>
                   </td>
                   <td>
-                    <span className={styles.actionIcon}>
-                      <Edit size={18} />
-                    </span>
-                    <span className={styles.actionIcon}>
-                      <Trash size={18} />
-                    </span>
+                    <span className={styles.actionIcon} onClick={() => handleEdit(product.id)}><Edit size={16} /></span>
+                    <span className={styles.actionIcon} onClick={() => handleDelete(product)}><Trash2 size={16} /></span>
                   </td>
                 </tr>
               ))}
@@ -124,6 +155,6 @@ export default function Produtos() {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }
