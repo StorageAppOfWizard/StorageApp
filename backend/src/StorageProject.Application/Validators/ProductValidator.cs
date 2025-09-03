@@ -20,9 +20,10 @@ namespace StorageProject.Application.Validators
                 .WithMessage("Field Description must have a maximum of 250 characters");
 
             RuleFor(x => x.Quantity)
-                .NotEmpty()
-                .WithMessage("Field Quantity is required")
-                .LessThanOrEqualTo(int.MaxValue);
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Field Quantity must be 0 or Greater")
+                .LessThanOrEqualTo(int.MaxValue)
+                .WithMessage($"Field Quantity must be less than {int.MaxValue}");
 
             RuleFor(x => x.BrandId)
                 .NotEmpty()

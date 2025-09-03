@@ -25,6 +25,15 @@ builder.Services.AddSwaggerGen(c =>
     
 var connectionString = builder.Configuration.GetConnectionString("StorageContext");
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
                                             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                                                    .EnableDetailedErrors()
@@ -60,6 +69,7 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<LoggingMiddleware>();
 app.UseHttpsRedirection();
 
+app.UseCors("AllowSpecificOrigins");
 app.UseAuthorization();
 
 app.MapControllers();

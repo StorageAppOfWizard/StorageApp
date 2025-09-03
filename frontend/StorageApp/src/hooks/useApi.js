@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getProducts, getBrands, getCategories } from "../services/productService";
+import axios from "axios";
 
 export const useApi = (endpoint, limit = 15) => {
   const [data, setData] = useState(null);
@@ -16,20 +17,23 @@ export const useApi = (endpoint, limit = 15) => {
         let response;
         //Mudar a regra de negócio para verificar o endpoint e chamar o serviço correto porque vai ter muitos endpoints e vai ficar inviável fazer um hook para cada um
         // Verificar se é possível passar o serviço como parâmetro e verificar se existe ou não, se não existir lançar um erro, se existir chamar o serviço
-        if (endpoint === "products") {
-          response = await getProducts(limit, controller.signal);
+        if (endpoint == "Product") { 
+          response = await getProducts(20,controller.signal);
           if (isMounted && response) {
-            const mappedProducts = response.products.map((product) => ({
+            const mappedProducts = response.map((product) => ({
               ...product,
-              brand: getRandomBrand(),
-              stock: Math.floor(Math.random() * 500),
+              brand: product.brandName,
+              stock: product.quantity,
             }));
+            
             setData(mappedProducts);
           }
-        } else if (endpoint === "brands") {
+          console.log("Response dos produtos:", response);
+          
+        } else if (endpoint === "Brand") {
           response = await getBrands(controller.signal);
           if (isMounted) setData(response);
-        } else if (endpoint === "categories") {
+        } else if (endpoint === "Category") {
           response = await getCategories(controller.signal);
           if (isMounted) setData(response);
         } else {

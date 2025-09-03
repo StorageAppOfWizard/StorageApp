@@ -11,11 +11,12 @@ import { deleteProduct } from "../../services/productService";
 
 export default function Produtos() {
   const navigate = useNavigate();
-  const { data: products, loading, error } = useApi("products", 15);
   const [editableStock, setEditableStock] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-
+  
+  const { data: products, loading, error } = useApi("Product");
+  
   const handleStockEdit = (productId, newStock) => {
     const stockNum = parseInt(newStock, 10);
     if (isNaN(stockNum) || stockNum < 0) {
@@ -68,7 +69,7 @@ export default function Produtos() {
         <div className={styles.container}>
           <div className={styles.header}>
             <h2>
-              <span className={styles.itemCount}>{products.length} itens cadastrados</span>
+              <span className={styles.itemCount}>{products.length} itens cadastrados</span> 
             </h2>
             <div className={styles.actions}>
               <input type="text" placeholder="Item, valor ou código" className={styles.search} />
@@ -86,7 +87,6 @@ export default function Produtos() {
           <table className={styles.productTable}>
             <thead>
               <tr>
-                <th>Imagem</th>
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Marca</th>
@@ -98,15 +98,8 @@ export default function Produtos() {
             <tbody>
               {products.map((product) => (
                 <tr key={product.id}>
-                  <td>
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className={styles.productImage}
-                    />
-                  </td>
-                  <td>{product.title}</td>
-                  <td>{product.category || "Sem categoria"}</td>
+                  <td>{product.name}</td>
+                  <td>{product.categoryName || "Sem categoria"}</td>
                   <td>{product.brand}</td>
                   <td>
                     {editableStock === product.id ? (
@@ -139,8 +132,8 @@ export default function Produtos() {
                       className={styles.statusDot}
                       style={{
                         backgroundColor:
-                          product.stock > 150 ? "#4caf50" :
-                            product.stock > 50 ? "#ffca28" :
+                          product.status =="Available" ? "#4caf50" :
+                            product.status =="LowStock" ? "#ffca28" :
                               "#f44336",
                       }}
                     ></span>

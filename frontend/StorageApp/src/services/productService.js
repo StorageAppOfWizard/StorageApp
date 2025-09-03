@@ -1,10 +1,9 @@
 //Ajustar a funções 
-
-
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "https://dummyjson.com",
+    //baseURL: "https://dummyjson.com",
+    baseURL: "https://localhost:7216", // Endpoint local para desenvolvimento
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",
@@ -16,8 +15,9 @@ const api = axios.create({
 
 export const getProducts = async (limit = 15, signal) => {
     try {
-        const response = await api.get(`/products?limit=${limit}`, { signal });
-        return response.data;
+        const response = await api.get(`Product`, { signal });
+        console.log("Produtos buscados:", response);
+        return response.data.value;
     } catch (error) {
         if (axios.isCancel(error)) {
             console.log(`Requisição dos produtos foi cancelada`, error);
@@ -87,7 +87,7 @@ export const deleteProduct = async (id, signal) => {
 // Funções de marcas e categorias (manter como estão por agora)
 export const getBrands = async (signal) => {
     try {
-        const response = await api.get(`/brands`, { signal });
+        const response = await api.get(`/Brand`, { signal });
         return response.data.brands || [];
     } catch (error) {
         if (axios.isCancel(error)) return null;
@@ -109,7 +109,7 @@ export const createBrand = async (brandData, signal) => {
 
 export const getCategories = async (signal) => {
     try {
-        const response = await api.get(`/products/categories`, { signal });
+        const response = await api.get(`/Category`, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) return null;
