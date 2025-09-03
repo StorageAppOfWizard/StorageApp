@@ -18,7 +18,7 @@ export const useApi = (endpoint, limit = 15) => {
         //Mudar a regra de negócio para verificar o endpoint e chamar o serviço correto porque vai ter muitos endpoints e vai ficar inviável fazer um hook para cada um
         // Verificar se é possível passar o serviço como parâmetro e verificar se existe ou não, se não existir lançar um erro, se existir chamar o serviço
         if (endpoint == "Product") { 
-          response = await getProducts(20,controller.signal);
+          response = await getProducts(controller.signal);
           if (isMounted && response) {
             const mappedProducts = response.map((product) => ({
               ...product,
@@ -58,8 +58,3 @@ export const useApi = (endpoint, limit = 15) => {
 
   return { data, loading, error };
 };
-
-function getRandomBrand() {
-  const brands = ["Royal Caribbean", "MSC Cruises", "Celebrity Cruises"];
-  return brands[Math.floor(Math.random() * brands.length)];
-}

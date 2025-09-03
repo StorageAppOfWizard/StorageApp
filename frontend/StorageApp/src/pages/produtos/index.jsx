@@ -7,7 +7,7 @@ import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import styles from "../../styles/produtos.module.css";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
-import { deleteProduct } from "../../services/productService";
+import { deleteProduct, updateProductStock } from "../../services/productService";
 
 export default function Produtos() {
   const navigate = useNavigate();
@@ -21,12 +21,15 @@ export default function Produtos() {
     const stockNum = parseInt(newStock, 10);
     if (isNaN(stockNum) || stockNum < 0) {
       toast.error("Estoque inválido! Use um número positivo.");
-      setEditableStock(null);
+      setEditableStock(false);
       return;
     }
     try {
-      console.log(`Novo estoque para produto ${productId}: ${stockNum}`);
-      setEditableStock(null);
+      updateProductStock(productId, stockNum);
+      const productIndex = products.findIndex((p) => p.id === productId);
+      products[productIndex].stock = stockNum;
+
+      setEditableStock(false);
       toast.success("Estoque atualizado com sucesso!");
     } catch (error) {
       toast.error("Erro ao atualizar estoque: " + error.message);
