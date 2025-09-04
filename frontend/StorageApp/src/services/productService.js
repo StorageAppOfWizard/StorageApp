@@ -2,16 +2,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-    //baseURL: "https://dummyjson.com",
-    baseURL: "https://localhost:7216", // Endpoint local para desenvolvimento
+
+    baseURL: "https://localhost:7216", 
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",
     },
 });
-
-// Endpoint fictício - Endpoint real para criar, ler, excluir ou mudar é apenas passar o protocolo (GET, POST...) no /[propriedade] (/Brands, /Product e /Category) é apenas dar um post em /Brands
-//Ja começa a consumir a api real porque ja tem o backend rodando
 
 export const getProducts = async (signal) => {
     try {
@@ -58,7 +55,7 @@ export const createProduct = async (productData, signal) => {
 
 export const updateProductStock = async (id, newStock, signal) => {
     try {
-        const response = await api.patch(`/Product/quantity`, {id: id, quantity: newStock }, { signal });
+        const response = await api.patch(`/Product/quantity`, {id: id, quantity: newStock, }, { signal });
         return response.data;
     }
     catch (error) {
@@ -84,8 +81,8 @@ export const updateProduct = async (id, productData, signal) => {
 
 export const deleteProduct = async (id, signal) => {
     try {
-        const response = await api.delete(`/products/${id}`, { signal });
-        return response.data;
+        await api.delete(`/Product/${id}`, { signal });
+        return;
     } catch (error) {
         if (axios.isCancel(error)) {
             console.log(`Requisição de exclusão de produto ${id} cancelada`, error);
@@ -96,47 +93,4 @@ export const deleteProduct = async (id, signal) => {
     }
 };
 
-// Funções de marcas e categorias (manter como estão por agora)
-export const getBrands = async (signal) => {
-    try {
-        const response = await api.get(`/Brand`, { signal });
-        return response.data.brands || [];
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao buscar marcas:", error);
-        throw error;
-    }
-};
 
-export const createBrand = async (brandData, signal) => {
-    try {
-        const response = await api.post(`/brands/add`, brandData, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao criar marca:", error);
-        throw error;
-    }
-};
-
-export const getCategories = async (signal) => {
-    try {
-        const response = await api.get(`/Category`, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao buscar categorias:", error);
-        throw error;
-    }
-};
-
-export const createCategory = async (categoryData, signal) => {
-    try {
-        const response = await api.post(`/categories/add`, categoryData, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao criar categoria:", error);
-        throw error;
-    }
-};

@@ -7,14 +7,14 @@ import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import styles from "../../styles/produtos.module.css";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
-import { deleteProduct, updateProductStock } from "../../services/productService";
+import { deleteProduct, getProducts, updateProductStock } from "../../services/productService";
 
 export default function Produtos() {
   const navigate = useNavigate();
   const [editableStock, setEditableStock] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
-  
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // const [productToDelete, setProductToDelete] = useState(null);
+
   const { data: products, loading, error } = useApi("Product");
   
   const handleStockEdit = (productId, newStock) => {
@@ -40,24 +40,22 @@ export default function Produtos() {
     navigate(`/produtos/edit/${productId}`);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (productToDelete) {
-      try {
-        await deleteProduct(productToDelete.id);
-        toast.success(`Produto ${productToDelete.title} excluído com sucesso!`);
-        setShowDeleteModal(false);
-        window.location.reload();
-      } catch (error) {
-        toast.error("Erro ao excluir produto: " + error.message);
-        setShowDeleteModal(false);
-      }
+  const handleDeleteConfirm = async (productId) => {
+    try {
+      await deleteProduct(productId);
+      toast.success(`Produto ${products.title} excluído com sucesso!`);
+      await getProducts();
+      // setShowDeleteModal(false);
+    } catch (error) {
+      toast.error("Erro ao excluir produto: " + error.message);
+      // setShowDeleteModal(false);
     }
   };
 
-  const handleDelete = (product) => {
-    setProductToDelete(product);
-    setShowDeleteModal(true);
-  };
+  // const handleDelete = (product) => {
+  //   setProductToDelete(product);
+  //   setShowDeleteModal(true);
+  // };
 
   if (loading) return <ProductTableSkeleton />;
   if (error) return (
@@ -72,7 +70,7 @@ export default function Produtos() {
         <div className={styles.container}>
           <div className={styles.header}>
             <h2>
-              <span className={styles.itemCount}>{products.length} itens cadastrados</span> 
+              <span className={styles.itemCount}>{products.length} itens cadastrados</span>
             </h2>
             <div className={styles.actions}>
               <input type="text" placeholder="Item, valor ou código" className={styles.search} />
@@ -135,15 +133,15 @@ export default function Produtos() {
                       className={styles.statusDot}
                       style={{
                         backgroundColor:
-                          product.status =="Available" ? "#4caf50" :
-                            product.status =="LowStock" ? "#ffca28" :
+                          product.status == "Available" ? "#4caf50" :
+                            product.status == "LowStock" ? "#ffca28" :
                               "#f44336",
                       }}
                     ></span>
                   </td>
                   <td>
                     <span className={styles.actionIcon} onClick={() => handleEdit(product.id)}><Edit size={16} /></span>
-                    <span className={styles.actionIcon} onClick={() => handleDelete(product)}><Trash2 size={16} /></span>
+                    <span className={styles.actionIcon} onClick={() => handleDeleteConfirm(product.id)}><Trash2 size={16} /></span>
                   </td>
                 </tr>
               ))}

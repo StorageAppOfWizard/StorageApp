@@ -3,9 +3,11 @@
 
 import { useState } from "react";
 import { useApi } from "../../hooks/useApi";
-import { createProduct, createBrand, createCategory } from "../../services/productService";
+import { createProduct } from "../../services/productService";
+import { createBrand } from "../../services/brandService";
+import { createCategory } from "../../services/categoryService";
 import ProductForm from "../../components/ProductForm";
-import styles from "../../styles/criar.module.css"; 
+ 
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom"; 
 

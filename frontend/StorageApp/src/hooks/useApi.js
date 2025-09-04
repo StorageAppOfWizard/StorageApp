@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { getProducts, getBrands, getCategories } from "../services/productService";
+import { getProducts } from "../services/productService";
+import { getBrands } from "../services/brandService";
+import { getCategories } from "../services/categoryService";
+
 import axios from "axios";
 
 export const useApi = (endpoint, limit = 15) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,8 +18,6 @@ export const useApi = (endpoint, limit = 15) => {
       try {
         setLoading(true);
         let response;
-        //Mudar a regra de negócio para verificar o endpoint e chamar o serviço correto porque vai ter muitos endpoints e vai ficar inviável fazer um hook para cada um
-        // Verificar se é possível passar o serviço como parâmetro e verificar se existe ou não, se não existir lançar um erro, se existir chamar o serviço
         if (endpoint == "Product") { 
           response = await getProducts(controller.signal);
           if (isMounted && response) {

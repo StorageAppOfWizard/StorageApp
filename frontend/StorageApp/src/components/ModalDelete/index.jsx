@@ -1,5 +1,5 @@
 //Arrumar depois, modal para deletar item com validação
-
+import styles from './modalDelete.module.css';
 export default function ModalDelete() {
     return (
             <div className={styles.modal}>
