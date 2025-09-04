@@ -1,73 +1,96 @@
-﻿//using Ardalis.Result;
-//using StorageProject.Application.Contracts;
-//using StorageProject.Application.DTOs.User;
-//using StorageProject.Application.Extensions;
-//using StorageProject.Application.Mappers;
-//using StorageProject.Application.Validators;
-//using StorageProject.Domain.Contracts;
+﻿using Ardalis.Result;
+using StorageProject.Application.Contracts;
+using StorageProject.Application.DTOs.User;
+using StorageProject.Application.Extensions;
+using StorageProject.Application.Mappers;
+using StorageProject.Application.Validators;
+using StorageProject.Domain.Contracts;
 
-//namespace StorageProject.Application.Services
-//{
-//    public class UserService : IUserService
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
+namespace StorageProject.Application.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-//        public UserService(IUnitOfWork unitOfWork)
-//        {
-//            _unitOfWork = unitOfWork;
-//        }
+        public UserService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
-//        public async Task<Result<List<UserDTO>>> GetAllAsync()
-//        {
-//            var entity = await _unitOfWork.UserRepository.GetAll();
-//            if (entity is null)
-//                return Result.NotFound("No users found");
-            
-//            return Result.Success(entity.Select(u => u.ToDTO()).ToList());
-//        }
+        public async Task<Result<List<UserDTO>>> GetAllAsync()
+        {
+            var entity = await _unitOfWork.UserRepository.GetAll();
+            if (entity is null)
+                return Result.NotFound("No users found");
 
-//        public async Task<Result<UserDTO>> GetByIdAsync(Guid id)
-//        {
-//            if (id == Guid.Empty)
-//                return Result.Error("Invalid user ID provided.");
+            return Result.Success(entity.Select(u => u.ToDTO()).ToList());
+        }
 
-//            var entity = await _unitOfWork.UserRepository.GetById(id);
+        public async Task<Result<UserDTO>> GetByIdAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+                return Result.Error("Invalid user ID provided.");
 
-//            if (entity is null)
-//                return Result.NotFound("User not found");
+            var entity = await _unitOfWork.UserRepository.GetById(id);
 
-//            return Result.Success(entity.ToDTO());
+            if (entity is null)
+                return Result.NotFound("User not found");
 
-//        }
-//        //public Task<Result> CreateAsync(CreateUserDTO createUserDTO)
-//        //{
+            return Result.Success(entity.ToDTO());
 
-//        //    //To do create user service
-//        //    var validation = createUserDTO.ToValidateErrors(new UserValidator());
-//        //    if (validation.Count != 0)
-//        //        return Result.Invalid(validation);
+        }
+        public async Task<Result> CreateAsync(CreateUserDTO dto)
+        {
+            var validation = dto.ToValidateErrors(new UserValidator());
+            if (validation.Count != 0)
+                return Result.Invalid(validation);
 
-//        //    var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(createUserDTO.Name);
-//        //    if (existingBrand != null)
-//        //        return Result.Conflict($"Brand with the name '{existingBrand.Name}' already exists.");
+            var existingUser = await _unitOfWork.UserRepository.GetByNameAsync(dto.Name);
+            if (existingUser != null)
+                return Result.Conflict($"User with the name '{existingUser.Name}' already exists.");
 
-//        //    var entity = createUserDTO.ToEntity();
+            var entity = dto.ToEntity();
 
-//        //    var brand = await _unitOfWork.BrandRepository.Create(entity);
-//        //    await _unitOfWork.CommitAsync();
+            await _unitOfWork.UserRepository.Create(entity);
+            await _unitOfWork.CommitAsync();
 
-//        //    return Result.SuccessWithMessage("Brand Created");
-//        //}
+            return Result.SuccessWithMessage("User Created");
+        }
 
-//        public Task<Result> UpdateAsync(UpdateUserDTO updateUserDTO)
-//        {
-//            throw new NotImplementedException();
-//        }
+        public async Task<Result> UpdateAsync(UpdateUserDTO dto)
+        {
+            var validation = dto.ToValidateErrors(new UserValidator());
+            if (validation.Count != 0)
+                return Result.Invalid(validation);
 
-//        public Task<Result> RemoveAsync(Guid id)
-//        {
-//            throw new NotImplementedException();
-//        }
+            var existingUser = await _unitOfWork.UserRepository.GetByNameAsync(dto.Name);
+            if (existingUser != null)
+                return Result.Conflict($"User with the name '{existingUser.Name}' already exists.");
 
-//    }
-//}
+            var entity = await _unitOfWork.UserRepository.GetById(dto.Id);
+            if (entity is null)
+                return Result.NotFound("User Not Found");
+
+            dto.ToEntity(entity);
+            await _unitOfWork.CommitAsync();
+
+            return Result.SuccessWithMessage("User Updated");
+        }
+
+        public async Task<Result> RemoveAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+                return Result.Error("Invalid User ID provided.");
+
+            var entity = await _unitOfWork.UserRepository.GetById(id);
+
+            if (entity == null)
+                return Result.NotFound("User not found");
+
+            _unitOfWork.UserRepository.Delete(entity);
+            await _unitOfWork.CommitAsync();
+            return Result.SuccessWithMessage("User deleted successfully.");
+        }
+
+    }
+}

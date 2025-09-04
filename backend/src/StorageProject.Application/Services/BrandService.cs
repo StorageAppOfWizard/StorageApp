@@ -40,17 +40,17 @@ namespace StorageProject.Application.Services
             return Result.Success(entity.ToDTO());
         }
 
-        public async Task<Result> CreateAsync(CreateBrandDTO createBrandDTO)
+        public async Task<Result> CreateAsync(CreateBrandDTO dto)
         {
-            var validation = createBrandDTO.ToValidateErrors(new BrandValidator());
-            if (validation.Any())
+            var validation = dto.ToValidateErrors(new BrandValidator());
+            if (validation.Count != 0)
                 return Result.Invalid(validation);
 
-            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(createBrandDTO.Name);
+            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(dto.Name);
             if(existingBrand != null)
                return Result.Conflict($"Brand with the name '{existingBrand.Name}' already exists.");
 
-            var entity = createBrandDTO.ToEntity();
+            var entity = dto.ToEntity();
 
             var brand = await _unitOfWork.BrandRepository.Create(entity);
             await _unitOfWork.CommitAsync();
@@ -58,22 +58,22 @@ namespace StorageProject.Application.Services
             return Result.SuccessWithMessage("Brand Created");
         }
 
-        public async Task<Result> UpdateAsync(UpdateBrandDTO updateBrandDTO)
+        public async Task<Result> UpdateAsync(UpdateBrandDTO dto)
         {
 
-            var validation = updateBrandDTO.ToValidateErrors(new BrandValidator());
-            if (validation.Any())
+            var validation = dto.ToValidateErrors(new BrandValidator());
+            if (validation.Count != 0)
                 return Result.Invalid(validation);
 
-            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(updateBrandDTO.Name);
+            var existingBrand = await _unitOfWork.BrandRepository.GetByNameAsync(dto.Name);
             if (existingBrand != null)
                 return Result.Conflict($"Brand with the name {existingBrand.Name} already exists.");
 
-            var entity = await _unitOfWork.BrandRepository.GetById(updateBrandDTO.Id);
+            var entity = await _unitOfWork.BrandRepository.GetById(dto.Id);
             if (entity is null)
                 return Result.NotFound("Brand Not Found");
 
-            updateBrandDTO.ToEntity(entity);
+            dto.ToEntity(entity);
             await _unitOfWork.CommitAsync();
 
             return Result.SuccessWithMessage("Brand updated successfully.");

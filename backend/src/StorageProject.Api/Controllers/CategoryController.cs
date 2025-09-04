@@ -77,11 +77,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Category")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCategoryDTO createCategoryDTO)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryDTO dto)
         {
             try
             {
-               var result = await _categoryService.CreateAsync(createCategoryDTO);
+               var result = await _categoryService.CreateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);
@@ -105,11 +105,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Category")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO updateCategoryDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO dto)
         {
             try
             {
-                var result = await _categoryService.UpdateAsync(updateCategoryDTO);
+                var result = await _categoryService.UpdateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);

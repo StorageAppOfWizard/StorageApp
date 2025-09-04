@@ -76,11 +76,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Product")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductDTO createProductDTO)
+        public async Task<IActionResult> Create([FromBody] CreateProductDTO dto)
         {
             try
             {
-                var result = await _productService.CreateAsync(createProductDTO);
+                var result = await _productService.CreateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);
@@ -103,11 +103,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Product")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateProductDTO dto)
         {
             try
             {
-                var result = await _productService.UpdateAsync(updateProductDTO);
+                var result = await _productService.UpdateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);
@@ -131,11 +131,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPatch("quantity")]
-        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO quantityDTO)
+        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO dto)
         {
             try
             {
-                var result = await _productService.UpdateQuantityAsync(quantityDTO);
+                var result = await _productService.UpdateQuantityAsync(dto);
 
                 if (result.IsInvalid())
                     return BadRequest(result);

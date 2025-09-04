@@ -2,7 +2,6 @@
 using StorageProject.Domain.Abstractions;
 using StorageProject.Domain.Contracts;
 using StorageProject.Infrasctructure.Data;
-using System.Linq;
 
 namespace StorageProject.Infrastructure.Repositories
 {

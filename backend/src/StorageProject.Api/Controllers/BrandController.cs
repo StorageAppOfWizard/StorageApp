@@ -73,11 +73,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Brand")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBrandDTO createBrandDTO)
+        public async Task<IActionResult> Create([FromBody] CreateBrandDTO dto)
         {
             try
             {
-                var result = await _brandService.CreateAsync(createBrandDTO);
+                var result = await _brandService.CreateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);
@@ -100,11 +100,11 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Brand")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateBrandDTO updateBrandDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateBrandDTO dto)
         {
             try
             { 
-                var result = await _brandService.UpdateAsync(updateBrandDTO);
+                var result = await _brandService.UpdateAsync(dto);
 
                 if (result.IsConflict())
                     return Conflict(result);

@@ -48,17 +48,14 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI(c => {
-//        c.SwaggerEndpoint("/swagger/v1/swagger.json", "StorageProject API V1");
-//        c.RoutePrefix = string.Empty;
-//    });
-//}
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+app.UseCors("AllowSpecificOrigins");
+}
 
-app.UseSwagger();
-app.UseSwaggerUI();
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -69,7 +66,6 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<LoggingMiddleware>();
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigins");
 app.UseAuthorization();
 
 app.MapControllers();
