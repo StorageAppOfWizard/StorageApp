@@ -67,7 +67,7 @@ export const updateProductStock = async (id, newStock, signal) => {
 }
 export const updateProduct = async (id, productData, signal) => {
     try {
-        const response = await api.put(`/products/${id}`, productData, { signal });
+        const response = await api.put(`/Product/${id}`, productData, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) {
