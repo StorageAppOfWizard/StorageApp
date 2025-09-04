@@ -10,8 +10,6 @@ const api = axios.create({
     },
 });
 
-// Endpoint fictício - Endpoint real para criar, ler, excluir ou mudar é apenas passar o protocolo (GET, POST...) no /[propriedade] (/Brands, /Product e /Category) é apenas dar um post em /Brands
-//Ja começa a consumir a api real porque ja tem o backend rodando
 
 export const getProducts = async (signal) => {
     try {
@@ -70,7 +68,7 @@ export const updateProductStock = async (id, newStock, signal) => {
 }
 export const updateProduct = async (id, productData, signal) => {
     try {
-        const response = await api.put(`/products/${id}`, productData, { signal });
+        const response = await api.put(`/Product/${id}`, productData, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) {
@@ -132,7 +130,7 @@ export const getCategories = async (signal) => {
 
 export const createCategory = async (categoryData, signal) => {
     try {
-        const response = await api.post(`/categories/add`, categoryData, { signal });
+        const response = await api.post(`/category/add`, categoryData, { signal });
         return response.data;
     } catch (error) {
         if (axios.isCancel(error)) return null;
