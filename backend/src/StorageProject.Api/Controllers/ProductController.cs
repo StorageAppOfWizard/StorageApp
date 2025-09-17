@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Product;
-using StorageProject.Application.Validators;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 

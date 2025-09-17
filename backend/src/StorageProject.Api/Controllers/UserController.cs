@@ -24,8 +24,7 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _userService.GetAllAsync();
 
-                if (result.IsNotFound())
-                    return NotFound(result);
+                if (result.IsNotFound()) return NotFound(result);
 
                 return Ok(result);
             }
@@ -42,8 +41,7 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _userService.GetByIdAsync(id);
 
-                if (result.IsNotFound())
-                    return NotFound(result);
+                if (result.IsNotFound()) return NotFound(result);
                 return Ok(result);
             }
             catch (Exception message)
@@ -59,10 +57,8 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _userService.CreateAsync(dto);
 
-                if (result.IsInvalid())
-                    return BadRequest(result);
-                if (result.IsConflict())
-                    return BadRequest(result);
+                if (result.IsInvalid()) return BadRequest(result);
+                if (result.IsConflict()) return BadRequest(result);
 
                 return CreatedAtAction(nameof(Create), result);
 
@@ -81,12 +77,10 @@ namespace StorageProject.Api.Controllers
             {
                 var result = await _userService.UpdateAsync(dto);
 
-                if (result.IsInvalid())
-                    return BadRequest(result);
-                if (result.IsConflict())
-                    return Conflict(result);
-                if (result.IsNotFound())
-                    return NotFound(result);
+                if (result.IsInvalid()) return BadRequest(result);
+                if (result.IsConflict()) return Conflict(result);
+                if (result.IsNotFound()) return NotFound(result);
+
                 return Ok(result);
 
             }
@@ -96,10 +90,23 @@ namespace StorageProject.Api.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-             
+            try
+            {
+                var result = await _userService.RemoveAsync(id);
+
+                if (result.IsInvalid()) return BadRequest();
+                if (result.IsNotFound()) return NotFound();
+
+                return Ok(result);
+            }
+
+            catch (Exception message)
+            {
+                return StatusCode(500, new { Message = message });
+            }
         }
     }
 }

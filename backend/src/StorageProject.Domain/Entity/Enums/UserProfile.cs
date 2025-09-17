@@ -4,6 +4,7 @@
     {
         Admin,
         Saler,
-        Manager
+        Manager,
+        Member
     }
 }

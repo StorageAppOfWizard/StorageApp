@@ -14,10 +14,10 @@ namespace StorageProject.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<User> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        public async Task<User?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _context.Users.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken)
-                ?? throw new ArgumentNullException(nameof(name), $"Brand {name} cannot be null or empty."); ;
+            return await _context.Users.FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower(), cancellationToken);
+                
         }
     }
 }

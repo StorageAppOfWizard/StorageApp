@@ -16,21 +16,21 @@ namespace StorageProject.Application.Mappers
             };
         }
 
-        public static User ToEntity(this CreateUserDTO createUserDTO)
+        public static User ToEntity(this CreateUserDTO createUserDTO, string hashPassword)
         {
             return new User
             {
                 Name = createUserDTO.Name,
                 Email = createUserDTO.Email,
-                Password = createUserDTO.Password,
+                Password = hashPassword,
             };
         }
 
-        public static void ToEntity(this UpdateUserDTO dto, User user)
+        public static void ToEntity(this UpdateUserDTO dto, User user, string hashPassword)
         {
             user.Name = dto.Name;
             user.Email = dto.Email;
-            user.Password = dto.Password;
+            user.Password =hashPassword;
         }
 
 
