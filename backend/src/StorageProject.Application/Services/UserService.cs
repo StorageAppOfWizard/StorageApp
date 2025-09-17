@@ -3,6 +3,7 @@ using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.User;
 using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
+using StorageProject.Application.Security;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
@@ -11,10 +12,12 @@ namespace StorageProject.Application.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHashPassword _hashPassword;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, IHashPassword hashPassword)
         {
             _unitOfWork = unitOfWork;
+            _hashPassword = hashPassword;
         }
 
         public async Task<Result<List<UserDTO>>> GetAllAsync()
@@ -49,7 +52,9 @@ namespace StorageProject.Application.Services
             if (existingUser != null)
                 return Result.Conflict($"User with the name '{existingUser.Name}' already exists.");
 
-            var entity = dto.ToEntity();
+            var hashPassword = _hashPassword.GenerateHasPassword(dto.Password);
+
+            var entity = dto.ToEntity(hashPassword);
 
             await _unitOfWork.UserRepository.Create(entity);
             await _unitOfWork.CommitAsync();
@@ -71,7 +76,9 @@ namespace StorageProject.Application.Services
             if (entity is null)
                 return Result.NotFound("User Not Found");
 
-            dto.ToEntity(entity);
+            var hashPassword = _hashPassword.GenerateHasPassword(entity.Password);
+
+            dto.ToEntity(entity, hashPassword);
             await _unitOfWork.CommitAsync();
 
             return Result.SuccessWithMessage("User Updated");

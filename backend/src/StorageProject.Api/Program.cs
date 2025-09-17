@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StorageProject.Api.Middlewares;
 using StorageProject.Application.Contracts;
+using StorageProject.Application.Security;
 using StorageProject.Application.Services;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
@@ -43,6 +44,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHashPassword, HashPassword>();
 
 
 

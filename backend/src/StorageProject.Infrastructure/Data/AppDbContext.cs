@@ -20,6 +20,10 @@ namespace StorageProject.Infrasctructure.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Status)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<User>()
+                .Property(p => p.Profile)
+                .HasConversion<string>();
         }
 
     }
