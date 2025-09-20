@@ -1,4 +1,3 @@
-// components/ProductRow.jsx
 import { memo } from "react";
 import { Edit, Trash2 } from "lucide-react";
 import styles from "../../styles/produtos.module.css";
