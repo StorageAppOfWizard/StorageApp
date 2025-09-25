@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Plus, Save, X } from "lucide-react";
+import { Save, X, PackagePlus } from "lucide-react";
+import "./ProductForm.css";
 
 const ProductForm = ({ onsubmit, brands, categories, initialData = {} }) => {
     const [formData, setFormData] = useState({
@@ -20,23 +21,63 @@ const ProductForm = ({ onsubmit, brands, categories, initialData = {} }) => {
         onsubmit(formData);
     };
 
-
     return (
-        <form onSubmit={handleSubmit}>
-            <input name="title" placeholder="Nome" value={formData.title} onChange={handleChange} required />
-            <select name="category" value={formData.category} onChange={handleChange} required>
-                <option value="">Selecione Categoria</option>
-                {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
-            </select>
-            <select name="brand" value={formData.brand} onChange={handleChange} required>
-                <option value="">Selecione Marca</option>
-                {brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}
-            </select>
-            <input type="number" name="stock" placeholder="Estoque" value={formData.stock} onChange={handleChange} required min="0" />
-            <input name="thumbnail" placeholder="URL da Imagem" value={formData.thumbnail} onChange={handleChange} required />
-            <button type="submit"><Save size={16} /> Salvar</button>
-            <button type="button" onClick={() => {}}><X size={16} /> Cancelar</button>
-        </form>
+        <div className="form-container">
+            <form onSubmit={handleSubmit}>
+                <input
+                    name="title"
+                    placeholder="Nome"
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
+                />
+                <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Selecione Categoria</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                            {cat}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="brand"
+                    value={formData.brand}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Selecione Marca</option>
+                    {brands.map((brand) => (
+                        <option key={brand} value={brand}>
+                            {brand}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="number"
+                    name="stock"
+                    placeholder="Estoque"
+                    value={formData.stock}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                />
+                <button type="submit">
+                    <Save size={16} /> Salvar
+                </button>
+                <button type="button">
+                    <X size={16} /> Cancelar
+                </button>
+            </form>
+
+            <div className="decoracao">
+                <PackagePlus strokeWidth={1.5} />
+            </div>
+        </div>
     );
 };
 
