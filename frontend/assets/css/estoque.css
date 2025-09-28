@@ -1,0 +1,103 @@
+@import url("./style.css");
+
+body {
+    display: flex;
+    height: 100vh;
+    background: var(--back-5);
+}
+
+/*Header da tabela*/
+.tabela-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.tabela-header input {
+    padding: 8px;
+    border: 1px solid var(--cor-2);
+    border-radius: 6px;
+    width: 200px;
+}
+
+.tabela-header .botoes-header button {
+    margin-left: 10px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--cor-1);
+    color: var(--cor-3);
+    cursor: pointer;
+}
+
+.tabela-header .botoes-header button:hover {
+    background-color: #0056b3;
+}
+
+th {
+    cursor: pointer;
+}
+
+/* Tabela */
+.tabela-container {
+    background: var(--cor-3);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: var(--cor-1);
+    color: var(--cor-3);
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background: #f1f5f9;
+}
+
+tbody tr:hover {
+    background: #e2e8f0;
+}
+
+td img {
+    cursor: pointer;
+    margin: 0 5px;
+    transition: transform 0.2s;
+}
+
+td img:hover {
+    transform: scale(1.2);
+}
+
+/*Status*/
+.status {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status.verde {
+    background: #22c55e;
+}
+
+.status.amarelo {
+    background: #facc15;
+}
+
+.status.vermelho {
+    background: #ef4444;
+}
