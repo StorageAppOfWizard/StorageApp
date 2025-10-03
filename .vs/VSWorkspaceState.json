@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\backend",
+    "\\backend\\src",
+    "\\backend\\src\\StorageProject.Api",
+    "\\backend\\src\\StorageProject.Api\\Controllers",
+    "\\frontend"
   ],
-  "SelectedNode": "\\StorageProject.sln",
+  "SelectedNode": "\\backend\\src\\StorageProject.Api\\Controllers\\UserController.cs",
   "PreviewInSolutionExplorer": false
 }

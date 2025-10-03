@@ -1,12 +1,14 @@
 ﻿using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.User;
+using StorageProject.Domain.Entity.Enums;
 
 namespace StorageProject.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/user")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

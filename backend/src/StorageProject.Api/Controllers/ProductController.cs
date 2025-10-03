@@ -8,7 +8,7 @@ using System.Net;
 namespace StorageProject.Api.Controllers
 {
 
-    [Route("[controller]")]
+    [Route("/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -129,7 +129,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.OK, "Quantity changed sucessfully")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpPatch("quantity")]
+        [HttpPatch("editQuantity")]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO dto)
         {
             try

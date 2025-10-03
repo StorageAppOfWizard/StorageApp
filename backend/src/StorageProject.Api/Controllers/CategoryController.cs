@@ -10,7 +10,7 @@ namespace StorageProject.Api.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("/category")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

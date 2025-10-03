@@ -9,7 +9,7 @@ using System.Net;
 namespace StorageProject.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/brand")]
     public class BrandController : Controller
     {
         private readonly IBrandService _brandService;
