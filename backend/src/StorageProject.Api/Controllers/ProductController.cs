@@ -35,7 +35,7 @@ namespace StorageProject.Api.Controllers
                 var result = await _productService.GetAllAsync(page, pageQuantity);
 
                 if (result.IsNotFound())
-                    return NotFound(result);
+                    return Ok(result);
 
                 return Ok(result);
             }

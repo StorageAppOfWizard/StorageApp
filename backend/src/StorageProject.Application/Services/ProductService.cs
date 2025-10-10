@@ -24,7 +24,7 @@ namespace StorageProject.Application.Services
             var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
 
             if (!products.Any())
-                return Result.NotFound("Products NotFound");
+                return Result.Success();
 
             var dto = products.Select(product => product.ToDTO()).ToList();
             return dto;

@@ -1,93 +1,126 @@
 .container {
     padding: 20px;
     background-color: var(--cor-50);
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #0f172a;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--cor-800);
 }
 
 .itemCount {
-    font-size: 0.7em;
-    color: var(--cor-800);
-    font-weight: 200;
-    margin-bottom: 10px;
+    font-size: 0.85em;
+    color: var(--cor-600);
+    font-weight: 400;
+    margin-bottom: 5px;
 }
 
 .actions {
     display: flex;
-    gap: 30px;
+    gap: 15px;
+    align-items: center;
 }
 
 .search {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid var(--cor-300);
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: border-color 0.3s;
 }
 
-.filter {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    border: 1px solid #cbd5e1;
-    cursor: pointer;
+.search:focus {
+    border-color: var(--cor-800);
+    outline: none;
 }
 
 .export,
 .addProduct {
-    margin-bottom: 10px;
-    padding: 5px 15px;
+    padding: 8px 15px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .export {
     background-color: #2DD0A9;
     color: var(--cor-50);
-    font-weight: 700;
+    font-weight: 600;
+}
+
+.export:hover {
+    transform: translateY(-1px);
 }
 
 .addProduct {
     background-color: var(--cor-100);
     color: var(--cor-900);
-    border: 1px solid #64748b;
+    border: 1px solid var(--cor-500);
     font-weight: 600;
+}
+
+.addProduct:hover {
+    background-color: var(--cor-200);
+    transform: translateY(-1px);
 }
 
 .productTable {
     width: 100%;
     border-collapse: collapse;
     background-color: var(--cor-50);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
 }
 
 .productTable th,
 .productTable td {
-    padding: 10px;
+    padding: 12px;
     text-align: center;
-    border-bottom: 1px solid #cbd5e1;
+    border-bottom: 1px solid var(--cor-300);
+    transition: background-color 0.3s;
 }
 
 .productTable th {
     background-color: var(--cor-800);
     color: var(--cor-50);
-    font-weight: 500;
+    font-weight: 600;
     text-align: center;
+    cursor: pointer;
+}
+
+.productTable th:hover {
+    background-color: var(--cor-700);
 }
 
 .productTable td {
     vertical-align: middle;
 }
 
-.productImage {
-    width: 80px;
-    height: auto;
-    border-radius: 4px;
+.productTable tbody tr:nth-child(even) {
+    background-color: var(--cor-100);
+}
+
+.productTable tbody tr:nth-child(odd) {
+    background-color: var(--cor-50);
+}
+
+.productTable tbody tr:nth-child(odd):hover {
+    background-color: var(--cor-200);
+    cursor: pointer;
+}
+
+.productTable tbody tr:nth-child(even):hover {
+    background-color: var(--cor-200);
+    cursor: pointer;
 }
 
 .stockValue {
@@ -96,6 +129,9 @@
     align-items: center;
     cursor: pointer;
     gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
 .editIcon {
@@ -108,27 +144,31 @@
 }
 
 .stockInput {
-    width: 50px;
-    padding: 2px;
-    border: 1px solid #94a3b8;
+    width: 60px;
+    padding: 4px 6px;
+    border: 1px solid var(--cor-400);
     border-radius: 4px;
+    font-size: 0.9em;
 }
 
-.stockInput:focus-visible{
+.stockInput:focus-visible {
     outline: 0;
 }
 
 .statusDot {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    margin-right: 5px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 .actionIcon {
-    margin-left: 10px;
-    cursor: pointer;
+  margin-left: 10px;
+  cursor: pointer;
+  color: var(--cor-500);
+  transition: color 0.2s;
 }
 
 @keyframes spin {
@@ -138,5 +178,9 @@
 }
 
 .error {
-    color: #d32f2f;
+  color: #d32f2f;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  text-align: center;
 }

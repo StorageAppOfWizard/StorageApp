@@ -29,32 +29,32 @@ export default function Produtos() {
     return "Available";
   };
 
-const handleStockEdit = useCallback(
-  async (productId, newStock) => {
-    const stockNum = Number(newStock);
-    if (isNaN(stockNum) || stockNum < 0) {
-      toast.error("Estoque inválido! Use um número positivo.");
-      setEditableStock(false);
-      return;
-    }
+  const handleStockEdit = useCallback(
+    async (productId, newStock) => {
+      const stockNum = Number(newStock);
+      if (isNaN(stockNum) || stockNum < 0) {
+        toast.error("Estoque inválido! Use um número positivo.");
+        setEditableStock(false);
+        return;
+      }
 
-    try {
-      await updateProductStock(productId, stockNum);
-      setLocalProducts((prev) =>
-        prev.map((p) =>
-          p.id === productId
-            ? { ...p, stock: stockNum, status: getStatusFromStock(stockNum) } 
-            : p
-        )
-      );
-      setEditableStock(false);
-      toast.success("Estoque atualizado com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao atualizar estoque: " + (error?.message ?? error));
-    }
-  },
-  []
-);
+      try {
+        await updateProductStock(productId, stockNum);
+        setLocalProducts((prev) =>
+          prev.map((p) =>
+            p.id === productId
+              ? { ...p, stock: stockNum, status: getStatusFromStock(stockNum) }
+              : p
+          )
+        );
+        setEditableStock(false);
+        toast.success("Estoque atualizado com sucesso!");
+      } catch (error) {
+        toast.error("Erro ao atualizar estoque: " + (error?.message ?? error));
+      }
+    },
+    []
+  );
 
   const handleEdit = useCallback(
     (productId) => {
@@ -134,17 +134,24 @@ const handleStockEdit = useCallback(
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
-                <ProductRow
-                  key={product.id}
-                  product={product}
-                  editableStock={editableStock}
-                  setEditableStock={setEditableStock}
-                  onStockEdit={handleStockEdit}
-                  onEdit={handleEdit}
-                  onDelete={handleDeleteConfirm}
-                />
-              ))}
+
+              {
+                filteredProducts.length === 0 ?
+                  (<tr>
+                    <td colSpan="6">Nenhum produto cadastrado</td>
+                  </tr>
+                  ) : (
+                    filteredProducts.map((product) => (
+                      <ProductRow
+                        key={product.id}
+                        product={product}
+                        editableStock={editableStock}
+                        setEditableStock={setEditableStock}
+                        onStockEdit={handleStockEdit}
+                        onEdit={handleEdit}
+                        onDelete={handleDeleteConfirm}
+                      />
+                    )))}
             </tbody>
           </table>
         </div>
