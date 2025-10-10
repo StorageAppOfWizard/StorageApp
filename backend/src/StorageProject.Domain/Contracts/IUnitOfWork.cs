@@ -6,7 +6,6 @@
         public IProductRepository ProductRepository { get; }
         public IBrandRepository BrandRepository { get; }
         public ICategoryRepository CategoryRepository { get; }
-        public IUserRepository UserRepository { get; }
         public async Task CommitAsync() { }
     }
 }
