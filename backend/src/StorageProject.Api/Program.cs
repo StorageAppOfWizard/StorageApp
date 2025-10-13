@@ -44,7 +44,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHashPassword, HashPassword>();
 
 
@@ -67,6 +66,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<MiddlewareException>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

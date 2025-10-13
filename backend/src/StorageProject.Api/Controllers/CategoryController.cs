@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
+using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Category;
 using StorageProject.Application.Validators;
@@ -29,20 +30,9 @@ namespace StorageProject.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                var result = await _categoryService.GetAllAsync();
 
-                if (result.IsNotFound())
-                    return NotFound(result);
-
-                return Ok(result);
-
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
+            var result = await _categoryService.GetAllAsync();
+            return result.ToActionResult();
         }
         #endregion
 
@@ -54,19 +44,9 @@ namespace StorageProject.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            try
-            {
-                var result = await _categoryService.GetByIdAsync(id);
 
-                if (result.IsNotFound())
-                    return NotFound(result.Errors);
-                
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
+            var result = await _categoryService.GetByIdAsync(id);
+            return result.ToActionResult();
         }
         #endregion
 
@@ -79,21 +59,10 @@ namespace StorageProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCategoryDTO dto)
         {
-            try
-            {
-               var result = await _categoryService.CreateAsync(dto);
 
-                if (result.IsConflict())
-                    return Conflict(result);
-                if (result.IsInvalid())
-                    return BadRequest(result);
+            var result = await _categoryService.CreateAsync(dto);
+            return result.ToActionResult();
 
-                return CreatedAtAction(nameof(Create), result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
         }
         #endregion
 
@@ -107,23 +76,9 @@ namespace StorageProject.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO dto)
         {
-            try
-            {
-                var result = await _categoryService.UpdateAsync(dto);
 
-                if (result.IsConflict())
-                    return Conflict(result);
-                if (result.IsInvalid())
-                    return BadRequest(result);
-                if (result.IsNotFound())
-                    return NotFound(result);
-
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
+            var result = await _categoryService.UpdateAsync(dto);
+            return result.ToActionResult();
 
         }
         #endregion
@@ -136,19 +91,9 @@ namespace StorageProject.Api.Controllers
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                var result = await _categoryService.RemoveAsync(id);
-                if (result.IsNotFound())
-                    return NotFound(result.Errors);
-                
-                return Ok(result);
 
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
+            var result = await _categoryService.RemoveAsync(id);
+            return result.ToActionResult();
         }
         #endregion
     }

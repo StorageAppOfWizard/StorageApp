@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
+using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Product;
 using Swashbuckle.AspNetCore.Annotations;
@@ -30,19 +31,8 @@ namespace StorageProject.Api.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageQuantity = 20)
         {
-            try
-            {
-                var result = await _productService.GetAllAsync(page, pageQuantity);
-
-                if (result.IsNotFound())
-                    return Ok(result);
-
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = "An unexpected error occurred. ", message });
-            }
+            var result = await _productService.GetAllAsync(page, pageQuantity);
+            return result.ToActionResult();
         }
         #endregion
 
@@ -53,19 +43,8 @@ namespace StorageProject.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            try
-            {
-                var result = await _productService.GetByIdAsync(id);
-                if (result.IsNotFound())
-                {
-                    return NotFound(result.Errors);
-                }
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = message });
-            }
+            var result = await _productService.GetByIdAsync(id);
+            return result.ToActionResult();
         }
         #endregion
 
@@ -77,21 +56,8 @@ namespace StorageProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProductDTO dto)
         {
-            try
-            {
-                var result = await _productService.CreateAsync(dto);
-
-                if (result.IsConflict())
-                    return Conflict(result);
-                if (result.IsInvalid())
-                    return BadRequest(result);
-
-                return CreatedAtAction(nameof(Create), result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = message });
-            }
+            var result = await _productService.CreateAsync(dto);
+            return result.ToActionResult();
         }
         #endregion
 
@@ -104,23 +70,9 @@ namespace StorageProject.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateProductDTO dto)
         {
-            try
-            {
-                var result = await _productService.UpdateAsync(dto);
 
-                if (result.IsConflict())
-                    return Conflict(result);
-                if (result.IsInvalid())
-                    return BadRequest(result);
-                if (result.IsNotFound())
-                    return NotFound(result);
-
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = message });
-            }
+            var result = await _productService.UpdateAsync(dto);
+            return result.ToActionResult();
         }
         #endregion
 
@@ -132,19 +84,9 @@ namespace StorageProject.Api.Controllers
         [HttpPatch("editQuantity")]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO dto)
         {
-            try
-            {
-                var result = await _productService.UpdateQuantityAsync(dto);
 
-                if (result.IsInvalid())
-                    return BadRequest(result);
-
-                return Ok(result);
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = message });
-            }
+            var result = await _productService.UpdateQuantityAsync(dto);
+            return result.ToActionResult();
         }
 
         #endregion
@@ -156,19 +98,9 @@ namespace StorageProject.Api.Controllers
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                var result = await _productService.RemoveAsync(id);
-                if (result.IsNotFound())
-                    return NotFound(result.Errors);
 
-                return Ok(result);
-
-            }
-            catch (Exception message)
-            {
-                return StatusCode(500, new { Message = message });
-            }
+            var result = await _productService.RemoveAsync(id);
+            return result.ToActionResult();
         }
         #endregion
     }
