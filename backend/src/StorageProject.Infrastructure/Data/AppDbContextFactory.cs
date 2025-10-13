@@ -10,8 +10,8 @@ namespace StorageProject.Infrastructure.Data
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            var connectionString = "server=localhost;port=3306;database=dev;user=developer;password=Lagavi30!;";
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            var connectionString = "Server=localhost,1433;Database=products;User Id=sa;Password=Lagavi30!;TrustServerCertificate=True;";
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new AppDbContext(optionsBuilder.Options);
         }

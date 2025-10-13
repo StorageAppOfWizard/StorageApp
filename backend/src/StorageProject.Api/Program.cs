@@ -36,9 +36,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-                                            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                                                   .EnableDetailedErrors()
-                                                   .EnableSensitiveDataLogging());
+                                            options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
