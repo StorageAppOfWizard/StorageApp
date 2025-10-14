@@ -1,0 +1,28 @@
+services:
+  sqlserver-product:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-product
+    environment:
+      - SA_PASSWORD=Lagavi30!
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+      
+  backend:
+    build: ./
+    container_name: backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - sqlserver-product
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
