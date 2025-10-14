@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Category;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.CategoryControllerTest
 {
@@ -76,12 +77,12 @@ namespace StorageProject.Tests.CategoryControllerTest
             // Arrange
             var categoryId = Guid.NewGuid();
             var updateCategoryDto = new UpdateCategoryDTO { Id = categoryId, Name = "UpdatedCategory" };
-            _fixture.CategoryServiceMock.Setup(s => s.UpdateAsync(updateCategoryDto)).ThrowsAsync(new Exception("Unexpected error"));
-            // Act
-            var result = await _fixture.Controller.Update(updateCategoryDto);
-            // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            _fixture.CategoryServiceMock.Setup(s => s.UpdateAsync(updateCategoryDto)).ThrowsAsync(new Exception("Unexpected Error"));
+            //Act
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Update(updateCategoryDto));
+
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Brand;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.BrandControllerTest
 {
@@ -53,10 +54,10 @@ namespace StorageProject.Tests.BrandControllerTest
             //Arrange
             _fixture.BrandServiceMock.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("Unexpected Error"));
             //Act
-            var result = await _fixture.Controller.Get();
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get());
+
             //Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

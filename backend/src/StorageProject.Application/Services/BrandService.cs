@@ -21,9 +21,9 @@ namespace StorageProject.Application.Services
         {
             var entity = await _unitOfWork.BrandRepository.GetAll();
 
-            if (entity == null || !entity.Any())
-                return Result.NotFound("No brands found");
-            
+            if (entity is null)
+                return Result.Success();
+
             return Result.Success(entity.Select(b => b.ToDTO()).ToList());
         }
 

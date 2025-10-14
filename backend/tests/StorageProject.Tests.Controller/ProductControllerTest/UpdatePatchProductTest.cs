@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Product;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.ProductControllerTest
 {
@@ -52,14 +53,13 @@ namespace StorageProject.Tests.ProductControllerTest
             //Arrange
             var product = new UpdateProductQuantityDTO { Id = Guid.NewGuid(), Quantity = 1 };
 
-            _fixture.ProductServiceMock.Setup(p => p.UpdateQuantityAsync(product)).ThrowsAsync(new Exception("An error occurred"));
+            _fixture.ProductServiceMock.Setup(p => p.UpdateQuantityAsync(product)).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var result = await _fixture.Controller.UpdateQuantity(product);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.UpdateQuantity(product));
 
-            //Arrange
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

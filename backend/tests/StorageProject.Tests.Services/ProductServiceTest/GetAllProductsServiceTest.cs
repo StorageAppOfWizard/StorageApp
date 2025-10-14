@@ -44,7 +44,7 @@ namespace StorageProject.Tests.Services.ProductServiceTest
         }
 
         [Fact]
-        public async Task GetAllProduct_WhenProductsNoExist_ErrorReturnProducts()
+        public async Task GetAllProduct_WhenProductsNoExist_ReturnProducts()
         {
             //Arrange
 
@@ -54,8 +54,7 @@ namespace StorageProject.Tests.Services.ProductServiceTest
             var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ResultStatus.NotFound, result.Status);
+            Assert.True(result.IsSuccess);
 
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Product;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.ProductControllerTest
 {
@@ -97,11 +98,10 @@ namespace StorageProject.Tests.ProductControllerTest
             _fixture.ProductServiceMock.Setup(c => c.UpdateAsync(input)).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var result = await _fixture.Controller.Update(input);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Update(input));
 
             //Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            Assert.Equal("Unexpected Error", exception.Message);
         }
 
 

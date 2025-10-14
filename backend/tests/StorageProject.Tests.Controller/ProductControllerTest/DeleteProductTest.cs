@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StorageProject.Domain.Entity;
 using StorageProject.Tests.ProductControllerTest;
 using System;
 using System.Collections.Generic;
@@ -54,15 +55,14 @@ namespace StorageProject.Tests.ProductControllerTest
         public async Task DeleteProduct_ReturnInternalServerError()
         {
             //Arrange
-            var ProductId = Guid.NewGuid();
-            _fixture.ProductServiceMock.Setup(s => s.RemoveAsync(ProductId)).ThrowsAsync(new Exception("Unexpected Error"));
+            var productId = Guid.NewGuid();
+            _fixture.ProductServiceMock.Setup(s => s.RemoveAsync(productId)).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var result = await _fixture.Controller.Delete(ProductId);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Delete(productId));
 
             //Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }
