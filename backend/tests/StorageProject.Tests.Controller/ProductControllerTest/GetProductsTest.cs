@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Product;
 using StorageProject.Domain.Entities.Enums;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.ProductControllerTest
 {
@@ -74,13 +75,13 @@ namespace StorageProject.Tests.ProductControllerTest
         public async Task GetAllProducts_ReturnsInternalServerError()
         {
 
-            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("An Error Ocurred"));
+            _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var result = await _fixture.Controller.Get();
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get());
 
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

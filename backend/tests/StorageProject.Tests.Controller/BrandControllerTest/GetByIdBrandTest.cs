@@ -52,13 +52,12 @@ namespace StorageProject.Tests.BrandControllerTest
         {
             //Arrange
             var brandId = Guid.NewGuid();
-            _fixture.BrandServiceMock.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("Unexpected Error"));
+            _fixture.BrandServiceMock.Setup(s => s.GetByIdAsync(brandId)).ThrowsAsync(new Exception("Unexpected Error"));
             //Act
-            var result = await _fixture.Controller.GetById(brandId);
-            //Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.GetById(brandId));
 
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

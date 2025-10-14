@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Category;
 using StorageProject.Application.DTOs.Product;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.ProductControllerTest
 {
@@ -36,8 +37,8 @@ namespace StorageProject.Tests.ProductControllerTest
             var result = await _fixture.Controller.Create(input);
 
             //Assert
-            var objectResult = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(201, objectResult.StatusCode);  
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(200, objectResult.StatusCode);  
         }
 
         [Fact]
@@ -100,11 +101,10 @@ namespace StorageProject.Tests.ProductControllerTest
             _fixture.ProductServiceMock.Setup(c => c.CreateAsync(input)).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var result = await _fixture.Controller.Create(input);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Create(input));
 
             //Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

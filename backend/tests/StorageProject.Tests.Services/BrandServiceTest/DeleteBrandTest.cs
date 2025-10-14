@@ -1,7 +1,5 @@
 ﻿using Ardalis.Result;
 using Moq;
-using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
-using StorageProject.Application.DTOs.Brand;
 using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.Services.BrandServiceTest

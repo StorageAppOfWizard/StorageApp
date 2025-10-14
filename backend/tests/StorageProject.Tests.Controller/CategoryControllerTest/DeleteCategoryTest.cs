@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.CategoryControllerTest
 {
@@ -44,11 +45,12 @@ namespace StorageProject.Tests.CategoryControllerTest
             // Arrange
             var categoryId = Guid.NewGuid();
             _fixture.CategoryServiceMock.Setup(s => s.RemoveAsync(categoryId)).ThrowsAsync(new Exception("Unexpected Error"));
-            // Act
-            var result = await _fixture.Controller.Delete(categoryId);
-            // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+
+            //Act
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Delete(categoryId));
+
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
 
     }

@@ -2,7 +2,6 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StorageProject.Api.Middlewares;
 using StorageProject.Application.Contracts;
-using StorageProject.Application.Security;
 using StorageProject.Application.Services;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
@@ -42,7 +41,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IHashPassword, HashPassword>();
 
 
 
@@ -68,14 +66,6 @@ if (app.Environment.IsDevelopment())
                 logger.LogError(ex, "Erro ao aplicar migrations");
             }
         }
-}
-
-
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
 }
 
 app.UseMiddleware<LoggingMiddleware>();
