@@ -52,7 +52,22 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-app.UseCors("AllowSpecificOrigins");
+    app.UseCors("AllowSpecificOrigins");
+
+    using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<AppDbContext>();
+                context.Database.Migrate(); // Isso executa as migrations pendentes
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "Erro ao aplicar migrations");
+            }
+        }
 }
 
 

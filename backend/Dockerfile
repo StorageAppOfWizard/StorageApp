@@ -1,38 +1,23 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+WORKDIR /App
 
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 5000
+# Copia tudo do projeto
+COPY . ./
 
+# Restaura pacotes
+RUN dotnet restore "StorageProject.sln"
 
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY StorageProject.sln .
-COPY ["src/StorageProject.Api/StorageProject.Api.csproj", "src/StorageProject.Api/"]
-COPY ["src/StorageProject.Application/StorageProject.Application.csproj", "src/StorageProject.Application/"]
-COPY ["src/StorageProject.Domain/StorageProject.Domain.csproj", "src/StorageProject.Domain/"]
-COPY ["src/StorageProject.Infrastructure/StorageProject.Infrastructure.csproj", "src/StorageProject.Infrastructure/"]
-COPY ["tests/StorageProject.Tests.Controller/StorageProject.Tests.Controller.csproj", "tests/StorageProject.Tests.Controller/"]
-COPY ["tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj", "tests/StorageProject.Tests.Services/"]
+# Publica o projeto Api
+RUN dotnet publish "./src/StorageProject.Api/StorageProject.Api.csproj" -c Release -o /App/publish
+# Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+WORKDIR /App
 
-RUN dotnet restore "./StorageProject.sln"
-COPY . .
+# Copia a pasta publicada
+COPY --from=build-env /App/publish .
 
-RUN dotnet test "StorageProject.sln" --no-restore --verbosity normal --collect:"XPlat Code Coverage"
-
-WORKDIR "/src/src/StorageProject.Api"
-RUN dotnet build "./StorageProject.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./StorageProject.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5173
 ENTRYPOINT ["dotnet", "StorageProject.Api.dll"]
+
