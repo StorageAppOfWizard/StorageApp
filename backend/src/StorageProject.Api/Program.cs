@@ -3,7 +3,7 @@ using StorageProject.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiConfiguration();
+builder.Services.AddApiConfiguration(builder.Configuration);
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddApplicationConfiguration();
 builder.Services.AddInfrastructureConfiguration(builder.Configuration);
