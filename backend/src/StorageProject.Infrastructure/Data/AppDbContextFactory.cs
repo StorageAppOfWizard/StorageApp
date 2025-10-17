@@ -10,8 +10,9 @@ namespace StorageProject.Infrastructure.Data
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            //var connectionString = "Server=sqlserver-product,1433;Database=products;User Id=sa;Password=Lagavi30!;TrustServerCertificate=True;";
             var connectionString = "Server=localhost,1433;Database=products;User Id=sa;Password=Lagavi30!;TrustServerCertificate=True;";
-            optionsBuilder.UseSqlServer(connectionString, o=> o.EnableRetryOnFailure()).EnableSensitiveDataLogging();
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new AppDbContext(optionsBuilder.Options);
         }
