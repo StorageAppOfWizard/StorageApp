@@ -1,4 +1,5 @@
 ﻿using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
@@ -26,6 +27,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brands Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
 
@@ -39,6 +41,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brand Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet("{id:Guid}")]
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> GetById(Guid id)
         {
 
@@ -47,12 +50,13 @@ namespace StorageProject.Api.Controllers
         }
         #endregion
 
-        #region Create   
+        #region Create 
         [SwaggerResponse((int)HttpStatusCode.OK, "Brand Created")]
         [SwaggerResponse((int)HttpStatusCode.Conflict, "Brand already exist")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Brand")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPost]
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Create([FromBody] CreateBrandDTO dto)
         {
 
@@ -68,6 +72,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Brand")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpPut]
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Update([FromBody] UpdateBrandDTO dto)
         {
 
@@ -82,6 +87,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brand Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpDelete("{id:Guid}")]
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Delete(Guid id)
         {
 
