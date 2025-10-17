@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import styles from "../../styles/SingnUp.module.css";
-import { Package } from "lucide-react";
+import styles from "../../styles/Singn.module.css";
 
 export default function SingnUp() {
     const [email, setEmail] = useState('');
@@ -21,9 +20,6 @@ export default function SingnUp() {
     return (
         <div className={styles.container}>
             <div className={styles.login}>
-                <div className={styles.loginArea}>
-                    <span className={styles.actionIcon}> <Package size={24} /> </span>
-                </div>
 
                 <form onSubmit={handleSubmit}>
                     <h1>Cadastrar</h1>
@@ -50,8 +46,10 @@ export default function SingnUp() {
                     />
 
                     <button type="submit" value='Entrar'>
-                        {loadingAuth ? 'Carregando...' : 'Criar Conta'}
+                        Criar Conta
                     </button>
+
+                    <Link to="/">Logar</Link>
                 </form>
             </div>
         </div>

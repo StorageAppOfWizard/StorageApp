@@ -11,7 +11,7 @@ export default function RoutesApp() {
   return (
     <Routes>
       <Route path="/" element={<SingnIn />} />
-      {/* <Route path="/register" element={<SingnUp />} /> */}
+      <Route path="/cadastrar" element={<SingnUp />} />
       <Route element={<Layout />}>
         
 

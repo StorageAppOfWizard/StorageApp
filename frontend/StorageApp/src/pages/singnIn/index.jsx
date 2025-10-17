@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import styles from "../../styles/Singn.module.css";
 
 
 export default function SingnIn() {
@@ -18,11 +19,11 @@ export default function SingnIn() {
     }
 
     return (
-            <div className='container-center'>
-                <div className='login'>
+            <div className={styles.container}>
+                <div className={styles.login}>
 
                     <form onSubmit={handleSignIn}>
-                        <h1>Entrar</h1>
+                        <h1>Login</h1>
                         <input
                             type="text"
                             placeholder="email@email.com"
@@ -40,9 +41,11 @@ export default function SingnIn() {
                         <button type='submit' value='Entrar'>
                             Entrar
                         </button>
+
+                        <Link to="/cadastrar">Criar Conta</Link>
                     </form>
 
-                    <Link to="/register">Criar Conta</Link>
+                    
 
                 </div>
             </div>
