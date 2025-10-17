@@ -35,7 +35,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
         }
 
         [Fact]
-        public async Task GetAllCategory_WhenCategorysNoExist_ErrorReturnAllCategorys()
+        public async Task GetAllCategory_WhenCategorysNoExist_ReturnAllCategorys()
         {
             //Arrange
 
@@ -45,8 +45,8 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
             var result = await _fixture.Service.GetAllAsync();
 
             //Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ResultStatus.NotFound, result.Status);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
 
         }
     }

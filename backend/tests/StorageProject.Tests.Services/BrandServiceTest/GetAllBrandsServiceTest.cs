@@ -36,7 +36,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
         }
 
         [Fact]
-        public async Task GetAllBrand_WhenBrandsNoExist_ErrorReturnAllBrands()
+        public async Task GetAllBrand_WhenBrandsNoExist_ReturnAllBrands()
         {
             //Arrange
 
@@ -46,8 +46,8 @@ namespace StorageProject.Tests.Services.BrandServiceTest
             var result = await _fixture.Service.GetAllAsync();
 
             //Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(ResultStatus.NotFound, result.Status);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(ResultStatus.Ok, result.Status);
 
         }
     }

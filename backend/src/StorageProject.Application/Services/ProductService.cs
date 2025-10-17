@@ -23,7 +23,7 @@ namespace StorageProject.Application.Services
 
             var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
 
-            if (!products.Any())
+            if (products is null)
                 return Result.Success();
 
             var dto = products.Select(product => product.ToDTO()).ToList();

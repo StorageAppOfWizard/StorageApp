@@ -22,7 +22,7 @@ namespace StorageProject.Application.Services
             var entity = await _unitOfWork.CategoryRepository.GetAll();
 
             if (entity is null)
-                return Result<List<CategoryDTO>>.NotFound("No categories found.");
+                return Result.Success();
 
             return Result.Success(entity.Select(b => b.ToDTO()).ToList());
         }

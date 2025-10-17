@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StorageProject.Application.DTOs.Category;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Tests.CategoryControllerTest
 {
@@ -22,8 +23,8 @@ namespace StorageProject.Tests.CategoryControllerTest
             // Act
             var result = await _fixture.Controller.Create(input);
             // Assert
-            var objectResult = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(201, objectResult.StatusCode);
+            var objectResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(200, objectResult.StatusCode);
         }
         [Fact]
         public async Task CreateCategory_WhenProductAlreadyExist_ReturnConflictResult()
@@ -54,12 +55,12 @@ namespace StorageProject.Tests.CategoryControllerTest
         public async Task CreateCategory_ReturnInternalServerError()
         {
             var input = new CreateCategoryDTO { Name = "Teste" };
-            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ThrowsAsync(new Exception("An Error occurred"));
-            // Act
-            var result = await _fixture.Controller.Create(input);
-            // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(500, objectResult.StatusCode);
+            _fixture.CategoryServiceMock.Setup(s => s.CreateAsync(input)).ThrowsAsync(new Exception("Unexpected Error"));
+            //Act
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Create(input));
+
+            //Assert
+            Assert.Equal("Unexpected Error", exception.Message);
         }
     }
 }

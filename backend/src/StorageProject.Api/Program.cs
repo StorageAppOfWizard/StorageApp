@@ -1,89 +1,18 @@
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using StorageProject.Api.Middlewares;
-using StorageProject.Application.Contracts;
-using StorageProject.Application.Security;
-using StorageProject.Application.Services;
-using StorageProject.Application.Validators;
-using StorageProject.Domain.Contracts;
-using StorageProject.Infrasctructure.Data;
-using StorageProject.Infrastructure.Repositories;
-using System.Text.Json.Serialization;
+using StorageProject.Api.Configurations;
+using StorageProject.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
-builder.Services.AddValidatorsFromAssemblyContaining<ProductValidator>();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.EnableAnnotations();
-});
-    
-var connectionString = builder.Configuration.GetConnectionString("StorageContext");
-
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
-    });
-});
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-                                            options.UseSqlServer(connectionString));
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IBrandService, BrandService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IHashPassword, HashPassword>();
-
-
+builder.Services.AddApiConfiguration(builder.Configuration);
+builder.Services.AddSwaggerConfiguration();
+builder.Services.AddApplicationConfiguration();
+builder.Services.AddInfrastructureConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("AllowSpecificOrigins");
-
-    using (var scope = app.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
-            try
-            {
-                var context = services.GetRequiredService<AppDbContext>();
-                context.Database.Migrate(); // Isso executa as migrations pendentes
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "Erro ao aplicar migrations");
-            }
-        }
-}
+    app.Services.ApplyMigrations();
 
 
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
-app.UseMiddleware<LoggingMiddleware>();
-app.UseMiddleware<MiddlewareException>();
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
+app.AddPipelineConfiguration();
 app.Run();
