@@ -17,7 +17,7 @@ WORKDIR /App
 COPY --from=build-env /App/publish .
 
 ENV ASPNETCORE_ENVIRONMENT=Development
-ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_URLS=http://+:5173
 EXPOSE 5173
 ENTRYPOINT ["dotnet", "StorageProject.Api.dll"]
 
