@@ -4,9 +4,9 @@
     "\\backend",
     "\\backend\\src",
     "\\backend\\src\\StorageProject.Api",
-    "\\backend\\src\\StorageProject.Api\\Controllers",
+    "\\backend\\src\\StorageProject.Api\\Configurations",
     "\\frontend"
   ],
-  "SelectedNode": "\\backend\\src\\StorageProject.Api\\Controllers\\UserController.cs",
+  "SelectedNode": "\\backend\\StorageProject.sln",
   "PreviewInSolutionExplorer": false
 }

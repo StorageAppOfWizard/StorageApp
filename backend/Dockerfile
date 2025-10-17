@@ -7,8 +7,13 @@ COPY . ./
 # Restaura pacotes
 RUN dotnet restore "StorageProject.sln"
 
-# Publica o projeto Api
+# Roda os testes
+RUN dotnet test "./tests/StorageProject.Tests.Controller/StorageProject.Tests.Controller.csproj" -c Release --no-restore
+RUN dotnet test "./tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj" -c Release --no-restore
+
+# Publica o projeto API
 RUN dotnet publish "./src/StorageProject.Api/StorageProject.Api.csproj" -c Release -o /App/publish
+
 # Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /App
@@ -17,7 +22,8 @@ WORKDIR /App
 COPY --from=build-env /App/publish .
 
 ENV ASPNETCORE_ENVIRONMENT=Development
-ENV ASPNETCORE_URLS=http://+:5000
-EXPOSE 5173
-ENTRYPOINT ["dotnet", "StorageProject.Api.dll"]
 
+# Porta que realmente está sendo usada
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "StorageProject.Api.dll"]

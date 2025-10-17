@@ -12,10 +12,9 @@
                 
             }
 
+            app.MapControllers();
             app.UseCustomMiddleware();
             app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
         }
     }
 }
