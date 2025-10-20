@@ -14,7 +14,7 @@ services:
     build: ./
     container_name: backend
     ports:
-      - "5173:5173"
+      - "8000:8000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -22,6 +22,23 @@ services:
     networks:
       - app-network
 
+  agent:
+    container_name: newrelic-infra
+    build:
+      context: ./
+      dockerfile: newrelic-infra.dockerfile
+    environment:
+      - NRIA_DISPLAY_NAME=backend-agent
+      - NRIA_LOG_LEVEL=info
+    cap_add:
+      - SYS_PTRACE
+    network_mode: bridge
+    pid: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: unless-stopped
 
 networks:
   app-network:

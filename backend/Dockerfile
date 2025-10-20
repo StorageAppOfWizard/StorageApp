@@ -23,7 +23,7 @@ COPY --from=build-env /App/publish .
 
 ENV ASPNETCORE_ENVIRONMENT=Development
 
-# Porta que realmente está sendo usada
-EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8000
+EXPOSE 8000
 
 ENTRYPOINT ["dotnet", "StorageProject.Api.dll"]

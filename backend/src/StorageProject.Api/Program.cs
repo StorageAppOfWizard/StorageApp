@@ -8,6 +8,5 @@ builder.Services.AddApplicationConfiguration();
 builder.Services.AddInfrastructureConfiguration(builder.Configuration);
 
 var app = builder.Build();
-
 app.AddPipelineConfiguration();
 app.Run();
