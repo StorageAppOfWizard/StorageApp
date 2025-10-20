@@ -28,7 +28,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Get(
             [FromQuery] int page = 1,
             [FromQuery] int pageQuantity = 20)

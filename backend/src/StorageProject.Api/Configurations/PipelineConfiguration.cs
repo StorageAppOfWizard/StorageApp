@@ -1,4 +1,6 @@
-﻿namespace StorageProject.Api.Configurations
+﻿using StorageProject.Api.Extensions;
+
+namespace StorageProject.Api.Configurations
 {
     public static class PipelineConfiguration
     {
@@ -8,13 +10,14 @@
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                app.UseCors("AllowSpecificOrigins");
-                
+                app.Services.ApplyMigrations();
             }
 
-            app.MapControllers();
             app.UseCustomMiddleware();
-            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.MapControllers();
         }
     }
 }
