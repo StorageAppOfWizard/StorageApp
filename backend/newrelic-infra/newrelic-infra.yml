@@ -1,1 +1,3 @@
-license_key: 
+license_key: ${NRIA_LICENSE_KEY}
+log_file: stdout
+verbose: 0
