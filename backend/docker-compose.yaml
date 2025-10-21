@@ -27,18 +27,20 @@ services:
     build:
       context: ./
       dockerfile: newrelic-infra.dockerfile
-    environment:
-      - NRIA_DISPLAY_NAME=backend-agent
-      - NRIA_LOG_LEVEL=info
     cap_add:
       - SYS_PTRACE
     network_mode: bridge
     pid: host
     privileged: true
+    depends_on:
+      - backend
     volumes:
       - "/:/host:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
     restart: unless-stopped
+
+    
+
 
 networks:
   app-network:

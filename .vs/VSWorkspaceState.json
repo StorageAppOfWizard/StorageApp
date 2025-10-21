@@ -2,11 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\backend",
+    "\\backend\\newrelic-infra",
     "\\backend\\src",
     "\\backend\\src\\StorageProject.Api",
-    "\\backend\\src\\StorageProject.Api\\Configurations",
     "\\frontend"
   ],
-  "SelectedNode": "\\backend\\Dockerfile",
+  "SelectedNode": "\\backend\\.gitattributes",
   "PreviewInSolutionExplorer": false
 }
