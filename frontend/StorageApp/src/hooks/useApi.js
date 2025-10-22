@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts } from "../services/productService";
-import { getBrands } from "../services/brandService";
-import { getCategories } from "../services/categoryService";
+import { getProducts, getBrands, getCategories, createUser } from "../services";
 
 import axios from "axios";
 

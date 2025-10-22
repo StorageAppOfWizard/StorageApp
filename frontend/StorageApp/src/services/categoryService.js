@@ -1,63 +1,61 @@
+import { apiMain as api } from "./api";
 import axios from "axios";
-
-const api = axios.create({
-
-    baseURL: "https://localhost:7216",
-    timeout: 10000,
-    headers: {
-        "Content-Type": "application/json",
-    },
-}); 
 
 
 export const getCategories = async (signal) => {
-    try {
-        const response = await api.get(`/category`, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao buscar categorias:", error);
-        throw error;
-    }
+  try {
+    const { data } = await api.get("/category", { signal });
+    return data.categories || data; 
+  } catch (error) {
+    if (axios.isCancel(error)) return null;
+    console.error("Erro ao buscar categorias:", error);
+    throw new Error(error.response?.data?.message || "Erro ao buscar categorias.");
+  }
 };
 
+
 export const createCategory = async (categoryData, signal) => {
-    try {
-        const response = await api.post(`/category`, categoryData, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) return null;
-        console.error("Erro ao criar categoria:", error);
-        throw error;
-    }
+  try {
+    const { data } = await api.post("/category", categoryData, { signal });
+    return data;
+  } catch (error) {
+    if (axios.isCancel(error)) return null;
+    console.error("Erro ao criar categoria:", error);
+    throw new Error(error.response?.data?.message || "Erro ao criar categoria.");
+  }
 };
 
 export const updateCategory = async (id, categoryData, signal) => {
-    try {
-        const response = await api.put(`/category`, categoryData, { signal });
-        return response.data;
-    } catch (error) {
-        if (axios.isCancel(error)) {
-            console.log(`Requisição de atualização de categoria ${id} cancelada`, error);
-            return null;
-        }
-        console.error(`Erro ao atualizar o categoria ${id}`, error);
-        throw error;
+  try {
+    const { data } = await api.put(`/category/${id}`, categoryData, { signal });
+    return data;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.warn(`Requisição de atualização da categoria ${id} cancelada.`);
+      return null;
     }
+    console.error(`Erro ao atualizar a categoria ${id}:`, error);
+    throw new Error(error.response?.data?.message || "Erro ao atualizar categoria.");
+  }
 };
 
+// 🔹 Excluir categoria (com checagem opcional)
 export const deleteCategory = async (id, signal) => {
-    try {
-        await api.delete(`/category/${id}`, { signal });
-        return;
-    } catch (error) {
-        if (axios.isCancel(error)) {
-            console.log(`Requisição de exclusão de categoria ${id} cancelada`, error);
-            return null;
-        }
-        console.error(`Erro ao excluir o categoria ${id}`, error);
-        throw error;
+  try {
+    await api.delete(`/category/${id}`, { signal });
+    return true;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.warn(`Requisição de exclusão da categoria ${id} cancelada.`);
+      return null;
     }
-};
 
-//Criar exceção de não deixar apagar brand/category estando atrelado a um produto  
+    if (error.response?.status === 409) {
+      console.error("Não é possível excluir esta categoria pois está vinculada a um produto.");
+      throw new Error("Não é possível excluir esta categoria pois está vinculada a um produto.");
+    }
+
+    console.error(`Erro ao excluir a categoria ${id}:`, error);
+    throw new Error(error.response?.data?.message || "Erro ao excluir categoria.");
+  }
+};
