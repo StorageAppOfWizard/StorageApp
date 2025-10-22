@@ -28,18 +28,33 @@ namespace StorageProject.Api.Middlewares
                 _logger.LogError("Exception while handling request: {Method} {Path}/", context.Request.Method, context.Request.Path);
                 throw;
             }
-            finally {
+            finally
+            {
                 sw.Stop();
-                _logger.LogInformation("Finished request {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds}ms", context.Response.StatusCode, sw.ElapsedMilliseconds);
+                _logger.LogInformation("Finished request {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds}ms",
+                    context.Request.Method,
+                    context.Request.Path,
+                    context.Response.StatusCode,
+                    sw.ElapsedMilliseconds
+                );
+            }
         }
-    }
 
-        private static GetLogLevel(int statusCode)
+        private static LogLevel GetLogLevel(int statusCode)
         {
-            switch
-                case 500 => LogLevel.Error
-                case 400 => LogLevel.Warning
-                case 200 => LogLevel.Information
+            switch (statusCode)
+            {
+                case >= 500:
+                    return LogLevel.Error;
+
+                case >= 400:
+                    return LogLevel.Warning;
+
+                default:
+                    return LogLevel.Information;
+            }
         }
+
+    }
 }
 
