@@ -10,6 +10,7 @@ namespace StorageProject.Api.Configurations
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IOrderService, OrderService>();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace StorageProject.Infrastructure.Repositories
         private IProductRepository _productRepository = null!;
         private IBrandRepository _brandRepository = null!;
         private ICategoryRepository _categoryRepository = null!;
+        private IOrderRepository _orderRepository = null!;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -18,6 +19,7 @@ namespace StorageProject.Infrastructure.Repositories
         public IProductRepository ProductRepository => _productRepository ??= new ProductRepository(_context);
         public IBrandRepository BrandRepository => _brandRepository ??= new BrandRepository(_context);
         public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
+        public IOrderRepository OrderRepository => _orderRepository ??= new OrderRepository(_context);
 
 
         public async Task CommitAsync() => await _context.SaveChangesAsync();

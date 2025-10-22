@@ -12,12 +12,17 @@ namespace StorageProject.Infrasctructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Brand> Brands{ get; set; }
         public DbSet<Category> Categories{ get; set; }
+        public DbSet<Order> Orders { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
                 .Property(p => p.Status)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Order>()
+                .Property(p=>p.Status)
                 .HasConversion<string>();
         }
 

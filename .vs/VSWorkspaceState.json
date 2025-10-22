@@ -2,10 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\backend",
-    "\\backend\\newrelic-infra",
     "\\backend\\src",
     "\\backend\\src\\StorageProject.Api",
-    "\\frontend"
+    "\\backend\\src\\StorageProject.Api\\Controllers",
+    "\\backend\\src\\StorageProject.Application",
+    "\\backend\\src\\StorageProject.Application\\Contracts",
+    "\\backend\\src\\StorageProject.Application\\Services",
+    "\\backend\\src\\StorageProject.Domain",
+    "\\backend\\src\\StorageProject.Infrastructure",
+    "\\backend\\src\\StorageProject.Infrastructure\\Repositories"
   ],
+  "SelectedNode": "\\backend\\StorageProject.sln",
   "PreviewInSolutionExplorer": false
 }

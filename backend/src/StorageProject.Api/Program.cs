@@ -1,6 +1,9 @@
+using DotNetEnv;
 using StorageProject.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
 
 builder.Services.AddApiConfiguration(builder.Configuration);
 builder.Services.AddSwaggerConfiguration();
