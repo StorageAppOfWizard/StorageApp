@@ -1,4 +1,7 @@
-﻿namespace StorageProject.Api.Middlewares
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
+
+namespace StorageProject.Api.Middlewares
 {
     public class LoggingMiddleware
     {
@@ -12,13 +15,31 @@
         }
         public async Task InvokeAsync(HttpContext context)
         {
-            // Log the request details
-            _logger.LogInformation("Handling request: {Method} {Path}", context.Request.Method, context.Request.Path);
-            // Call the next middleware in the pipeline
-            await _next(context);
-            // Log the response details
-            _logger.LogInformation("Finished handling request. Response status code: {StatusCode}", context.Response.StatusCode);
+            var sw = Stopwatch.StartNew();
+
+            try
+            {
+                _logger.LogInformation("Handling request: {Method} {Path}", context.Request.Method, context.Request.Path);
+                await _next(context);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception while handling request: {Method} {Path}/", context.Request.Method, context.Request.Path);
+                throw;
+            }
+            finally {
+                sw.Stop();
+                _logger.LogInformation("Finished request {Method} {Path} responded {StatusCode} in {ElapsedMilliseconds}ms", context.Response.StatusCode, sw.ElapsedMilliseconds);
         }
     }
+
+        private static GetLogLevel(int statusCode)
+        {
+            switch
+                case 500 => LogLevel.Error
+                case 400 => LogLevel.Warning
+                case 200 => LogLevel.Information
+        }
 }
 
