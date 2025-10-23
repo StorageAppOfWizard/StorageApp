@@ -4,7 +4,7 @@
     align-items: center;
     flex-direction: column;
     min-height: 100vh !important;
-    margin-right: 10px;
+    padding: 30px;
 }
 
 .login{
@@ -70,5 +70,16 @@
 .login a:hover {
     color: var(--cor-800);
     text-decoration: underline;
+}
+
+.login input.error {
+  border-color: #ef4444;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  margin-bottom: 0;
 }
 
