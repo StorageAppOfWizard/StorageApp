@@ -29,7 +29,14 @@ namespace StorageProject.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateOrderDTO order)
         {
-            var result  = await _orderService.CreateAsync(order);
+            var result  = await _orderService.RequestOrder(order);
+            return result.ToActionResult();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateOrderDTO order)
+        {
+            var result = await _orderService.UpdateOrderAsync(order);
             return result.ToActionResult();
         }
 

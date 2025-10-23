@@ -1,4 +1,5 @@
 ﻿using StorageProject.Application.DTOs.Order;
+using StorageProject.Application.DTOs.Product;
 using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Mappers
@@ -9,6 +10,7 @@ namespace StorageProject.Application.Mappers
         {
             return new OrderDTO
             {
+                Id = order.Id,
                 ProductId = order.ProductId,
                 Quantity = order.QuantityProduct,
                 Status = order.Status,
@@ -16,25 +18,32 @@ namespace StorageProject.Application.Mappers
             };
         }
 
-        public static Order ToEntity(this OrderDTO order)
+        public static Order ToEntity(this OrderDTO dto)
         {
             return new Order
             {
-                ProductId = order.ProductId,
-                UserId = order.UserId,
-                QuantityProduct = order.Quantity
+                ProductId = dto.ProductId,
+                UserId = dto.UserId,
+                QuantityProduct = dto.Quantity
 
             };
         }
 
-        public static Order ToEntity(this CreateOrderDTO order)
+        public static Order ToEntity(this CreateOrderDTO dto)
         {
             return new Order
             {
-                ProductId = order.ProductId,
-                UserId = order.UserId,
-                QuantityProduct = order.Quantity
+                ProductId = dto.ProductId,
+                UserId = dto.UserId,
+                QuantityProduct = dto.Quantity,  
             };
+        }
+
+        public static void ToEntity(this UpdateOrderDTO dto, Order order)
+        {
+
+            order.ProductId = dto.ProductId;
+            order.QuantityProduct = dto.Quantity;
         }
     }
 }
