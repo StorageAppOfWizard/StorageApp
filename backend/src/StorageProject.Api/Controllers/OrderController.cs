@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
+using StorageProject.Application.DTOs.Order;
 using StorageProject.Domain.Entities.Enums;
 using StorageProject.Domain.Entity;
 
@@ -15,6 +16,7 @@ namespace StorageProject.Api.Controllers
         public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
+            
         }
 
         [HttpPost("cancelOrder")]
@@ -25,7 +27,7 @@ namespace StorageProject.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Order order)
+        public async Task<IActionResult> Create([FromBody] CreateOrderDTO order)
         {
             var result  = await _orderService.CreateAsync(order);
             return result.ToActionResult();

@@ -1,8 +1,9 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
+using StorageProject.Application.DTOs.Order;
+using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
-using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Services
 {
@@ -15,28 +16,29 @@ namespace StorageProject.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<List<Order>>> GetAllAsync()
+        public async Task<Result<List<OrderDTO>>> GetAllAsync()
         {
             var order = await _unitOfWork.OrderRepository.GetAll();
             if (order is null)
                 return Result.NoContent();
 
             
-            return Result.Success(order.ToList());
+            return Result.Success(order.Select(o=>o.ToDTO()).ToList());
         }
 
-        public async Task<Result<Order>> GetByIdAsync(Guid id)
+        public async Task<Result<OrderDTO>> GetByIdAsync(Guid id)
         {
             var order = await _unitOfWork.OrderRepository.GetById(id);
             if (order is null)
                 return Result.NoContent();
 
-            return Result.Success(order);
+            return Result.Success(order.ToDTO());
         }
 
-        public async Task<Result> CreateAsync(Order order)
+        public async Task<Result> CreateAsync(CreateOrderDTO order)
         {
-           await _unitOfWork.OrderRepository.Create(order);
+            await _unitOfWork.OrderRepository.Create(order.ToEntity());
+            await _unitOfWork.CommitAsync();
             return Result.Success();
         }
 
@@ -61,7 +63,7 @@ namespace StorageProject.Application.Services
             return Result.Success(order.UpdateStatus(status));
         }
 
-        public Task<Result<Order>> RequestOrder(Order order)
+        public Task<Result<OrderDTO>> RequestOrder(OrderDTO order)
         {
             throw new NotImplementedException();
         }
