@@ -4,6 +4,7 @@ import axios from "axios";
 
 export const createUser = async (userData, signal) => {
   try {
+    console.log("Criando usuário com dados:", userData);
     const { data } = await api.post("/auth/register", userData, { signal });
     return data;
   } catch (error) {
@@ -11,7 +12,7 @@ export const createUser = async (userData, signal) => {
 
     console.error("Erro ao criar usuário:", error);
     throw new Error(
-      error.response?.data?.message || "Erro ao criar usuário. Tente novamente."
+      error|| "Erro ao criar usuário. Tente novamente."
     );
   }
 };

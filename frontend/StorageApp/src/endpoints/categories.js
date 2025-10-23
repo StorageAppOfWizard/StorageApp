@@ -5,5 +5,17 @@ export const categoryEndpoint = {
     fn: getCategories,
   },
 
+  CategoryCreate: {
+    fn: createCategory,
+  },
+
+  CategoryUpdate: {
+    fn: updateCategory,
+  },
+
+  CategoryDelete: {
+    fn: deleteCategory,
+  },
+
 
 };
