@@ -1,6 +1,5 @@
 // Para operações de mutação (POST, PUT, DELETE)
 import { useState } from "react";
-import axios from "axios";
 import { endpointMap } from "../endpoints";
 
 const getEndpointConfig = (endpointPath) => {

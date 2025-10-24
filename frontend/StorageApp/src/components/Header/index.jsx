@@ -40,6 +40,9 @@ export default function Header({ profileName = "", overrideTitle, overrideIcon }
             <div onClick={() => handleOptionClick('/historicos')} className={styles.dropdownItem}>
               Histórico
             </div>
+            <div onClick={() => handleOptionClick('/')} className={styles.dropdownItem}>
+              Sair
+            </div>
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/Singn.module.css";
 import { useMutateApi } from "../../hooks/useMutateApi";
-import { useRegisterForm } from "../../hooks/useFormRegister";
+import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";
 import { useToast } from "../../contexts/ToastContext";
 
@@ -23,39 +23,35 @@ export default function SingnUp() {
         touched,
         validate,
         resetForm
-    } = useRegisterForm();
+    } = useAuthForm("register");
 
-    async function handleSignUp(e) {
-        e.preventDefault();
+async function handleSignUp(e) {
+    e.preventDefault();
+    setFormError(null);
+    errorShown.current = false;
 
-        setFormError(null);
-        errorShown.current = false;
-
-        if (!validate()) {
-            toast.warning("Por favor, corrija os erros no formulário");
-            return;
-        }
-
-        try {
-            successShown.current = false;
-            await mutate(values);
-        } catch (err) {
-        }
+    if (!validate()) {
+        toast.warning("Por favor, corrija os erros no formulário");
+        return;
     }
 
-    useEffect(() => {
-        if (mutationResult && successShown.current) {
-            successShown.current = true;
+    successShown.current = false;
+    await mutate(values);
+}
 
-            toast.success("Conta criada com sucesso! Bem-vindo(a)!");
-            resetForm();
-            setFormError(null);
+useEffect(() => {
+    if (mutationResult && !successShown.current) {
+        successShown.current = true;
 
-            setTimeout(() => {
-                navigate("/produtos", { replace: true });
-            }, 1500);
-        }
-    }, [mutationResult]);
+        toast.success("Conta criada com sucesso! Bem-vindo(a)!");
+        resetForm();
+        setFormError(null);
+
+        setTimeout(() => {
+            navigate("/produtos", { replace: true });
+        }, 1500);
+    }
+}, [mutationResult, navigate, toast, resetForm]);
 
     useEffect(() => {
         if (error && !errorShown.current) {
