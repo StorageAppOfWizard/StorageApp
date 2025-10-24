@@ -47,10 +47,10 @@ namespace StorageProject.Application.Services
                 return Result.Error("There is not sufficient quantity for this order");
             if (dto.UserId is null)
                 return Result.Error("Sign in for create a order");
-            
+
             existingProduct.Quantity -= dto.Quantity;
             await _unitOfWork.OrderRepository.Create(dto.ToEntity());
-            
+
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Created");
         }
@@ -63,6 +63,17 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Order not exist");
             if (order.Status == OrderStatus.Approved)
                 return Result.Error("You can't delete one order already approved");
+ 
+
+            var statusThatRestoreStock = new[] {
+                    OrderStatus.Pending,
+             };
+
+            if (statusThatRestoreStock.Contains(order.Status))
+            {
+                var product = await _unitOfWork.ProductRepository.GetById(order.ProductId);
+                product.Quantity += order.QuantityProduct;
+            }
 
             _unitOfWork.OrderRepository.Delete(order);
             await _unitOfWork.CommitAsync();
