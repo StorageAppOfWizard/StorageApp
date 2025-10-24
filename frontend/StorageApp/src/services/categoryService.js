@@ -39,7 +39,7 @@ export const updateCategory = async (id, categoryData, signal) => {
   }
 };
 
-// 🔹 Excluir categoria (com checagem opcional)
+
 export const deleteCategory = async (id, signal) => {
   try {
     await api.delete(`/category/${id}`, { signal });

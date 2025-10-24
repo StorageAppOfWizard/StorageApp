@@ -1,63 +1,63 @@
-// src/pages/singnUp/index.jsx
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/Singn.module.css";
 import { useMutateApi } from "../../hooks/useMutateApi";
+import { useAuthForm } from "../../hooks/useAuthForm";
+import { ValidatedInput } from "../../components/ValidateInput";
+import { useToast } from "../../contexts/ToastContext";
 
 export default function SingnUp() {
-    const [userName, setuserName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirmed, setpasswordConfirmed] = useState("");
     const [formError, setFormError] = useState(null);
-
     const { mutate, loading, error, mutationResult } = useMutateApi("Auth.UserCreate");
+    const navigate = useNavigate();
+    const toast = useToast();
 
-    async function handleSignUp(e) {
-        e.preventDefault();
+    const successShown = useRef(false);
+    const errorShown = useRef(false);
 
-        console.log("Tentando criar conta com:", { userName, email, password, passwordConfirmed });
+    const {
+        values,
+        handlers,
+        blurHandlers,
+        errors,
+        touched,
+        validate,
+        resetForm
+    } = useAuthForm("register");
 
-        // Validação básica
-        if (!userName || !email || !password || !passwordConfirmed) {
-            setFormError("Todos os campos são obrigatórios");
-            return;
-        }
-        if (password !== passwordConfirmed) {
-            setFormError("As senhas não coincidem");
-            return;
-        }
-        if (password.length < 6) {
-            setFormError("A senha deve ter pelo menos 6 caracteres");
-            return;
-        }
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            setFormError("Email inválido");
-            return;
-        }
+async function handleSignUp(e) {
+    e.preventDefault();
+    setFormError(null);
+    errorShown.current = false;
 
-        setFormError(null);
-        try {
-            await mutate({ userName, email, password, passwordConfirmed });
-        } catch (err) {
-            console.error("Erro na mutação:", err);
-        }
+    if (!validate()) {
+        toast.warning("Por favor, corrija os erros no formulário");
+        return;
     }
 
-    useEffect(() => {
-        if (mutationResult) {
-            alert("Usuário criado com sucesso!");
-            setuserName("");
-            setEmail("");
-            setPassword("");
-            setpasswordConfirmed("");
-            setFormError(null);
-        }
-    }, [mutationResult]);
+    successShown.current = false;
+    await mutate(values);
+}
+
+useEffect(() => {
+    if (mutationResult && !successShown.current) {
+        successShown.current = true;
+
+        toast.success("Conta criada com sucesso! Bem-vindo(a)!");
+        resetForm();
+        setFormError(null);
+
+        setTimeout(() => {
+            navigate("/produtos", { replace: true });
+        }, 1500);
+    }
+}, [mutationResult, navigate, toast, resetForm]);
 
     useEffect(() => {
-        if (error) {
-            alert("Erro: " + error);
+        if (error && !errorShown.current) {
+            errorShown.current = true;
+            
+            toast.error(error)
         }
     }, [error]);
 
@@ -66,38 +66,55 @@ export default function SingnUp() {
             <div className={styles.login}>
                 <form onSubmit={handleSignUp}>
                     <h1>Criar Conta</h1>
-                    {formError && <p style={{ color: "red" }}>{formError}</p>}
-                    <input
+
+                    <ValidatedInput
                         type="text"
                         placeholder="Nome do Usuário"
-                        value={userName}
-                        onChange={(e) => setuserName(e.target.value)}
+                        value={values.userName}
+                        onChange={handlers.userName}
+                        onBlur={blurHandlers.userName}
+                        error={errors.userName}
+                        touched={touched.userName}
                         disabled={loading}
                     />
-                    <input
+
+                    <ValidatedInput
                         type="email"
                         placeholder="email@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={values.email}
+                        onChange={handlers.email}
+                        onBlur={blurHandlers.email}
+                        error={errors.email}
+                        touched={touched.email}
                         disabled={loading}
                     />
-                    <input
+
+                    <ValidatedInput
                         type="password"
                         placeholder="Senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={values.password}
+                        onChange={handlers.password}
+                        onBlur={blurHandlers.password}
+                        error={errors.password}
+                        touched={touched.password}
                         disabled={loading}
                     />
-                    <input
+
+                    <ValidatedInput
                         type="password"
                         placeholder="Confirmar Senha"
-                        value={passwordConfirmed}
-                        onChange={(e) => setpasswordConfirmed(e.target.value)}
+                        value={values.passwordConfirmed}
+                        onChange={handlers.passwordConfirmed}
+                        onBlur={blurHandlers.passwordConfirmed}
+                        error={errors.passwordConfirmed}
+                        touched={touched.passwordConfirmed}
                         disabled={loading}
                     />
+
                     <button type="submit" disabled={loading}>
                         {loading ? "Criando..." : "Criar Conta"}
                     </button>
+
                     <Link to="/">Já tenho conta</Link>
                 </form>
             </div>

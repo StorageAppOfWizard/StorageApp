@@ -1,5 +1,5 @@
 //Ajustar as entradas e saidas
-
+import { ToastProvider } from "../contexts/ToastContext";
 import { Routes, Route } from "react-router-dom";
 import Produtos from "../pages/produtos/index";
 import CreateProduto from "../pages/criar";
@@ -9,15 +9,17 @@ import SingnUp from "../pages/singnUp";
 
 export default function RoutesApp() {
   return (
-    <Routes>
-      <Route path="/" element={<SingnIn />} />
-      <Route path="/cadastrar" element={<SingnUp />} />
-      <Route element={<Layout />}>
-        
+    <ToastProvider>
+      <Routes>
+        <Route path="/" element={<SingnIn />} />
+        <Route path="/cadastrar" element={<SingnUp />} />
+        <Route element={<Layout />}>
 
-        <Route path="/produtos" element={<Produtos />} />
-        <Route path="/criar" element={<CreateProduto />} />
-      </Route>
-    </Routes>
+
+          <Route path="/produtos" element={<Produtos />} />
+          <Route path="/criar" element={<CreateProduto />} />
+        </Route>
+      </Routes>
+    </ToastProvider>
   );
 }

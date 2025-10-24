@@ -2,7 +2,7 @@ import { ShoppingCart, Package, Users, DollarSign, Settings, PackagePlus } from 
 
 export const menuItems = [
     { name: "Pedidos", icon: ShoppingCart, path: "/pedidos" },
-    { name: "Produtos", icon: Package, path: "/" },
+    { name: "Produtos", icon: Package, path: "/produtos" },
     { name: "Clientes", icon: Users, path: "/clientes" },
     { name: "Históricos", icon: DollarSign, path: "/historicos" },
     { name: "Usuários", icon: Users, path: "/usuarios" },
@@ -10,7 +10,7 @@ export const menuItems = [
 ];
 
 export const headerData = {
-    "/": { title: "Produtos", icon: Package },
+    "/produtos": { title: "Produtos", icon: Package },
     "/pedidos": { title: "Pedidos", icon: ShoppingCart },
     "/clientes": { title: "Clientes", icon: Users  },
     "/historicos": { title: "Históricos", icon: DollarSign },

@@ -1,6 +1,5 @@
 // Para operações de mutação (POST, PUT, DELETE)
 import { useState } from "react";
-import axios from "axios";
 import { endpointMap } from "../endpoints";
 
 const getEndpointConfig = (endpointPath) => {
@@ -27,12 +26,13 @@ export const useMutateApi = (endpoint) => {
 
       const response = await config.fn(mutationData, controller.signal);
       setMutationResult(response);
+      console.log(response)
       return response;
+
     } catch (error) {
-      if (!axios.isCancel(error)) {
-        setError(`Erro ao processar mutação: ${error.message}`);
-      }
-      throw error;
+      console.log(error)
+      setError(`${error.response.data.errors}`);
+
     } finally {
       setLoading(false);
     }
