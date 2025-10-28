@@ -2,8 +2,6 @@
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
-using StorageProject.Domain.Entities.Enums;
-using StorageProject.Domain.Entity;
 
 namespace StorageProject.Api.Controllers
 {
@@ -19,17 +17,24 @@ namespace StorageProject.Api.Controllers
             
         }
 
-        [HttpPost("cancelOrder")]
-        public async Task<IActionResult> CancelOrder([FromBody] Guid id, OrderStatus status)
+        [HttpPatch("reject-order/{id:Guid}")]
+        public async Task<IActionResult> CancelOrder(Guid id)
         {
-            var result = await _orderService.CancelOrderAsync(id, status);
+            var result = await _orderService.RejectOrderAsync(id);
             return result.ToActionResult();
         }
 
-        [HttpPost]
+        [HttpPatch("approve-order/{id:Guid}")]
+        public async Task<IActionResult> ApproveOrder(Guid id)
+        {
+            var result = await _orderService.ApproveOrderAsync(id);
+            return result.ToActionResult();
+        }
+
+        [HttpPost("create-order")]
         public async Task<IActionResult> Create([FromBody] CreateOrderDTO order)
         {
-            var result  = await _orderService.RequestOrder(order);
+            var result  = await _orderService.CreateOrderAsync(order);
             return result.ToActionResult();
         }
 
@@ -58,7 +63,7 @@ namespace StorageProject.Api.Controllers
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result  = await _orderService.DeleteAsync(id);
+            var result  = await _orderService.DeleteOrderAsync(id);
             return result.ToActionResult();
         }
 

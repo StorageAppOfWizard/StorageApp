@@ -1,5 +1,4 @@
 ﻿using StorageProject.Application.DTOs.Order;
-using StorageProject.Application.DTOs.Product;
 using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Mappers
@@ -15,6 +14,8 @@ namespace StorageProject.Application.Mappers
                 Quantity = order.QuantityProduct,
                 Status = order.Status,
                 UserId = order.UserId,
+                CreationDate = order.CreationDate
+
             };
         }
 
@@ -36,6 +37,7 @@ namespace StorageProject.Application.Mappers
                 ProductId = dto.ProductId,
                 UserId = dto.UserId,
                 QuantityProduct = dto.Quantity,  
+
             };
         }
 

@@ -39,22 +39,6 @@ namespace StorageProject.Api.Middlewares
                 );
             }
         }
-
-        private static LogLevel GetLogLevel(int statusCode)
-        {
-            switch (statusCode)
-            {
-                case >= 500:
-                    return LogLevel.Error;
-
-                case >= 400:
-                    return LogLevel.Warning;
-
-                default:
-                    return LogLevel.Information;
-            }
-        }
-
     }
 }
 

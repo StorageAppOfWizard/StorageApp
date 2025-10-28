@@ -6,6 +6,8 @@ using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
+
+//TO DO: explicitar o update
 namespace StorageProject.Application.Services
 {
     public class BrandService : IBrandService

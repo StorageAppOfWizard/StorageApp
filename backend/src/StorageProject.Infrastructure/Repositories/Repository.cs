@@ -24,12 +24,13 @@ namespace StorageProject.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken = default)
             => await _dbSet
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-       
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-        public async Task<T> GetById(Guid id, CancellationToken cancellationToken = default)
-            => await _dbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+        public async Task<T?> GetById(Guid id, CancellationToken cancellationToken = default)
+            => await _dbSet
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         
         public async Task<IEnumerable<T?>> GetPagedAsync(int? page, int? pageQuantity, CancellationToken cancellationToken = default)
             => await _dbSet

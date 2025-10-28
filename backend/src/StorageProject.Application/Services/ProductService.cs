@@ -1,12 +1,13 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
-using StorageProject.Application.DTOs.Brand;
 using StorageProject.Application.DTOs.Product;
 using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 
+
+//TO DO: explicitar o update
 namespace StorageProject.Application.Services
 {
     public class ProductService : IProductService
@@ -81,6 +82,7 @@ namespace StorageProject.Application.Services
         {
             var entity = await _unitOfWork.ProductRepository.GetById(dto.Id);
             dto.ToEntity(entity);
+            _unitOfWork.ProductRepository.Update(entity);
             await _unitOfWork.CommitAsync();
 
             return Result.Success();
