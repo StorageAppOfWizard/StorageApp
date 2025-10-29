@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
+using StorageProject.Application.Handlers;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
@@ -11,10 +12,17 @@ namespace StorageProject.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly Dictionary<OrderStatus, IOrderStatusHandler> _statusHandler;
 
         public OrderService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+
+            _statusHandler = new Dictionary<OrderStatus, IOrderStatusHandler>
+            {
+                {OrderStatus.Pending, new PendingStatusHandler()},
+                {OrderStatus.Reject, new RejectStatusHandler()},
+            };
         }
 
         public async Task<Result<List<OrderDTO>>> GetAllAsync()
@@ -56,24 +64,23 @@ namespace StorageProject.Application.Services
         public async Task<Result> RejectOrderAsync(Guid orderId)
         {
             var order = await _unitOfWork.OrderRepository.GetById(orderId);
+            var product = await _unitOfWork.ProductRepository.GetById(order.ProductId);
             if (order is null)
                 return Result.NotFound("Not Found Order");
 
             if (order.Status is not OrderStatus.Pending)
                 return Result.Error("You can to reject only pending order");
-            
+
             order.UpdateStatus(OrderStatus.Reject);
 
-            var restoreResult = await RestoreProductStock(order);
-            
-            if (!restoreResult.IsSuccess)
-                    return restoreResult;
+            var handler = _statusHandler[order.Status];
+            var result = handler.Handle(order, product,null);   
 
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Rejected");
         }
-        
+
         public async Task<Result> ApproveOrderAsync(Guid orderId)
         {
             var order = await _unitOfWork.OrderRepository.GetById(orderId);
@@ -82,7 +89,7 @@ namespace StorageProject.Application.Services
 
             if (order.Status is not OrderStatus.Pending)
                 return Result.Error("You can to approve only pending order");
-            
+
             order.UpdateStatus(OrderStatus.Approved);
 
             _unitOfWork.OrderRepository.Update(order);
@@ -90,7 +97,7 @@ namespace StorageProject.Application.Services
 
             return Result.SuccessWithMessage("Order Approved");
         }
-        
+
         public async Task<Result> DeleteOrderAsync(Guid id)
         {
             var order = await _unitOfWork.OrderRepository.GetById(id);
@@ -103,7 +110,7 @@ namespace StorageProject.Application.Services
 
             if (order.Status == OrderStatus.Pending)
             {
-                var restoreResult  = await RestoreProductStock(order);
+                var restoreResult = await RestoreProductStock(order);
                 if (!restoreResult.IsSuccess)
                     return restoreResult;
             }
@@ -124,23 +131,37 @@ namespace StorageProject.Application.Services
             if (product is null)
                 return Result.NotFound("Product not found");
 
+
+
+
             if (order.Status == OrderStatus.Approved)
                 return Result.Error("You can't update an order that is already approved.");
+
 
             var oldStatus = order.Status;
             var newStatus = dto.Status;
 
-            if (oldStatus == OrderStatus.Pending && newStatus == OrderStatus.Reject)
+            if (oldStatus == OrderStatus.Reject && newStatus == OrderStatus.Reject)
+                return Result.Error($"You can't update a rejected order to {newStatus}");
+
+            if (oldStatus == OrderStatus.Pending && newStatus == OrderStatus.Pending)
+            {
                 product.Quantity += order.QuantityProduct;
+                product.Quantity -= dto.Quantity;
 
+            }
 
-            if (oldStatus == OrderStatus.Reject && newStatus == OrderStatus.Pending)
+            if (newStatus == OrderStatus.Reject)
+                await RestoreProductStock(order);
+
+            if (newStatus == OrderStatus.Pending)
             {
                 if (product.Quantity < dto.Quantity)
                     return Result.Error("Insufficient stock to reopen this order.");
 
                 product.Quantity -= dto.Quantity;
             }
+
 
             dto.ToEntity(order);
             order.UpdateStatus(newStatus);
@@ -155,11 +176,12 @@ namespace StorageProject.Application.Services
 
         private async Task<Result> RestoreProductStock(Order order)
         {
-            var product  = await _unitOfWork.ProductRepository.GetById(order.ProductId);
+            var product = await _unitOfWork.ProductRepository.GetById(order.ProductId);
             if (product is null)
                 return Result.Error("Product not found - unable to restore stock");
 
             product.Quantity += order.QuantityProduct;
+            _unitOfWork.ProductRepository.Update(product);
             return Result.Success();
         }
 

@@ -5,6 +5,7 @@ using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
+using StorageProject.Domain.Entities.Enums;
 
 
 //TO DO: explicitar o update
@@ -64,7 +65,7 @@ namespace StorageProject.Application.Services
             if (validation.Count != 0)
                 return Result.Invalid(validation);
 
-            var existingProduct = await _unitOfWork.ProductRepository.GetByNameAsync(dto.Name);
+            var existingProduct = await _unitOfWork.ProductRepository.GetByConditionAsync(p => p.Name == dto.Name && p.Id != dto.Id);
             if (existingProduct is not null)
                 return Result.Conflict($"Product with the name {existingProduct.Name} already exists.");
 
@@ -73,7 +74,8 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Not Found Product");
 
             dto.ToEntity(entity);
-            await _unitOfWork.CommitAsync();//The EF detect the tracking, don't need .Update() function
+            _unitOfWork.ProductRepository.Update(entity);
+            await _unitOfWork.CommitAsync();
 
             return Result.SuccessWithMessage($"{dto.Name} changed");
         }
@@ -93,6 +95,13 @@ namespace StorageProject.Application.Services
             var product = await _unitOfWork.ProductRepository.GetById(id);
             if (product is null)
                 return Result.NotFound("Not Found Product");
+
+            var orders = await _unitOfWork.OrderRepository.GetAll();
+            var hasLinkedOrder = orders.Any(o => o.ProductId == id);
+            var pendingOrders = orders.Any(o => o.Status == OrderStatus.Pending);
+
+            if (hasLinkedOrder && pendingOrders)
+                return Result.Error("Exist a order pending with this product");
 
             _unitOfWork.ProductRepository.Delete(product);
 
