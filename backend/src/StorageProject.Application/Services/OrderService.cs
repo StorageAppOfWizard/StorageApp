@@ -64,11 +64,12 @@ namespace StorageProject.Application.Services
             if (order is null)
                 return Result.NotFound("Not Found Order");
 
-            await _orderHandler
-                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject)
-                .Handle(order,product);
+            var handler = _orderHandler
+                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject);
 
-          
+            if (handler is null)
+                return Result.Error($"There's not handler for status ${order.Status}");
+
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Rejected");
@@ -80,9 +81,11 @@ namespace StorageProject.Application.Services
             if (order is null)
                 return Result.NotFound("Not Found Order");
 
-            await _orderHandler
-                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Approved)
-                .Handle(order,null);
+            var handler = _orderHandler
+                 .FirstOrDefault(x => x.TargetStatus == OrderStatus.Approved);
+
+            if (handler is null)
+                return Result.Error($"There's not handler for status ${order.Status}");
 
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
@@ -98,10 +101,13 @@ namespace StorageProject.Application.Services
             if (order is null)
                 return Result.NotFound("Order not exist");
 
-            await _orderHandler
-                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject)
-                .Handle(order,product);
-            
+            var handler = _orderHandler
+                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject);
+
+            if (handler is null)
+                return Result.Error($"There's not handler for status ${order.Status}");
+
+            await handler.Handle(order,product);
 
             _unitOfWork.OrderRepository.Delete(order);
             await _unitOfWork.CommitAsync();
