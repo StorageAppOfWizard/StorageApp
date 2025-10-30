@@ -38,13 +38,6 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateOrderDTO order)
-        {
-            var result = await _orderService.UpdateOrderAsync(order);
-            return result.ToActionResult();
-        }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
