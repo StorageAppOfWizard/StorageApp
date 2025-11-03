@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, createUser, loginUser, updateUser, deleteUser } from "../services/authService";
+import { getAllUsers, getUserById, createUser, loginUser, updateUser, deleteUser, logoutUser } from "../services/authService";
 
 export const authEndpoint = {
   UserGetAll: {
@@ -21,6 +21,10 @@ export const authEndpoint = {
   },
   UserDelete: {
     fn: deleteUser,
+    isMutation: true,
+  },
+  UserLogout: {
+    fn: logoutUser,
     isMutation: true,
   },
 };

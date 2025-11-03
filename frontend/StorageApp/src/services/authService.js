@@ -14,10 +14,26 @@ export const createUser = async (userData, signal) => {
 export const loginUser = async (userData, signal) => {
   try {
     const { data } = await api.post("/auth/login", userData, { signal });
+
+    localStorage.setItem("token", data.token)
     return data;
   } catch (error) {
     throw error
   }
+};
+
+
+export const logoutUser = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("user")
+};
+
+export const isAuthenticated = () => {
+  return !!localStorage.getItem("token");
+};
+
+export const getToken = () => {
+  return localStorage.getItem("token");
 };
 
 
