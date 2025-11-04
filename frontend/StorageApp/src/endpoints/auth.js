@@ -3,7 +3,7 @@ import { getAllUsers, getUserById, createUser, loginUser, updateUser, deleteUser
 export const authEndpoint = {
   UserGetAll: {
     fn: getAllUsers,
-  },
+  }, 
   UserGetById: {
     fn: getUserById,
   },

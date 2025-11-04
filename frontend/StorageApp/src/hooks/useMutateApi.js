@@ -1,10 +1,17 @@
-// Para operações de mutação (POST, PUT, DELETE)
 import { useState } from "react";
 import { endpointMap } from "../endpoints";
 
 const getEndpointConfig = (endpointPath) => {
-  const [group, specificEndpoint] = endpointPath.split(".");
-  return endpointMap[group]?.[specificEndpoint];
+  if (typeof endpointPath === "string") {
+    const [group, specificEndpoint] = endpointPath.split(".");
+    return endpointMap[group]?.[specificEndpoint];
+  }
+
+  if (typeof endpointPath === "object" && endpointPath.fn) {
+    return endpointPath;
+  }
+
+  return null;
 };
 
 export const useMutateApi = (endpoint) => {
@@ -12,7 +19,7 @@ export const useMutateApi = (endpoint) => {
   const [error, setError] = useState(null);
   const [mutationResult, setMutationResult] = useState(null);
 
-  const mutate = async (mutationData) => {
+  const mutate = async (mutationData, options = {}) => {
     const controller = new AbortController();
     setLoading(true);
     setError(null);
@@ -21,18 +28,37 @@ export const useMutateApi = (endpoint) => {
     try {
       const config = getEndpointConfig(endpoint);
       if (!config || !config.isMutation) {
-        throw new Error("Endpoint não suportado ou não é uma mutação");
+        throw new Error("Endpoint inválido ou não é uma mutação");
       }
 
       const response = await config.fn(mutationData, controller.signal);
       setMutationResult(response);
-      console.log(response)
+
+      if (options.onSuccess) options.onSuccess(response);
       return response;
 
-    } catch (error) {
-      console.log(error)
-      setError(`${error.response.data.errors}`);
+    } catch (err) {
+      console.error("❌ Erro na mutação:", err);
 
+      let message = "Erro desconhecido.";
+
+      const dataErrors = err.response?.data?.errors;
+
+      if (dataErrors) {
+        if (typeof dataErrors === "string") {
+          message = dataErrors;
+        } else if (Array.isArray(dataErrors)) {
+          message = dataErrors.join(", ");
+        } else if (typeof dataErrors === "object") {
+          message = Object.values(dataErrors).join(", ");
+        }
+      } else if (err.message) {
+        message = err.message;
+      }
+
+      setError(message);
+
+      if (options.onError) options.onError(err);
     } finally {
       setLoading(false);
     }

@@ -4,15 +4,15 @@ import styles from '../../styles/header.module.css';
 import { ChevronDown } from 'lucide-react';
 import { headerData } from '../../data/menuItems';
 import { useMutateApi } from '../../hooks/useMutateApi';
-import { authEndpoint } from '../../endpoints/auth';
 
 export default function Header({ profileName = "", overrideTitle, overrideIcon }) {
 
-  const { mutate } = useMutateApi(authEndpoint.UserLogout)
-
+  const { mutate: logout, loading } = useMutateApi("Auth.UserLogout");
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const { title, icon: Icon } = overrideTitle || overrideIcon
     ? { title: overrideTitle, icon: overrideIcon }
     : (headerData[location.pathname] || { title: "Página Não Encontrada", icon: null });
@@ -26,10 +26,17 @@ export default function Header({ profileName = "", overrideTitle, overrideIcon }
     setIsDropdownOpen(false);
   };
 
-  const handleLogout = () => {
-    mutate(null, {
-      onSuccess: () => navigate("/"),
-    });
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("userData");
+
+      navigate("/");
+    } catch (error) {
+      console.error("❌ Erro ao fazer logout:", error);
+    }
   };
 
   return (
