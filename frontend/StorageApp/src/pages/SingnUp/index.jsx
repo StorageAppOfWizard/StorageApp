@@ -43,12 +43,12 @@ useEffect(() => {
     if (mutationResult && !successShown.current) {
         successShown.current = true;
 
-        toast.success("Conta criada com sucesso! Bem-vindo(a)!");
+        toast.success("Cadastro criado com sucesso!");
         resetForm();
         setFormError(null);
 
         setTimeout(() => {
-            navigate("/produtos", { replace: true });
+            navigate("/", { replace: true });
         }, 1500);
     }
 }, [mutationResult, navigate, toast, resetForm]);

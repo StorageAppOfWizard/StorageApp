@@ -3,24 +3,40 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from '../../styles/header.module.css';
 import { ChevronDown } from 'lucide-react';
 import { headerData } from '../../data/menuItems';
-
-//Tem que criar as condições para criar o usuario
+import { useMutateApi } from '../../hooks/useMutateApi';
 
 export default function Header({ profileName = "", overrideTitle, overrideIcon }) {
+
+  const { mutate: logout, loading } = useMutateApi("Auth.UserLogout");
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const { title, icon: Icon } = overrideTitle || overrideIcon
     ? { title: overrideTitle, icon: overrideIcon }
     : (headerData[location.pathname] || { title: "Página Não Encontrada", icon: null });
 
   const handleDropdownToggle = () => {
-    setIsDropdownOpen((prev) => !prev); 
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const handleOptionClick = (path) => {
     navigate(path);
     setIsDropdownOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("userData");
+
+      navigate("/");
+    } catch (error) {
+      console.error("❌ Erro ao fazer logout:", error);
+    }
   };
 
   return (
@@ -40,7 +56,7 @@ export default function Header({ profileName = "", overrideTitle, overrideIcon }
             <div onClick={() => handleOptionClick('/historicos')} className={styles.dropdownItem}>
               Histórico
             </div>
-            <div onClick={() => handleOptionClick('/')} className={styles.dropdownItem}>
+            <div onClick={handleLogout} className={styles.dropdownItem}>
               Sair
             </div>
           </div>
