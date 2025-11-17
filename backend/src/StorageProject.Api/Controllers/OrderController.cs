@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
+using System.Security.Claims;
 
 namespace StorageProject.Api.Controllers
 {
@@ -31,9 +33,11 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost("create-order")]
         public async Task<IActionResult> Create([FromBody] CreateOrderDTO order)
         {
+
             var result  = await _orderService.CreateOrderAsync(order);
             return result.ToActionResult();
         }

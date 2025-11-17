@@ -30,13 +30,13 @@ namespace StorageProject.Application.Mappers
             };
         }
 
-        public static Order ToEntity(this CreateOrderDTO dto)
+        public static Order ToEntity(this CreateOrderDTO dto, string userId)
         {
             return new Order
             {
                 ProductId = dto.ProductId,
-                UserId = dto.UserId,
-                QuantityProduct = dto.Quantity,  
+                UserId = userId,
+                QuantityProduct = dto.Quantity,
 
             };
         }

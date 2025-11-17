@@ -28,7 +28,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Get(
             [FromQuery] int page = 1,
             [FromQuery] int pageQuantity = 20)
@@ -43,7 +43,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet("{id:Guid}")]
-        //[Authorize(Policy = "AdminOrManager")]
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var result = await _productService.GetByIdAsync(id);

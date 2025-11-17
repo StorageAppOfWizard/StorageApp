@@ -14,6 +14,7 @@ namespace StorageProject.Api.Configurations
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderHandler, ApprovedHandler>();
             services.AddScoped<IOrderHandler, RejectHandler>();
+            services.AddHttpContextAccessor();
 
         }
     }

@@ -1,10 +1,12 @@
 ﻿using Ardalis.Result;
+using Microsoft.AspNetCore.Http;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
 using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
+using System.Security.Claims;
 
 namespace StorageProject.Application.Services
 {
@@ -12,11 +14,14 @@ namespace StorageProject.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEnumerable<IOrderHandler> _orderHandler;
+        private readonly IHttpContextAccessor _context;
 
-        public OrderService(IUnitOfWork unitOfWork, IEnumerable<IOrderHandler> orderHandler)
+
+        public OrderService(IUnitOfWork unitOfWork, IEnumerable<IOrderHandler> orderHandler, IHttpContextAccessor context)
         {
             _unitOfWork = unitOfWork;
             _orderHandler = orderHandler;
+            _context = context;
         }
 
         public async Task<Result<List<OrderDTO>>> GetAllAsync()
@@ -39,18 +44,21 @@ namespace StorageProject.Application.Services
 
         public async Task<Result> CreateOrderAsync(CreateOrderDTO dto)
         {
+            
             var existingProduct = await _unitOfWork.ProductRepository.GetById(dto.ProductId);
             if (existingProduct is null)
                 return Result.NotFound("Not Found Product, check if the product exist");
 
             if (existingProduct.Quantity < dto.Quantity)
                 return Result.Error("There is not sufficient quantity for this order");
+            
+            var userId = _context.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (dto.UserId is null)
-                return Result.Error("Sign in for create a order");
+            if (userId is null)
+                return Result.Unauthorized("Sign in for create a order");
 
             existingProduct.Quantity -= dto.Quantity;
-            await _unitOfWork.OrderRepository.Create(dto.ToEntity());
+            await _unitOfWork.OrderRepository.Create(dto.ToEntity(userId));
 
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Created");
@@ -70,6 +78,8 @@ namespace StorageProject.Application.Services
             if (handler is null)
                 return Result.Error($"There's not handler for status ${order.Status}");
 
+            await handler.Handle(order,product);
+
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Rejected");
@@ -78,6 +88,7 @@ namespace StorageProject.Application.Services
         public async Task<Result> ApproveOrderAsync(Guid orderId)
         {
             var order = await _unitOfWork.OrderRepository.GetById(orderId);
+
             if (order is null)
                 return Result.NotFound("Not Found Order");
 
@@ -86,6 +97,8 @@ namespace StorageProject.Application.Services
 
             if (handler is null)
                 return Result.Error($"There's not handler for status ${order.Status}");
+
+            await handler.Handle(order,null);
 
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
