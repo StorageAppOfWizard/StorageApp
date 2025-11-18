@@ -57,10 +57,15 @@ namespace StorageProject.Tests.Services.ProductServiceTest
                 Description="",
                 Quantity = 10
             };
+
+
+            
+            
+
             var existingProductName = new Product { Id = dto.Id, Name = dto.Name };
 
             _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetById(dto.Id, cancellationToken)).ReturnsAsync(existingProductName);
-            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetByNameAsync(dto.Name, cancellationToken)).ReturnsAsync(existingProductName);
+            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetByConditionAsync(p => p.Name == dto.Name && p.Id != dto.Id)).ReturnsAsync(existingProductName);
 
             //Act
             var result = await _fixture.Service.UpdateAsync(dto);

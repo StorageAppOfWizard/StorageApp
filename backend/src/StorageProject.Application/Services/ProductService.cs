@@ -97,10 +97,10 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Not Found Product");
 
             var orders = await _unitOfWork.OrderRepository.GetAll();
-            var hasLinkedOrder = orders.Any(o => o.ProductId == id);
-            var pendingOrders = orders.Any(o => o.Status == OrderStatus.Pending);
+            var hasLinkedPendingOrder = orders.Any(o => o.ProductId == id && o.Status ==OrderStatus.Pending);
+            
 
-            if (hasLinkedOrder && pendingOrders)
+            if (hasLinkedPendingOrder)
                 return Result.Error("Exist a order pending with this product");
 
             _unitOfWork.ProductRepository.Delete(product);
