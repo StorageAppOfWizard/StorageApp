@@ -33,7 +33,7 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
-        [Authorize(Policy = "AdminOrManager")]
+        [Authorize]
         [HttpPost("create-order")]
         public async Task<IActionResult> Create([FromBody] CreateOrderDTO order)
         {
@@ -46,6 +46,15 @@ namespace StorageProject.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var result = await _orderService.GetAllAsync();
+            return result.ToActionResult();
+
+        }
+
+        [Authorize]
+        [HttpGet("my-orders")]
+        public async Task<IActionResult> GetByUser()
+        {
+            var result = await _orderService.GetOrdersByUserIdAsync();
             return result.ToActionResult();
 
         }

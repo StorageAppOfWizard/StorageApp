@@ -13,6 +13,7 @@ namespace StorageProject.Api.Configurations
                 app.Services.ApplyMigrations();
             }
 
+            app.MapGet("/", () => Results.Redirect("/swagger"));
             app.UseCustomMiddleware();
             app.UseRouting();
             app.UseAuthentication();

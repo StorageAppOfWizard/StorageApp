@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
-using StorageProject.Application.Extensions;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
@@ -28,7 +27,7 @@ namespace StorageProject.Application.Services
         {
             var order = await _unitOfWork.OrderRepository.GetAll();
             if (order is null)
-                return Result.NoContent();
+                return Result.Success();
 
             return Result.Success(order.Select(o => o.ToDTO()).ToList());
         }
@@ -40,6 +39,20 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Order not found");
 
             return Result.Success(order.ToDTO());
+        }
+
+        public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync()
+        {
+            var userId = _context.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId is null) return Result.Forbidden();
+
+            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(userId);
+
+            if (orders is null || !orders.Any())
+                return Result.Success();
+
+            return Result.Success(orders.Select(o => o.ToDTO()).ToList());
         }
 
         public async Task<Result> CreateOrderAsync(CreateOrderDTO dto)
