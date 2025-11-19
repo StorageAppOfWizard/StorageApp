@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
-using System.Security.Claims;
 
 namespace StorageProject.Api.Controllers
 {
@@ -19,6 +18,7 @@ namespace StorageProject.Api.Controllers
             
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPatch("reject-order/{id:Guid}")]
         public async Task<IActionResult> CancelOrder(Guid id)
         {
@@ -26,6 +26,7 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPatch("approve-order/{id:Guid}")]
         public async Task<IActionResult> ApproveOrder(Guid id)
         {
@@ -42,6 +43,7 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -59,6 +61,7 @@ namespace StorageProject.Api.Controllers
 
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult>GetById(Guid id)
         {
@@ -66,6 +69,7 @@ namespace StorageProject.Api.Controllers
             return result.ToActionResult();
         }
 
+        [Authorize(Policy = "AdminOrManager")]
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {

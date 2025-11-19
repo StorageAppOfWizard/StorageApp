@@ -1,11 +1,10 @@
 ﻿using Ardalis.Result;
-using Microsoft.AspNetCore.Http;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
-using System.Security.Claims;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Services
 {
@@ -13,14 +12,14 @@ namespace StorageProject.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEnumerable<IOrderHandler> _orderHandler;
-        private readonly IHttpContextAccessor _context;
+        private readonly IUserContextAuth _userContextAuth;
 
 
-        public OrderService(IUnitOfWork unitOfWork, IEnumerable<IOrderHandler> orderHandler, IHttpContextAccessor context)
+        public OrderService(IUnitOfWork unitOfWork, IEnumerable<IOrderHandler> orderHandler, IUserContextAuth userContextAuth)
         {
             _unitOfWork = unitOfWork;
             _orderHandler = orderHandler;
-            _context = context;
+            _userContextAuth = userContextAuth;
         }
 
         public async Task<Result<List<OrderDTO>>> GetAllAsync()
@@ -43,11 +42,10 @@ namespace StorageProject.Application.Services
 
         public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync()
         {
-            var userId = _context.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId is null) return Result.Forbidden();
+            if (_userContextAuth.IsAuthenticated is false) return Result.Forbidden();
 
-            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(userId);
+            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(_userContextAuth.UserId);
 
             if (orders is null || !orders.Any())
                 return Result.Success();
@@ -65,7 +63,7 @@ namespace StorageProject.Application.Services
             if (existingProduct.Quantity < dto.Quantity)
                 return Result.Error("There is not sufficient quantity for this order");
             
-            var userId = _context.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = _userContextAuth.UserId;
 
             if (userId is null)
                 return Result.Unauthorized("Sign in for create a order");
@@ -85,13 +83,14 @@ namespace StorageProject.Application.Services
             if (order is null)
                 return Result.NotFound("Not Found Order");
 
-            var handler = _orderHandler
-                .FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject);
+            var handler = _orderHandler.FirstOrDefault(x => x.TargetStatus == OrderStatus.Reject);
 
             if (handler is null)
                 return Result.Error($"There's not handler for status ${order.Status}");
 
-            await handler.Handle(order,product);
+            var result = await handler.Handle(order,product);
+
+            if (!result.IsSuccess) return Result.Error(result.Errors.FirstOrDefault());
 
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();
@@ -111,7 +110,9 @@ namespace StorageProject.Application.Services
             if (handler is null)
                 return Result.Error($"There's not handler for status ${order.Status}");
 
-            await handler.Handle(order,null);
+            var result = await handler.Handle(order,null);
+
+            if (!result.IsSuccess) return Result.Error(result.Errors.FirstOrDefault());
 
             _unitOfWork.OrderRepository.Update(order);
             await _unitOfWork.CommitAsync();

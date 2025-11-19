@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using StorageProject.Application.Contracts;
 using StorageProject.Application.Validators;
+using StorageProject.Infrastructure.Authentication;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -46,6 +48,9 @@ namespace StorageProject.Api.Configurations
             services.AddControllers()
                 .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+
+
         }
     }
 }

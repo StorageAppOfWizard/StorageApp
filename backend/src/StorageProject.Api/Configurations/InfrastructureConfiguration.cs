@@ -14,6 +14,8 @@ namespace StorageProject.Api.Configurations
                                                 options.UseSqlServer(connectionString, provideOptions => provideOptions.EnableRetryOnFailure()));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+
         }
     }
 }
