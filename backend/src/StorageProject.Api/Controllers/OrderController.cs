@@ -20,7 +20,7 @@ namespace StorageProject.Api.Controllers
 
         [Authorize(Policy = "AdminOrManager")]
         [HttpPatch("reject-order/{id:Guid}")]
-        public async Task<IActionResult> CancelOrder(Guid id)
+        public async Task<IActionResult> RejectOrder(Guid id)
         {
             var result = await _orderService.RejectOrderAsync(id);
             return result.ToActionResult();
