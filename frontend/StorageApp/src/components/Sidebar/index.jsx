@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu } from 'lucide-react';
 import styles from '../../styles/sidebar.module.css';
-import logo from '../../assets/Logo-teste.png';
 import { menuItems } from '../../data/menuItems';
 
 export default function Sidebar() {
@@ -16,7 +15,7 @@ export default function Sidebar() {
 
             <nav className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
                 <div className={styles.logo}>
-                    <img src={logo} alt="Logo da Marca" />
+                    <h1>StorageApp</h1>
                 </div>
 
                 <div className={styles.menu}>
