@@ -11,12 +11,6 @@ namespace StorageProject.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
-<<<<<<< HEAD
-
-        public OrderService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-=======
         private readonly IEnumerable<IOrderHandler> _orderHandler;
         private readonly IUserContextAuth _userContextAuth;
 
@@ -26,7 +20,6 @@ namespace StorageProject.Application.Services
             _unitOfWork = unitOfWork;
             _orderHandler = orderHandler;
             _userContextAuth = userContextAuth;
->>>>>>> 0e119f3b3d86b5994b1f7606753560cf34c49b34
         }
 
         public async Task<Result<List<OrderDTO>>> GetAllAsync()
@@ -147,7 +140,6 @@ namespace StorageProject.Application.Services
             await _unitOfWork.CommitAsync();
 
             return Result.SuccessWithMessage("Order deleted successfully");
-<<<<<<< HEAD
         }
 
         public async Task<Result<OrderStatus>> CancelOrderAsync(Guid orderId, OrderStatus status)
@@ -160,8 +152,8 @@ namespace StorageProject.Application.Services
                 return Result.Error("You can to cancel only pending order");
 
             await RestoreProductStock(order.ToDTO());
-
-            return Result.Success(order.UpdateStatus(status));
+            order.UpdateStatus(status);
+            return Result.Success();
         }
 
         public async Task<Result> UpdateOrderAsync(UpdateOrderDTO dto)
@@ -188,9 +180,5 @@ namespace StorageProject.Application.Services
             product.Quantity += order.Quantity;
 
         }
-=======
-        }    
->>>>>>> 0e119f3b3d86b5994b1f7606753560cf34c49b34
-
     }
 }

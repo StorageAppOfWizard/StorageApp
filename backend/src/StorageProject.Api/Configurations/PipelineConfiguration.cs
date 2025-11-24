@@ -16,6 +16,7 @@ namespace StorageProject.Api.Configurations
             app.MapGet("/", () => Results.Redirect("/swagger"));
             app.UseCustomMiddleware();
             app.UseRouting();
+            app.UseCors("AllowSpecificOrigins");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

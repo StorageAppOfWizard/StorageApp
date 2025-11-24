@@ -3,11 +3,11 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver-product
     environment:
-      - SA_PASSWORD=${DB_PASSWORD}
+      - SA_PASSWORD=Lagavi30!
       - ACCEPT_EULA=Y
     user: root
-    volumes:
-      - backend_sql_data:/var/opt/mssql
+    # volumes:
+    #   - backend_sql_data:/var/opt/mssql
     ports:
       - "1433:1433"
     networks:
@@ -16,42 +16,42 @@ services:
   api-product:
     build: 
       context: ./
-      args:
-        LICENSE_KEY: ${LICENSE_KEY}
+      # args:
+      #   LICENSE_KEY: ${LICENSE_KEY}
     container_name: api-product
     ports:
       - "8000:8000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
+      # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
     depends_on:
       - sqlserver-product
     networks:
       - app-network
       
-  newrelic-infra:
-    container_name: newrelic-infra
-    build:
-      context: ./
-      dockerfile: newrelic-infra.dockerfile
-    environment:
-      - NRIA_LICENSE_KEY=${LICENSE_KEY}
-    cap_add:
-      - SYS_PTRACE
-    networks:
-      - app-network 
-    pid: host
-    privileged: true
-    depends_on:
-      - api-product
-    volumes:
-      - "/:/host:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    restart: unless-stopped
+  # newrelic-infra:
+  #   container_name: newrelic-infra
+  #   build:
+  #     context: ./
+  #     dockerfile: newrelic-infra.dockerfile
+  #   environment:
+  #     - NRIA_LICENSE_KEY=${LICENSE_KEY}
+  #   cap_add:
+  #     - SYS_PTRACE
+  #   networks:
+  #     - app-network 
+  #   pid: host
+  #   privileged: true
+  #   depends_on:
+  #     - api-product
+  #   volumes:
+  #     - "/:/host:ro"
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #   restart: unless-stopped
     
 networks:
   app-network:
     driver: bridge
     
-volumes:
-  backend_sql_data:
+# volumes:
+#   backend_sql_data:
