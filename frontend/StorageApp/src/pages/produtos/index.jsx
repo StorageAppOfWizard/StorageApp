@@ -56,7 +56,7 @@ export default function Produtos() {
       setLocalProducts((prev) =>
         prev.map((p) =>
           p.id === productId
-            ? { ...p, stock: stockNum, status: getStatusFromStock(stockNum) }
+            ? { ...p, quantity: stockNum, status: getStatusFromStock(stockNum) }
             : p
         )
       );

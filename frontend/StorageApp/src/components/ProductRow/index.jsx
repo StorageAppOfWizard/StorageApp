@@ -8,12 +8,12 @@ const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, set
         <tr>
             <td>{product.name}</td>
             <td>{product.categoryName || "Sem categoria"}</td>
-            <td>{product.brand}</td>
+            <td>{product.brandName}</td>
             <td>
                 {editableStock === product.id ? (
                     <input
                         type="number"
-                        defaultValue={product.stock}
+                        defaultValue={product.quantity}
                         onBlur={(e) => onStockEdit(product.id, e.target.value)}
                         onKeyPress={(e) => e.key === "Enter" && onStockEdit(product.id, e.target.value)}
                         autoFocus
@@ -25,7 +25,7 @@ const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, set
                         className={styles.stockValue}
                         onClick={() => setEditableStock(product.id)}
                     >
-                        {product.stock}
+                        {product.quantity}
                         <Edit className={styles.editIcon} size={16} />
                     </span>
                 )}
