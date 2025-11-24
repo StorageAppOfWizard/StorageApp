@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
-using StorageProject.Application.DTOs.Product;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
@@ -11,12 +10,10 @@ namespace StorageProject.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProductService _productService;
 
-        public OrderService(IUnitOfWork unitOfWork, IProductService productService)
+        public OrderService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _productService = productService;
         }
 
         public async Task<Result<List<OrderDTO>>> GetAllAsync()
@@ -108,7 +105,7 @@ namespace StorageProject.Application.Services
 
         private async Task RestoreProductStock(OrderDTO order)
         {
-            var product  = await _unitOfWork.ProductRepository.GetById(order.ProductId);
+            var product = await _unitOfWork.ProductRepository.GetById(order.ProductId);
             if (product is null) return;
 
             product.Quantity += order.Quantity;
