@@ -11,9 +11,11 @@ namespace StorageProject.Api.Configurations
         {
             var connectionString = configuration.GetConnectionString("StorageContext");
             services.AddDbContext<AppDbContext>(options =>
-                                                options.UseSqlServer(connectionString));
+                                                options.UseSqlServer(connectionString, provideOptions => provideOptions.EnableRetryOnFailure()));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+
         }
     }
 }

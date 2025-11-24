@@ -16,7 +16,8 @@ namespace StorageProject.Api.Extensions
                 ResultStatus.Conflict => new ConflictObjectResult(result),
                 ResultStatus.Unauthorized => new UnauthorizedObjectResult(result),
                 ResultStatus.Forbidden => new ObjectResult(result) { StatusCode = StatusCodes.Status403Forbidden },
-                ResultStatus.Error => new ObjectResult(result) { StatusCode = StatusCodes.Status400BadRequest}
+                ResultStatus.Error => new BadRequestObjectResult(result) { StatusCode = StatusCodes.Status400BadRequest},
+                ResultStatus.NoContent => new NoContentResult(),
             };
         }
         public static IActionResult ToActionResult<T>(this Result<T> result)
@@ -30,6 +31,8 @@ namespace StorageProject.Api.Extensions
                 ResultStatus.Conflict => new ConflictObjectResult(result),
                 ResultStatus.Unauthorized => new UnauthorizedObjectResult(result),
                 ResultStatus.Forbidden => new ObjectResult(result) { StatusCode = StatusCodes.Status403Forbidden },
+                ResultStatus.Error => new BadRequestObjectResult(result) { StatusCode = StatusCodes.Status400BadRequest},
+                ResultStatus.NoContent => new NoContentResult(),
             };
         }
     }

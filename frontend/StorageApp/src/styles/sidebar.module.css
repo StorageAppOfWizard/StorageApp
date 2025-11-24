@@ -1,28 +1,36 @@
 .sidebar {
-    width: 160px;
-    height: 100vh;
-    background-color: var(--cor-800);
+    width: 230px;
+    height: calc(100vh - 20px);
+    background: linear-gradient(to bottom, var(--cor-800), var(--cor-900));
     color: var(--cor-50);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0;
+    justify-content: flex-start; 
+    padding: 25px 15px;
     position: fixed;
-    left: 0;
-    top: 0;
-    transition: transform 0.5s ease-in-out;
+    left: 10px;
+    top: 10px;
+    transition: transform 0.3s ease;
     z-index: 1000;
+    border-radius: 10px;
 }
+
 
 .logo {
-    margin-bottom: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--cor-700);
 }
 
-.logo img {
-    width: 100px;
-    height: auto;
-    object-fit: contain;
+.logo h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
 }
 
 .menu {
@@ -33,18 +41,17 @@
 }
 
 .menuItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 14px 0;
     width: 100%;
-    font-size: 11px;
-    background: transparent;
-    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
     color: var(--cor-50);
-    transition: background 0.3s ease;
-    position: relative;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.25s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .menuItem:hover {
@@ -64,7 +71,7 @@
 .sidebarToggle {
     position: fixed;
     top: 15px;
-    left: 8px;
+    left: 15px;
     background: none;
     border: none;
     color: var(--cor-50);
@@ -81,7 +88,6 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 900;
-    transition: opacity 0.5s ease-in-out;
 }
 
 @media (max-width: 768px) {

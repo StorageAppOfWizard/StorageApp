@@ -1,4 +1,5 @@
-﻿using StorageProject.Domain.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entity;
 using StorageProject.Infrasctructure.Data;
 
@@ -19,14 +20,9 @@ namespace StorageProject.Infrastructure.Repositories
             _context.Orders.Update(order);
         }
 
-        public void RequestOrder(Guid productId, int quantity, string UserId)
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(string userId)
         {
-            
-        }
-
-        Task IOrderRepository.RequestOrder(Guid productId, int quantity, string UserId)
-        {
-            throw new NotImplementedException();
+            return await _context.Orders.Where(o => o.UserId == userId).AsNoTracking().ToListAsync();
         }
     }
 }

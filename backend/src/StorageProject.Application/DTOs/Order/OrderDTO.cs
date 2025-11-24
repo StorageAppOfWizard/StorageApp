@@ -9,6 +9,7 @@ namespace StorageProject.Application.DTOs.Order
         public int Quantity { get; set; }
         public OrderStatus Status{ get; set; }
         public string UserId { get; set; }
+        public DateTime CreationDate { get; set; }
 
 
     }

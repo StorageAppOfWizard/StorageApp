@@ -1,5 +1,7 @@
 ﻿using StorageProject.Application.Contracts;
+using StorageProject.Application.Handlers;
 using StorageProject.Application.Services;
+using StorageProject.Infrastructure.Authentication;
 
 namespace StorageProject.Api.Configurations
 {
@@ -11,6 +13,12 @@ namespace StorageProject.Api.Configurations
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderHandler, ApprovedHandler>();
+            services.AddScoped<IOrderHandler, RejectHandler>();
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserContextAuth, UserContextAuth>();
+
         }
     }
 }

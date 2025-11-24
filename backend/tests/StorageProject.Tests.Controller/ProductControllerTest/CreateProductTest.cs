@@ -23,12 +23,13 @@ namespace StorageProject.Tests.ProductControllerTest
         public async Task CreateProduct_WhenAllFieldsAreCorrect_ReturnOkResult()
         {
             //Arrange
-            var input = new CreateProductDTO {
+            var input = new CreateProductDTO
+            {
                 BrandId = Guid.NewGuid(),
                 CategoryId = Guid.NewGuid(),
                 Description = "Test",
                 Name = "Test",
-                Quantity= 100
+                Quantity = 100
             };
 
             _fixture.ProductServiceMock.Setup(c => c.CreateAsync(input)).ReturnsAsync(Result.SuccessWithMessage($"{input.Name} created!"));
@@ -38,7 +39,7 @@ namespace StorageProject.Tests.ProductControllerTest
 
             //Assert
             var objectResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(200, objectResult.StatusCode);  
+            Assert.Equal(200, objectResult.StatusCode);
         }
 
         [Fact]
@@ -61,7 +62,7 @@ namespace StorageProject.Tests.ProductControllerTest
 
             //Assert
             var objectResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(400,objectResult.StatusCode);
+            Assert.Equal(400, objectResult.StatusCode);
         }
 
         [Fact]

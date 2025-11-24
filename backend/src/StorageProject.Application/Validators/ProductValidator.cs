@@ -10,7 +10,7 @@ namespace StorageProject.Application.Validators
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .WithMessage("Field Name is required")
-                .Length(3,20)
+                .Length(3,100)
                 .WithMessage("Field must contain between 3 and 100 caracteres")
                 .Matches(@"[a-zA-Z]")
                 .WithMessage("Field must contain at least one letter");

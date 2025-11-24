@@ -2,6 +2,7 @@
 using StorageProject.Domain.Abstractions;
 using StorageProject.Domain.Contracts;
 using StorageProject.Infrasctructure.Data;
+using System.Linq.Expressions;
 
 namespace StorageProject.Infrastructure.Repositories
 {
@@ -24,12 +25,12 @@ namespace StorageProject.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken = default)
             => await _dbSet
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-       
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-        public async Task<T> GetById(Guid id, CancellationToken cancellationToken = default)
-            => await _dbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        public async Task<T?> GetById(Guid id, CancellationToken cancellationToken = default)
+            => await _dbSet
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         
         public async Task<IEnumerable<T?>> GetPagedAsync(int? page, int? pageQuantity, CancellationToken cancellationToken = default)
             => await _dbSet
@@ -39,11 +40,12 @@ namespace StorageProject.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
 
 
+        public async Task<T?> GetByConditionAsync(Expression<Func<T, bool>> predicate)
+
+            => await _dbSet.FirstOrDefaultAsync(predicate);
+
         public void Update(T entity, CancellationToken cancellationToken = default)
-        {
-            _dbSet.Update(entity);
-        }
-
-
+        => _dbSet.Update(entity);
+        
     }
 }

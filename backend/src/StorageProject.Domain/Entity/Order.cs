@@ -12,12 +12,9 @@ namespace StorageProject.Domain.Entity
 
 
 
-        public OrderStatus UpdateStatus(OrderStatus status)
+        public void UpdateStatus(OrderStatus status)
         {
-            if (Status is not OrderStatus.Pending)
-                throw new InvalidOperationException("You can to cancel only pending order ");
-
-            return Status = status;
+            Status = status;
         }
     }
 

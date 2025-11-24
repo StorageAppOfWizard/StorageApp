@@ -3,6 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /App
 COPY . ./
 RUN dotnet restore "StorageProject.sln"
+RUN dotnet test "./tests/StorageProject.Tests.Controller/StorageProject.Tests.Controller.csproj"
+RUN dotnet test "./tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj"
 RUN dotnet publish "./src/StorageProject.Api/StorageProject.Api.csproj" -c Release -o /App/publish
 
 # Runtime stage
@@ -18,11 +20,9 @@ RUN apt-get update && apt-get install -y wget ca-certificates gnupg \
  && apt-get install -y 'newrelic-dotnet-agent' \
  && rm -rf /var/lib/apt/lists/*
 
-# Recebe a chave como argumento
-ARG LICENSE_KEY
 
 # Define no runtime
-ENV NEW_RELIC_LICENSE_KEY=${LICENSE_KEY} \
+ENV NEW_RELIC_LICENSE_KEY="" \
     CORECLR_ENABLE_PROFILING=1 \
     CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
     CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent \

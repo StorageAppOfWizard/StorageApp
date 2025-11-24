@@ -47,7 +47,7 @@ export const useAuthForm = (mode = "register") => {
 
   const validate = useCallback(() => {
     if (mode === "login") {
-      return validateAll(null, email, password, null); // só email e senha
+      return validateAll(null, email, password, null);
     }
     return validateAll(userName, email, password, passwordConfirmed);
   }, [mode, validateAll, userName, email, password, passwordConfirmed]);
