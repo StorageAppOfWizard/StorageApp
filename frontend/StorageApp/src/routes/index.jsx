@@ -9,6 +9,7 @@ import Layout from "../components/Layout";
 import SingnIn from "../pages/singnIn";
 import SingnUp from "../pages/singnUp";
 import Orders from "../pages/orders"; 
+import Configuracoes from "../pages/configuracoes"; 
 
 export default function RoutesApp() {
 
@@ -27,6 +28,7 @@ export default function RoutesApp() {
             <Route path="/produtos" element={<Produtos />} />
             <Route path="/criar" element={<CreateProduto />} />
             <Route path="/pedidos" element={<Orders />} />
+            <Route path="/configuracoes" element={<Configuracoes />} />
           </Route>
         </Route>
       </Routes>

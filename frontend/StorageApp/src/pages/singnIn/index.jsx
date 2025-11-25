@@ -5,17 +5,19 @@ import { useMutateApi } from "../../hooks/useMutateApi";
 import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";
 import { useToast } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
     const { mutate, loading, error, mutationResult } = useMutateApi("Auth.UserLogin");
     const { values, handlers, blurHandlers, errors, touched, validate } = useAuthForm("login");
     const navigate = useNavigate();
     const toast = useToast();
+    const { login } = useAuth();
 
     const successShown = useRef(false);
     const errorShown = useRef(false);
 
-    async function handleLogin(e) { 
+    async function handleLogin(e) {
         e.preventDefault();
         errorShown.current = false;
         successShown.current = false;
@@ -33,11 +35,14 @@ export default function Login() {
             successShown.current = true;
 
             toast.success("Login efetuado com sucesso!");
-            setTimeout(() => {
+
+            setTimeout(async () => {
+                await login(mutationResult.token);
+
                 navigate("/produtos", { replace: true });
             }, 1000);
         }
-    }, [mutationResult, navigate, toast]);
+    }, [mutationResult, navigate, toast, login]);
 
     useEffect(() => {
         if (error && !errorShown.current) {

@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, createUser, loginUser, updateUser, deleteUser, logoutUser } from "../services/authService";
+import { getAllUsers, getUserById, createUser, loginUser, updateUser, deleteUser, logoutUser, getUserDataFromToken } from "../services/authService";
 
 export const authEndpoint = {
   UserGetAll: {
@@ -26,5 +26,8 @@ export const authEndpoint = {
   UserLogout: {
     fn: logoutUser,
     isMutation: true,
+  },
+  UserDataFromToken: {
+    fn: getUserDataFromToken,
   },
 };

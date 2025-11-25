@@ -1,66 +1,44 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styles from '../../styles/header.module.css';
-import { ChevronDown } from 'lucide-react';
-import { headerData } from '../../data/menuItems';
-import { useMutateApi } from '../../hooks/useMutateApi';
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import styles from "../../styles/header.module.css";
+import { Settings } from "lucide-react";
+import { headerData } from "../../data/menuItems";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function Header({ profileName = "", overrideTitle, overrideIcon }) {
-
-  const { mutate: logout, loading } = useMutateApi("Auth.UserLogout");
+export default function Header({ overrideTitle, overrideIcon }) {
+  const { user, loading: userLoading } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { title, icon: Icon } =
+    overrideTitle || overrideIcon
+      ? { title: overrideTitle, icon: overrideIcon }
+      : headerData[location.pathname] || {
+        title: "Página Não Encontrada",
+        icon: null,
+      };
 
-  const { title, icon: Icon } = overrideTitle || overrideIcon
-    ? { title: overrideTitle, icon: overrideIcon }
-    : (headerData[location.pathname] || { title: "Página Não Encontrada", icon: null });
-
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-
-  const handleOptionClick = (path) => {
-    navigate(path);
-    setIsDropdownOpen(false);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const response = await logout();
-
-      localStorage.removeItem("userToken");
-      localStorage.removeItem("userData");
-
-      navigate("/");
-    } catch (error) {
-      console.error("❌ Erro ao fazer logout:", error);
-    }
-  };
+  const profileName = user?.unique_name || user?.name || "Carregando...";
 
   return (
     <header className={styles.header}>
       <div className={styles.titleContainer}>
-        {Icon && <Icon />}
+        {Icon && <Icon className={styles.icon} />}
         <span className={styles.title}>{title}</span>
       </div>
-      <div className={styles.profile} onClick={handleDropdownToggle}>
-        <span className={styles.profileName}>{profileName}</span>
-        <ChevronDown className={styles.profileIcon} />
-        {isDropdownOpen && (
-          <div className={styles.dropdown}>
-            <div onClick={() => handleOptionClick('/configuracoes')} className={styles.dropdownItem}>
-              Configurações
-            </div>
-            <div onClick={() => handleOptionClick('/historicos')} className={styles.dropdownItem}>
-              Histórico
-            </div>
-            <div onClick={handleLogout} className={styles.dropdownItem}>
-              Sair
-            </div>
+
+      <div className={styles.actions}>
+        <div className={styles.actionProfile}>
+          <div className={styles.profile}>
+            {userLoading ? (
+              <span className={styles.profileName}>Carregando...</span>
+            ) : (
+              <span className={styles.profileName}>{profileName}</span>
+            )}
           </div>
-        )}
+
+          <Link to="/configuracoes" className={styles.actionIcon}>
+            <Settings />
+          </Link>
+        </div>
       </div>
     </header>
   );
