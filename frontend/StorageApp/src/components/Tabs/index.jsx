@@ -1,27 +1,18 @@
-import { useState } from "react";
-import './Tabs.css'
+import { Link } from "react-router-dom";
+import "./tabs.css";
 
-export default function Tabs({ tabs, onChange, defaultValue }) {
-  const [active, setActive] = useState(defaultValue || tabs[0].value);
-
-  const handleClick = (value) => {
-    setActive(value);
-    onChange(value);
-  };
-
+export default function Tabs({ tabs, currentValue }) {
   return (
-    <div>
-      <div className="main">
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => handleClick(tab.value)}
-            className={`tab-button ${active === tab.value ? "active" : ""}`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+    <div className="tabs-container">
+      {tabs.map((tab) => (
+        <Link
+          key={tab.value}
+          to={tab.to}
+          className={`tab-item ${currentValue === tab.value ? "active" : ""}`}
+        >
+          {tab.label}
+        </Link>
+      ))}
     </div>
   );
 }

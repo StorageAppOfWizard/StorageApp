@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useAuthValidation } from './useAuthValidation .js';
+import { useAuthValidation } from './components/useAuthValidation.js';
 
 export const useAuthForm = (mode = "register") => {
   const [userName, setuserName] = useState("");

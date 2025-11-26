@@ -1,4 +1,4 @@
-import styles from "../../styles/order.module.css";
+import styles from "../../styles/pages/order.module.css";
 import { useFetchApi } from './../../hooks/useFetchApi';
 import { useNavigate, Link } from "react-router-dom";
 import { Plus } from "lucide-react";

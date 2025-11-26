@@ -1,5 +1,5 @@
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import styles from "../../styles/header.module.css";
+import styles from "../../styles/components/header.module.css";
 import { Settings } from "lucide-react";
 import { headerData } from "../../data/menuItems";
 import { useAuth } from "../../contexts/AuthContext";

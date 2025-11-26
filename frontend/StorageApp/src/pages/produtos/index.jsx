@@ -5,7 +5,7 @@ import { useMutateApi } from "../../hooks/useMutateApi";
 
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import ProductRow from "../../components/ProductRow";
-import styles from "../../styles/produtos.module.css";
+import styles from "../../styles/pages/produtos.module.css";
 
 import { Plus } from "lucide-react";
 import { toast } from "react-toastify";

@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "../../styles/Singn.module.css";
+import styles from "../../styles/pages/Singn.module.css";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";

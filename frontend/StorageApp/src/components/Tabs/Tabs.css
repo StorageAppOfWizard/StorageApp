@@ -1,20 +1,33 @@
-.main {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.tab-button {
+.tabs-container a {
   padding: 8px 16px;
   border-radius: 6px;
   border: 1px solid var(--cor-200);
   background-color: var(--cor-50);
-  font-weight: normal;
+  font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
+  color: var(--cor-900);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.tab-button.active {
+.tabs-container a:hover {
+  background-color: var(--cor-200);
+  border-color: var(--cor-300);
+}
+
+.tabs-container a.active {
   border: 2px solid var(--cor-900);
   background-color: var(--cor-200);
-  font-weight: bold;
+  font-weight: 600;
+}
+
+.tabs-container a.active:hover {
+  background-color: var(--cor-200);
+  border: 2px solid var(--cor-900);
 }

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import styles from "../../styles/order.module.css";
+import styles from "../../styles/pages/order.module.css";
 import axios from "axios";
 
 

@@ -1,18 +1,14 @@
 import { apiMain as api } from "./api";
 
-
 export const getBrands = async (signal) => {
-  try {
-    const { data } = await api.get("/brands", { signal });
-    return data.brands || [];
-  } catch (error) {
-    throw error
-  }
+    const response = await api.get("/brand", { signal });
+    console.log("Produtos buscados:", response.data);
+    return response.data.value || response.data || [];
 };
 
 export const createBrand = async (brandData, signal) => {
   try {
-    const { data } = await api.post("/brands/add", brandData, { signal });
+    const { data } = await api.post("/brand", brandData, { signal });
     return data;
   } catch (error) {
     throw error

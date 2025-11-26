@@ -4,12 +4,16 @@ import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "./private";
 
 import Produtos from "../pages/produtos/index";
-import CreateProduto from "../pages/criar";
 import Layout from "../components/Layout";
 import SingnIn from "../pages/singnIn";
 import SingnUp from "../pages/singnUp";
-import Orders from "../pages/orders"; 
-import Configuracoes from "../pages/configuracoes"; 
+import Orders from "../pages/orders";
+import Configuracoes from "../pages/configuracoes";
+
+import Create from "../pages/criar";
+import CriarProduto from "../pages/criar/criarProduto";
+import CriarBrand from "../pages/criar/criarBrand"
+import CriarCategory from "../pages/criar/criarCategory"
 
 export default function RoutesApp() {
 
@@ -25,8 +29,17 @@ export default function RoutesApp() {
         {/* Rotas privadas */}
         <Route element={<PrivateRoute />}>
           <Route element={<Layout />}>
+
             <Route path="/produtos" element={<Produtos />} />
-            <Route path="/criar" element={<CreateProduto />} />
+
+            {/* Rotas de criação */}
+            <Route path="/criar" element={<Create />} /> 
+            <Route path="/criar/produto" element={<CriarProduto />} />
+            <Route path="/criar/marca" element={<CriarBrand />} />
+            <Route path="/criar/categoria" element={<CriarCategory />} />
+
+
+
             <Route path="/pedidos" element={<Orders />} />
             <Route path="/configuracoes" element={<Configuracoes />} />
           </Route>
