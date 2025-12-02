@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-test-and-publish:
+  build-and-test:
     name: Build e Teste
     runs-on: ubuntu-latest
 
@@ -26,16 +26,21 @@ jobs:
       run: dotnet build backend/StorageProject.sln --no-restore
     - name: 5. Tests App
       run: dotnet test backend/StorageProject.sln --no-build
-
-    - name: 6. Login Docker
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        
-    - name: 7. Buld and Push Docker Hub
-      uses: docker/build-push-action@v6
-      with:
-        context: ./backend
-        push: true
-        tags: gabrieldocker1/storageapp:latest
+      
+  build-image-to-docker:
+    name: Build Image and Publish Docker Hub
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 6. Login Docker
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          
+      - name: 7. Buld and Push Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: gabrieldocker1/storageapp:latest
