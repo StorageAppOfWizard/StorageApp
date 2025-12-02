@@ -20,12 +20,12 @@ jobs:
       with:
         dotnet-version: '9.x'
     - name: 3. Install Dependencies
-      run: dotnet restore
+      run: dotnet restore backend/StorageProject.sln
 
     - name: 4. Build
-      run: dotnet build --no-restore
+      run: dotnet build backend/StorageProject.sln --no-restore
     - name: 5. Tests App
-      run: dotnet test --no-build
+      run: dotnet test backend/StorageProject.sln --no-build
 
     - name: 6. Login Docker
       uses: docker/login-action@v3
@@ -36,6 +36,6 @@ jobs:
     - name: 7. Buld and Push Docker Hub
       uses: docker/build-push-action@v6
       with:
-        context: .
+        context: ./backend
         push: true
         tags: gabrieldocker1/storageapp:latest
