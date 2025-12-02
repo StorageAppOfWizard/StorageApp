@@ -30,6 +30,7 @@ jobs:
   build-image-to-docker:
     name: Build Image and Publish Docker Hub
     runs-on: ubuntu-latest
+    needs: build-and-test
     
     steps:
       - name: 6. Login Docker
