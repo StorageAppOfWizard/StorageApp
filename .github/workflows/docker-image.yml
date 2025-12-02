@@ -3,8 +3,13 @@ name: CI/CD Storage App in Docker
 on:
   push:
     branches: [ "main" ]
+    paths: 
+      - 'backend/**'
+      - '.github/workflows/docker-image.yml'
   pull_request:
     branches: [ "main" ]
+    paths: 
+      - 'backend/**'
 
 jobs:
   build-and-test:
