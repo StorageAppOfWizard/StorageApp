@@ -42,6 +42,6 @@ jobs:
       - name: 7. Buld and Push Docker Hub
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
+          context: .
           push: true
           tags: gabrieldocker1/storageapp:latest
