@@ -16,5 +16,8 @@ export const headerData = {
     "/historicos": { title: "Históricos", icon: DollarSign },
     "/usuarios": { title: "Usuários", icon: Users },
     "/configuracoes": { title: "Configurações", icon: Settings },
-    "/criar": { title: "Novos Produtos", icon: PackagePlus },
+    
+    "/criar/produto": { title: "Novos Produtos", icon: PackagePlus },
+    "/criar/marca": { title: "Novos Produtos", icon: PackagePlus },
+    "/criar/categoria": { title: "Novos Produtos", icon: PackagePlus },
 };

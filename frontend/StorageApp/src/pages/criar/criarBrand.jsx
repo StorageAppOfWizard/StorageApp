@@ -7,17 +7,14 @@ import { useMutateApi } from "../../hooks/useMutateApi";
 export default function CriarBrand() {
    const [nomeMarca, setNomeMarca] = useState("");
 
-  // GET: lista todas as marcas
-  const { data: marcas, loading, error } = useFetchApi("Brand.GetAll");
-
-  // POST: cria nova marca
-  const { mutate, loading: creating } = useMutateApi("Brand.Create");
+  const { data: marcas, loading, error } = useFetchApi("Brand.BrandsGet");
+  const { mutate, loading: creating } = useMutateApi("Brand.BrandsCreate");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await mutate(
-      { nome: nomeMarca },
+      { name: nomeMarca },
       {
         onSuccess: () => {
           setNomeMarca("");
@@ -53,8 +50,6 @@ export default function CriarBrand() {
         </button>
       </form>
 
-      <hr style={{ margin: "25px 0" }} />
-
       <h3>Marcas cadastradas</h3>
 
       {loading && <p>Carregando...</p>}
@@ -64,15 +59,13 @@ export default function CriarBrand() {
         <table className="table-default">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nome</th>
             </tr>
           </thead>
           <tbody>
             {marcas?.map((marca) => (
               <tr key={marca.id}>
-                <td>{marca.id}</td>
-                <td>{marca.nome}</td>
+                <td>{marca.name}</td>
               </tr>
             ))}
           </tbody>

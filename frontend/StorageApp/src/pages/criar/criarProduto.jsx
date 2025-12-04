@@ -1,9 +1,7 @@
 import { useState } from "react";
 import Tabs from "../../components/Tabs";
-import { useCreateTabs } from "../../hooks/components/useCreateTabs"
 
 export default function CriarProduto() {
-  const { tabs, current } = useCreateTabs();
 
   const [form, setForm] = useState({
     nome: "",
@@ -28,7 +26,7 @@ export default function CriarProduto() {
           { value: "brand", label: "Criar Marca", to: "/criar/marca" },
           { value: "category", label: "Criar Categoria", to: "/criar/categoria" }
         ]}
-        currentValue={current}
+        currentValue="product"
       />
 
       <h2>Criar Produto</h2>
