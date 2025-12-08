@@ -126,7 +126,7 @@ export default function Produtos() {
 
             <button className={styles.export}>Exportar</button>
 
-            <Link to="/criar">
+            <Link to="/criar/produto">
               <button className={styles.addProduct}>
                 <Plus size={16} /> Produto
               </button>

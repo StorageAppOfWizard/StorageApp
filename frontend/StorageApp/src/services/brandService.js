@@ -2,7 +2,6 @@ import { apiMain as api } from "./api";
 
 export const getBrands = async ({signal}) => {
     const response = await api.get("/brand", { signal });
-    console.log("Marcas buscadas:", response.data);
     return response.data.value || response.data || [];
 };
 

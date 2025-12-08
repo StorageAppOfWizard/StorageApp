@@ -3,7 +3,6 @@ import { apiMain as api } from "./api";
 
 export const getProducts = async ({ signal }) => {
     const response = await api.get("/product", { signal });
-    console.log("Produtos buscados:", response.data);
     return response.data.value || response.data || [];
 };
 
@@ -15,11 +14,11 @@ export const getProductById = async ({ id, signal }) => {
 };
 
 
-export const createProduct = async ({ productData, signal }) => {
-    const response = await api.post("/product", productData, { signal });
-    return response.data;
-
+export const createProduct = async (data, signal) => {
+  const response = await api.post("/product", data, { signal });
+  return response.data;
 };
+
 
 
 export const updateProductStock = async ({ id, newStock, signal }) => {

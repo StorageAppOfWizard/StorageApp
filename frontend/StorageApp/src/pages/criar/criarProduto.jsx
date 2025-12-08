@@ -1,21 +1,50 @@
 import { useState } from "react";
 import Tabs from "../../components/Tabs";
+import { useMutateApi } from "../../hooks/useMutateApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
+import styles from "../../styles/pages/criacao.module.css";
 
 export default function CriarProduto() {
+  const { data: marcas } = useFetchApi("Brand.BrandsGet");
+  const { data: categorias } = useFetchApi("Category.CategorysGet");
+  const { mutate, loading: creating } = useMutateApi("Product.ProductCreate");
 
   const [form, setForm] = useState({
-    nome: "",
-    preco: "",
-    descricao: "",
+    name: "",
+    quantity: 0,
+    description: "",
+    brandId: "",
+    categoryId: "",
   });
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    alert("Produto criado!");
+
+    await mutate(
+      {
+        name: form.name,
+        description: form.description,
+        quantity: Number(form.quantity),
+        brandId: form.brandId,
+        categoryId: form.categoryId,
+      },
+      {
+        onSuccess: () => {
+          setForm({
+            name: "",
+            quantity: 0,
+            description: "",
+            brandId: "",
+            categoryId: "",
+          });
+          window.location.reload();
+        },
+      }
+    );
   }
 
   return (
@@ -24,63 +53,86 @@ export default function CriarProduto() {
         tabs={[
           { value: "product", label: "Criar Produto", to: "/criar/produto" },
           { value: "brand", label: "Criar Marca", to: "/criar/marca" },
-          { value: "category", label: "Criar Categoria", to: "/criar/categoria" }
+          { value: "category", label: "Criar Categoria", to: "/criar/categoria" },
         ]}
         currentValue="product"
       />
 
-      <h2>Criar Produto</h2>
+      <div className={styles.container}>
+        <div className={styles.criar}>
+          <h2 className={styles.title}>Criar Produto</h2>
 
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          Nome do Produto:
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-          />
-        </label>
 
-        <label>
-          Quantidade:
-          <input
-            type="number"
-            name="quantity"
-            value={form.quantity}
-            onChange={handleChange}
-          />
-        </label>
+          <form onSubmit={handleSubmit} className={styles.formGrid}>
 
-        <label>
-          Marca:
-          <textarea
-            name="brand"
-            value={form.brand}
-            onChange={handleChange}
-          />
-        </label>
+            <div className={styles.left}>
+              <label className={styles.label}>Nome do Produto</label>
+              <input
+                className={styles.input}
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
 
-        <label>
-          Categoria:
-          <textarea
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-          />
-        </label>
+              <label className={styles.label}>Quantidade</label>
+              <input
+                className={styles.input}
+                type="number"
+                name="quantity"
+                value={form.quantity}
+                onChange={handleChange}
+                required
+              />
 
-        <label>
-          Descrição:
-          <textarea
-            name="descricao"
-            value={form.descricao}
-            onChange={handleChange}
-          />
-        </label>
+              <label className={styles.label}>Marca</label>
+              <select
+                className={styles.input}
+                name="brandId"
+                value={form.brandId}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecione uma marca</option>
+                {marcas?.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+            </div>
 
-        <button className="btn" type="submit">Criar Produto</button>
-      </form>
+            <div className={styles.right}>
+              <label className={styles.label}>Categoria</label>
+              <select
+                className={styles.input}
+                name="categoryId"
+                value={form.categoryId}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecione uma categoria</option>
+                {categorias?.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+
+              <label className={styles.label}>Descrição</label>
+              <textarea
+                className={styles.textarea}
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+              />
+
+              <button className={styles.btn} type="submit" disabled={creating}>
+                {creating ? "Criando..." : "Criar Produto"}
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
     </div>
   );
 }

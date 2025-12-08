@@ -2,10 +2,11 @@ import { useState } from "react";
 import Tabs from "../../components/Tabs";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
+import styles from "../../styles/pages/criacao.module.css";
 
 
 export default function CriarBrand() {
-   const [nomeMarca, setNomeMarca] = useState("");
+  const [nomeMarca, setNomeMarca] = useState("");
 
   const { data: marcas, loading, error } = useFetchApi("Brand.BrandsGet");
   const { mutate, loading: creating } = useMutateApi("Brand.BrandsCreate");
@@ -35,42 +36,55 @@ export default function CriarBrand() {
         currentValue="brand"
       />
 
-      <h2>Criar Marca</h2>
+      <div className={styles.container}>
 
-      <form onSubmit={handleSubmit} className="form">
-        <label>Nome da Marca</label>
-        <input
-          value={nomeMarca}
-          onChange={(e) => setNomeMarca(e.target.value)}
-          required
-        />
+        <div className={styles.criar}>
+          <h2 className={styles.title}>Criar Marca</h2>
 
-        <button className="btn" disabled={creating}>
-          {creating ? "Salvando..." : "Criar Marca"}
-        </button>
-      </form>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label className={styles.label}>Nome da Marca</label>
 
-      <h3>Marcas cadastradas</h3>
+            <input
+              className={styles.input}
+              value={nomeMarca}
+              onChange={(e) => setNomeMarca(e.target.value)}
+              required
+            />
 
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+            <button className={styles.btn} disabled={creating}>
+              {creating ? "Salvando..." : "Criar Marca"}
+            </button>
+          </form>
 
-      {!loading && (
-        <table className="table-default">
-          <thead>
-            <tr>
-              <th>Nome</th>
-            </tr>
-          </thead>
-          <tbody>
-            {marcas?.map((marca) => (
-              <tr key={marca.id}>
-                <td>{marca.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        </div>
+        <div className={styles.cadastrado}>
+          <h3 className={styles.subtitle}>Marcas cadastradas</h3>
+
+          {loading && <p>Carregando...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+
+          {!loading && (
+            <div className={styles.tableContainer}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {marcas?.map((marca) => (
+                    <tr key={marca.id} className={styles.row}>
+                      <td>{marca.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   );
 }

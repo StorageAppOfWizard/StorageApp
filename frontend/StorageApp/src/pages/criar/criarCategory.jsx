@@ -2,6 +2,7 @@ import { useState } from "react";
 import Tabs from "../../components/Tabs";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
+import styles from "../../styles/pages/criacao.module.css";
 
 export default function CriarCategory() {
   const [nomeCategoria, setnomeCategoria] = useState("");
@@ -41,51 +42,62 @@ export default function CriarCategory() {
         currentValue="category"
       />
 
-      <h2>Criar Categoria</h2>
+      <div className={styles.container}>
+        <div className={styles.criar}>
+          <h2 className={styles.title}>Criar Categoria</h2>
 
-      <form onSubmit={handleSubmit} className="form">
-        <label> Nome da Categoria: </label>
-        <input
-          type="text"
-          value={nomeCategoria}
-          onChange={(e) => setnomeCategoria(e.target.value)}
-          required
-        />
-        <textarea
-          type="text"
-          value={DescriptCategoria}
-          onChange={(e) => setdescriptCategoria(e.target.value)}
-        >
-        </textarea>
-
-
-        <button className="btn" disabled={creating}>
-          {creating ? "Salvando..." : "Criar Categoria"}
-        </button>
-      </form>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label className={styles.label}> Nome da Categoria</label>
+            <input
+              type="text"
+              className={styles.input}
+              value={nomeCategoria}
+              onChange={(e) => setnomeCategoria(e.target.value)}
+              required
+            />
+            <textarea
+              type="text"
+              className={styles.textarea}
+              value={DescriptCategoria}
+              onChange={(e) => setdescriptCategoria(e.target.value)}
+            >
+            </textarea>
 
 
-      <h3>Categorias cadastradas</h3>
+            <button className={styles.btn} disabled={creating}>
+              {creating ? "Salvando..." : "Criar Categoria"}
+            </button>
+          </form>
 
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
 
-      {!loading && (
-        <table className="table-default">
-          <thead>
-            <tr>
-              <th>Nome</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categorias?.map((categorias) => (
-              <tr key={categorias.id}>
-                <td>{categorias.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <div className={styles.cadastrado}>
+          <h3 className={styles.subtitle}>Categorias cadastradas</h3>
+
+          {loading && <p>Carregando...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+
+          {!loading && (
+            <div className={styles.tableContainer}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categorias?.map((categorias) => (
+                    <tr key={categorias.id}>
+                      <td>{categorias.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 }

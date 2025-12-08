@@ -35,7 +35,6 @@ export const useFetchApi = (endpoint, limit = 15, options = {}) => {
             ? config.transform(response)
             : response;
           setData(transformedData);
-          console.log(`Response para ${endpoint}:`, response);
         }
       } catch (error) {
         if (!axios.isCancel(error) && isMounted) {

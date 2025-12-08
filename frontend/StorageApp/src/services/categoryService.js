@@ -3,7 +3,6 @@ import { apiMain as api } from "./api";
 
 export const getCategory = async ({signal}) => {
     const response = await api.get("/category", { signal });
-    console.log("Categorias buscadas:", response.data);
     return response.data.value || response.data || [];
 };
 
