@@ -55,6 +55,8 @@ export default function CriarCategory() {
               onChange={(e) => setnomeCategoria(e.target.value)}
               required
             />
+            
+            <label className={styles.label}>Descrição</label>
             <textarea
               type="text"
               className={styles.textarea}

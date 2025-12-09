@@ -10,6 +10,7 @@ export const menuItems = [
 ];
 
 export const headerData = {
+    "/Pedidos": {title: "Pedidos", icon: ShoppingCart },
     "/produtos": { title: "Produtos", icon: Package },
     "/pedidos": { title: "Pedidos", icon: ShoppingCart },
     "/clientes": { title: "Clientes", icon: Users  },

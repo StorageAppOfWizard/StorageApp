@@ -31,11 +31,11 @@ export const updateProductStock = async ({ id, newStock, signal }) => {
 };
 
 
-export const updateProduct = async ({ productData, signal }) => {
-  const response = await api.put("/product", productData, { signal });
+export const updateProduct = async (data) => {
+  const response = await api.put("/product", data);
   return response.data;
-
 };
+
 
 
 export const deleteProduct = async ({ id, signal }) => {

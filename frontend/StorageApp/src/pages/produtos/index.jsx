@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
 
+import EditProductModal from "../../components/EditProductModal";
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 import ProductRow from "../../components/ProductRow";
 import styles from "../../styles/pages/produtos.module.css";
@@ -16,15 +17,24 @@ export default function Produtos() {
   const [editableStock, setEditableStock] = useState(null);
   const [inputSearch, setInputSearch] = useState("");
   const [localProducts, setLocalProducts] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(null);
+
 
   const {
     data: products,
     loading,
     error,
   } = useFetchApi("Product.ProductsGet");
+  const { data: categorias } = useFetchApi("Category.CategorysGet");
+  const { data: marcas } = useFetchApi("Brand.BrandsGet");
+
 
   const { mutate: mutateStock } = useMutateApi("Product.ProductUpdateStock");
   const { mutate: mutateDelete } = useMutateApi("Product.ProductDelete");
+  const { mutate: mutateUpdate } = useMutateApi("Product.ProductUpdate");
+
+
 
   useEffect(() => {
     if (Array.isArray(products)) {
@@ -68,12 +78,32 @@ export default function Produtos() {
     }
   };
 
-  const handleEdit = useCallback(
-    (productId) => {
-      navigate(`/produtos/edit/${productId}`);
-    },
-    [navigate]
-  );
+  const handleEdit = useCallback((productId) => {
+    const prod = localProducts.find((p) => p.id === productId);
+    setProductToEdit(prod);
+    setIsEditModalOpen(true);
+  }, [localProducts]);
+
+  const handleSubmitEdit = async (formData, id) => {
+    try {
+      await mutateUpdate({
+        id,
+        ...formData,
+      });
+
+      toast.success("Produto atualizado!");
+
+      setLocalProducts((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, ...formData } : p))
+      );
+
+      setIsEditModalOpen(false);
+      window.location.reload();
+    } catch (error) {
+      toast.error("Erro ao atualizar: " + (error?.message ?? error));
+    }
+  };
+
 
   const handleDeleteConfirm = async (productId) => {
     try {
@@ -167,6 +197,16 @@ export default function Produtos() {
           </tbody>
         </table>
       </div>
+
+      <EditProductModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        product={productToEdit}
+        marcas={marcas}
+        categorias={categorias}
+        onSubmitEdit={handleSubmitEdit}
+      />
+
     </div>
   );
 }
