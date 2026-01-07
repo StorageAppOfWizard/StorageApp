@@ -1,10 +1,7 @@
-﻿using Ardalis.Result;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Category;
-using StorageProject.Application.Validators;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 

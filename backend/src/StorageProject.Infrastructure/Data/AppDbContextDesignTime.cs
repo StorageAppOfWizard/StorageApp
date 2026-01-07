@@ -10,8 +10,8 @@ namespace StorageProject.Infrastructure.Data
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            var connectionString = "Server=svc-db-sistem-storageapp,1433;Database=products;User Id=sa;Password=Lagavi30!;TrustServerCertificate=True;";
-            optionsBuilder.UseSqlServer(connectionString);
+            var connectionString = "User ID=root;Password=Lagavi30!;Host=localhost;Port=5432;Database=products;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Lifetime=0;";
+            optionsBuilder.UseNpgsql(connectionString);
 
             return new AppDbContext(optionsBuilder.Options);
         }
