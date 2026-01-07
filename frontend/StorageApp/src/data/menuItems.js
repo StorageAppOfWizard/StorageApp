@@ -10,11 +10,15 @@ export const menuItems = [
 ];
 
 export const headerData = {
+    "/Pedidos": {title: "Pedidos", icon: ShoppingCart },
     "/produtos": { title: "Produtos", icon: Package },
     "/pedidos": { title: "Pedidos", icon: ShoppingCart },
     "/clientes": { title: "Clientes", icon: Users  },
     "/historicos": { title: "Históricos", icon: DollarSign },
     "/usuarios": { title: "Usuários", icon: Users },
     "/configuracoes": { title: "Configurações", icon: Settings },
-    "/criar": { title: "Novos Produtos", icon: PackagePlus },
+    
+    "/criar/produto": { title: "Novos Produtos", icon: PackagePlus },
+    "/criar/marca": { title: "Novos Produtos", icon: PackagePlus },
+    "/criar/categoria": { title: "Novos Produtos", icon: PackagePlus },
 };

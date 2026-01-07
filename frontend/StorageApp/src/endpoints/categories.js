@@ -1,20 +1,27 @@
-import { getCategories, createCategory, updateCategory, deleteCategory } from "../services/categoryService";
+import { getCategory, getCategoryById, createCategory, updateCategory, deleteCategory } from "../services/categoryService";
 
 export const categoryEndpoint = {
-  CategoriesGet :{
-    fn: getCategories,
+  CategorysGet: {
+    fn: getCategory,
+  },
+
+  CategoriesByidGet: {
+    fn: getCategoryById,
   },
 
   CategoryCreate: {
     fn: createCategory,
+    isMutation: true,
   },
 
   CategoryUpdate: {
     fn: updateCategory,
+    isMutation: true,
   },
 
   CategoryDelete: {
     fn: deleteCategory,
+    isMutation: true,
   },
 
 
