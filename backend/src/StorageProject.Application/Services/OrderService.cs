@@ -4,7 +4,6 @@ using StorageProject.Application.DTOs.Order;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
-using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Services
 {
@@ -64,12 +63,13 @@ namespace StorageProject.Application.Services
                 return Result.Error("There is not sufficient quantity for this order");
             
             var userId = _userContextAuth.UserId;
+            var username = _userContextAuth.UserName;
 
             if (userId is null)
                 return Result.Unauthorized("Sign in for create a order");
 
             existingProduct.Quantity -= dto.Quantity;
-            await _unitOfWork.OrderRepository.Create(dto.ToEntity(userId));
+            await _unitOfWork.OrderRepository.Create(dto.ToEntity(userId, username));
 
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Created");

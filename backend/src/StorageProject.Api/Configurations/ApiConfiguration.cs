@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using StorageProject.Application.Contracts;
 using StorageProject.Application.Validators;
-using StorageProject.Infrastructure.Authentication;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -34,7 +32,9 @@ namespace StorageProject.Api.Configurations
                         ValidateAudience = false,
                         ValidateLifetime = false,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(key))
+                            Encoding.UTF8.GetBytes(key)),
+                        NameClaimType = "unique_name",
+ 
                     };
                 });
 

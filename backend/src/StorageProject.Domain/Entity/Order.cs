@@ -9,6 +9,7 @@ namespace StorageProject.Domain.Entity
         public Guid ProductId { get; set; }
         public int QuantityProduct { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
 
 
 

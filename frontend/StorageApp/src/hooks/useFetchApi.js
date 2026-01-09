@@ -8,7 +8,7 @@ const getEndpointConfig = (endpointPath) => {
   return endpointMap[group]?.[specificEndpoint];
 };
 
-export const useFetchApi = (endpoint, limit = 15, options = {}) => {
+export const useFetchApi = (endpoint, options = {}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,7 +27,6 @@ export const useFetchApi = (endpoint, limit = 15, options = {}) => {
 
         const response = await config.fn({
           ...options,
-          limit,
           signal: controller.signal,
         });
         if (isMounted && response) {
@@ -51,7 +50,7 @@ export const useFetchApi = (endpoint, limit = 15, options = {}) => {
       isMounted = false;
       controller.abort();
     };
-  }, [endpoint, limit, JSON.stringify(options)]);
+  }, [endpoint, JSON.stringify(options)]);
 
   return { data, loading, error };
 };

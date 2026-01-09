@@ -10,7 +10,7 @@ import ProductTableSkeleton from "../../components/ProductTableSkeleton";
 export default function Orders() {
 
   const navigate = useNavigate();
-  
+
   const [localOrders, setLocalOrders] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
 
@@ -26,21 +26,6 @@ export default function Orders() {
     }
   }, [orders]);
 
-  // const getStatusOrder = (status) => {
-  //   if (status === "Pending") return "Pending";
-  //   if (status === "Approved") return "Approved";
-  //   return "Rejected";
-  // };
-
-
-  const filteredOrders = localOrders.filter((p) => {
-    const s = inputSearch.trim().toLowerCase();
-    if (!s) return true;
-
-    return [p.name, p.categoryName, p.brand]
-      .map((v) => (v ?? "").toString().toLowerCase())
-      .some((field) => field.includes(s));
-  });
 
 
   if (loading) return <ProductTableSkeleton />;
@@ -58,14 +43,14 @@ export default function Orders() {
         <div className={styles.header}>
           <h2>
             <span className={styles.itemCount}>
-              {filteredOrders.length} itens cadastrados
+              {localOrders.length} Ordens cadastrados
             </span>
           </h2>
 
           <div className={styles.actions}>
             <input
               type="text"
-              placeholder="Item, Categoria ou Marca"
+              placeholder="Solicitante, Nome Produto"
               className={styles.search}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -73,9 +58,9 @@ export default function Orders() {
 
             <button className={styles.export}>Exportar</button>
 
-            <Link to="/criar">
+            <Link to="/criarOrdem">
               <button className={styles.addProduct}>
-                <Plus size={16} /> Produto
+                <Plus size={16} /> Pedido
               </button>
             </Link>
           </div>
@@ -84,22 +69,21 @@ export default function Orders() {
         <table className={styles.productTable}>
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Marca</th>
-              <th>Estoque</th>
-              <th>Status</th>
-              <th>Ações</th>
+              <th>Nome do Produto</th>
+              <th>Solicitante</th>
+              <th>Quantidade</th>
+              <th>Status Pedido</th>
+              <th>Data do Pedido</th>
             </tr>
           </thead>
 
           <tbody>
-            {filteredOrders.length === 0 ? (
+            {localOrders.length === 0 ? (
               <tr>
                 <td colSpan="6">Nenhum produto cadastrado</td>
               </tr>
             ) : (
-              filteredOrders.map((order) => (
+              localOrders.map((order) => (
                 <OrderRow
                   key={order.id}
                   order={order}

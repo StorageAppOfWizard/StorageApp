@@ -14,6 +14,7 @@ namespace StorageProject.Application.Mappers
                 Quantity = order.QuantityProduct,
                 Status = order.Status,
                 UserId = order.UserId,
+                UserName = order.UserName,
                 CreationDate = order.CreationDate
 
             };
@@ -25,17 +26,19 @@ namespace StorageProject.Application.Mappers
             {
                 ProductId = dto.ProductId,
                 UserId = dto.UserId,
+                UserName = dto.UserName,
                 QuantityProduct = dto.Quantity
 
             };
         }
 
-        public static Order ToEntity(this CreateOrderDTO dto, string userId)
+        public static Order ToEntity(this CreateOrderDTO dto, string userId, string userName)
         {
             return new Order
             {
                 ProductId = dto.ProductId,
                 UserId = userId,
+                UserName = userName,
                 QuantityProduct = dto.Quantity,
 
             };
