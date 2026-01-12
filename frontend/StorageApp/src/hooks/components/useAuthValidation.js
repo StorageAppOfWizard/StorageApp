@@ -1,102 +1,85 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import * as yup from 'yup';
 
 export const useAuthValidation = (mode = "register") => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
-  // --- VALIDAÇÕES BÁSICAS ---
-  const validateUserName = useCallback((value) => {
-    if (!value || !value.trim()) {
-      return "O campo Nome é obrigatório";
-    }
-    if (value.length < 3 || value.length > 20) {
-      return "O campo deve conter entre 3 e 20 caracteres";
-    }
-    return null;
-  }, []);
+  // --- SCHEMAS DE VALIDAÇÃO ---
+  const registerSchema = useMemo(() => yup.object().shape({
+    userName: yup
+      .string()
+      .required("O campo Nome é obrigatório")
+      .min(3, "O campo deve conter entre 3 e 20 caracteres")
+      .max(20, "O campo deve conter entre 3 e 20 caracteres")
+      .trim(),
+    email: yup
+      .string()
+      .required("O campo E-mail é obrigatório")
+      .email("O campo deve conter um e-mail válido")
+      .min(3, "O campo deve conter entre 3 e 100 caracteres")
+      .max(100, "O campo deve conter entre 3 e 100 caracteres")
+      .trim(),
+    password: yup
+      .string()
+      .required("O campo Senha é obrigatório")
+      .min(8, "A senha deve ter pelo menos 8 caracteres.")
+      .max(150, "A senha não deve exceder 150 caracteres.")
+      .matches(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula.")
+      .matches(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula.")
+      .matches(/[0-9]/, "A senha deve conter pelo menos um número.")
+      .matches(/[^a-zA-Z0-9]/, "A senha deve conter pelo menos um caractere especial."),
+    passwordConfirmed: yup
+      .string()
+      .required("O campo Confirmar Senha é obrigatório")
+      .oneOf([yup.ref('password')], "As senhas não coincidem")
+  }), []);
 
-  const validateEmail = useCallback((value) => {
-    if (!value || !value.trim()) {
-      return "O campo E-mail é obrigatório";
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      return "O campo deve conter um e-mail válido";
-    }
-    if (value.length < 3 || value.length > 100) {
-      return "O campo deve conter entre 3 e 100 caracteres";
-    }
-    return null;
-  }, []);
+  const loginSchema = useMemo(() => yup.object().shape({
+    email: yup
+      .string()
+      .required("O campo E-mail é obrigatório")
+      .email("O campo deve conter um e-mail válido")
+      .min(3, "O campo deve conter entre 3 e 100 caracteres")
+      .max(100, "O campo deve conter entre 3 e 100 caracteres")
+      .trim(),
+    password: yup
+      .string()
+      .required("O campo Senha é obrigatório")
+  }), []);
 
-  const validatePassword = useCallback((value) => {
-    if (!value || value.length === 0) {
-      return "O campo Senha é obrigatório";
-    }
-
-    // No login, pode pular as regras mais fortes
-    if (mode === "login") return null;
-
-    if (value.length < 8) {
-      return "A senha deve ter pelo menos 8 caracteres.";
-    }
-    if (value.length > 150) {
-      return "A senha não deve exceder 150 caracteres.";
-    }
-    if (!/[A-Z]/.test(value)) {
-      return "A senha deve conter pelo menos uma letra maiúscula.";
-    }
-    if (!/[a-z]/.test(value)) {
-      return "A senha deve conter pelo menos uma letra minúscula.";
-    }
-    if (!/[0-9]/.test(value)) {
-      return "A senha deve conter pelo menos um número.";
-    }
-    if (!/[^a-zA-Z0-9]/.test(value)) {
-      return "A senha deve conter pelo menos um caractere especial.";
-    }
-    return null;
-  }, [mode]);
-
-  const validatePasswordConfirmed = useCallback((value, password) => {
-    if (!value || value.length === 0) {
-      return "O campo Confirmar Senha é obrigatório";
-    }
-    if (value !== password) {
-      return "As senhas não coincidem";
-    }
-    return null;
-  }, []);
+  const schema = mode === "register" ? registerSchema : loginSchema;
 
   // --- VALIDAÇÃO INDIVIDUAL ---
   const validateField = useCallback(
-    (fieldName, value, password = null) => {
-      let error = null;
+    async (fieldName, value, allValues = {}) => {
+      try {
+        // Valida apenas o campo específico
+        await yup.reach(schema, fieldName).validate(value);
+        
+        // Se for passwordConfirmed, precisa validar com a senha também
+        if (fieldName === 'passwordConfirmed' && mode === 'register') {
+          await schema.validateAt(fieldName, { ...allValues, [fieldName]: value });
+        }
 
-      switch (fieldName) {
-        case "userName":
-          if (mode === "register") error = validateUserName(value);
-          break;
-        case "email":
-          error = validateEmail(value);
-          break;
-        case "password":
-          error = validatePassword(value);
-          break;
-        case "passwordConfirmed":
-          if (mode === "register") error = validatePasswordConfirmed(value, password);
-          break;
-        default:
-          break;
+        setErrors((prev) => ({
+          ...prev,
+          [fieldName]: null,
+        }));
+
+        return null;
+      } catch (error) {
+        const errorMessage = error.message;
+        
+        setErrors((prev) => ({
+          ...prev,
+          [fieldName]: errorMessage,
+        }));
+
+        return errorMessage;
       }
-
-      setErrors((prev) => ({
-        ...prev,
-        [fieldName]: error,
-      }));
-
-      return error;
     },
-    [validateUserName, validateEmail, validatePassword, validatePasswordConfirmed, mode]
+    [schema, mode]
   );
 
   const handleBlur = useCallback((fieldName) => {
@@ -108,43 +91,44 @@ export const useAuthValidation = (mode = "register") => {
 
   // --- VALIDAÇÃO GLOBAL ---
   const validateAll = useCallback(
-    (userName, email, password, passwordConfirmed) => {
-      let newErrors = {};
+    async (formData) => {
+      try {
+        await schema.validate(formData, { abortEarly: false });
+        
+        setErrors({});
+        
+        const touchedFields = Object.keys(formData).reduce((acc, key) => {
+          acc[key] = true;
+          return acc;
+        }, {});
+        
+        setTouched(touchedFields);
 
-      if (mode === "register") {
-        newErrors = {
-          userName: validateUserName(userName),
-          email: validateEmail(email),
-          password: validatePassword(password),
-          passwordConfirmed: validatePasswordConfirmed(passwordConfirmed, password),
-        };
-      } else {
-        newErrors = {
-          email: validateEmail(email),
-          password: validatePassword(password),
-        };
-      }
-
-      setErrors(newErrors);
-
-      const touchedFields =
-        mode === "register"
-          ? {
-              userName: true,
-              email: true,
-              password: true,
-              passwordConfirmed: true,
+        return true;
+      } catch (error) {
+        const newErrors = {};
+        
+        if (error.inner) {
+          error.inner.forEach((err) => {
+            if (err.path && !newErrors[err.path]) {
+              newErrors[err.path] = err.message;
             }
-          : {
-              email: true,
-              password: true,
-            };
+          });
+        }
 
-      setTouched(touchedFields);
+        setErrors(newErrors);
 
-      return !Object.values(newErrors).some((error) => error !== null);
+        const touchedFields = Object.keys(formData).reduce((acc, key) => {
+          acc[key] = true;
+          return acc;
+        }, {});
+
+        setTouched(touchedFields);
+
+        return false;
+      }
     },
-    [mode, validateUserName, validateEmail, validatePassword, validatePasswordConfirmed]
+    [schema]
   );
 
   const resetValidation = useCallback(() => {

@@ -1,4 +1,3 @@
-// Para operações de leitura (GET)
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { endpointMap } from "../endpoints";

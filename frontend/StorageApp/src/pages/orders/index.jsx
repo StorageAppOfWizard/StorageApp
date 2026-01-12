@@ -43,7 +43,7 @@ export default function Orders() {
         <div className={styles.header}>
           <h2>
             <span className={styles.itemCount}>
-              {localOrders.length} Ordens cadastrados
+              {localOrders.length} pedidos cadastrados
             </span>
           </h2>
 
