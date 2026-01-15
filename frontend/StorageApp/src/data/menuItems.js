@@ -21,4 +21,5 @@ export const headerData = {
     "/criar/produto": { title: "Novos Produtos", icon: PackagePlus },
     "/criar/marca": { title: "Novos Produtos", icon: PackagePlus },
     "/criar/categoria": { title: "Novos Produtos", icon: PackagePlus },
+    "/criar/pedido": { title: "Novos Pedidos", icon: ShoppingCart },
 };

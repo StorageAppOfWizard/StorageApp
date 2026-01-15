@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Edit, Trash2, ShoppingCart } from "lucide-react";
 import styles from "../../styles/pages/produtos.module.css";
+import { Link } from "react-router-dom";
 
 const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, setEditableStock, onOrder }) => {
 
@@ -50,9 +51,17 @@ const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, set
                 <span className={styles.actionIcon} onClick={() => onDelete(product.id)}>
                     <Trash2 size={16} />
                 </span>
+                    {/* Provisório para criar pedido (mandando para a página de criar produto) */}
+                <span className={styles.actionIcon}>
+                    <Link to={"/criar/pedido"}>
+                        <ShoppingCart size={16} />
+                    </Link>
+                </span>
+
+                {/* Com um clique no carrinho de compras, abrir modal para criar pedido para este produto
                 <span className={styles.actionIcon} onClick={() => onOrder(product.id)}>
                     <ShoppingCart size={16}/>
-                </span>
+                </span> */}
             </td>
         </tr>
     );

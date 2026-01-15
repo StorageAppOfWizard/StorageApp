@@ -1,5 +1,5 @@
 import Orders from '../pages/orders';
-import { getOrders, getMyOrders } from './../services/orderService';
+import { getOrders, getMyOrders, createOrders, approveOrder, rejectOrder } from './../services/orderService';
 
 export const orderEndpoint = {
 
@@ -9,6 +9,21 @@ export const orderEndpoint = {
 
   OrdersMyOrdersGet: {
     fn: getMyOrders,
+  },
+
+  OrdersCreate: {
+    fn: createOrders,
+    isMutation: true,
+  },
+
+  OrdersApprove: {
+    fn: approveOrder,
+    isMutation: true,
+  },
+
+  OrdersReject: {
+    fn: rejectOrder,
+    isMutation: true,
   },
 
 };

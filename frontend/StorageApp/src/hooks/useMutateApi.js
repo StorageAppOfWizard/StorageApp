@@ -24,6 +24,7 @@ export const useMutateApi = (endpoint) => {
     setLoading(true);
     setError(null);
     setMutationResult(null);
+    console.log("Iniciando mutação para endpoint:", endpoint, "com dados:", mutationData);
 
     try {
       const config = getEndpointConfig(endpoint);
@@ -33,6 +34,8 @@ export const useMutateApi = (endpoint) => {
 
       const response = await config.fn(mutationData, controller.signal);
       setMutationResult(response);
+      console.log("o que está chegando no Mutation: ",mutationData);
+      
 
       if (options.onSuccess) options.onSuccess(response);
       return response;

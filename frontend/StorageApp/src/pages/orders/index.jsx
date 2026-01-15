@@ -1,24 +1,42 @@
 import styles from "../../styles/pages/order.module.css";
 import { useFetchApi } from './../../hooks/useFetchApi';
-import { useNavigate, Link } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useMutateApi } from "../../hooks/useMutateApi";
+import { Link } from "react-router-dom";
+import { Plus, } from "lucide-react";
 import OrderRow from "../../components/OrdersRow";
 import { useEffect, useState } from 'react';
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
+import { toast } from "react-toastify";
 
 
 export default function Orders() {
 
-  const navigate = useNavigate();
-
   const [localOrders, setLocalOrders] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
 
-  const {
-    data: orders,
-    loading,
-    error,
-  } = useFetchApi("Order.OrdersGet");
+  const { data: orders, loading, error, } = useFetchApi("Order.OrdersGet");
+  const { mutate: mutateReject } = useMutateApi("Order.OrdersReject");
+  const { mutate: mutateApprove } = useMutateApi("Order.OrdersApprove");
+
+  const onReject = async (id) => {
+    console.log(id);
+
+    await mutateReject({ id }, {
+      onSuccess: () => {
+       toast.success("Pedido rejeitado com sucesso!");
+      }
+    });
+  };
+
+  const onApprove = async (id) => {
+    await mutateApprove({ id }, {
+      onSuccess: () => {
+       toast.success("Pedido aprovado com sucesso!");
+      }
+    });
+  };
+
+
 
   useEffect(() => {
     if (Array.isArray(orders)) {
@@ -58,7 +76,7 @@ export default function Orders() {
 
             <button className={styles.export}>Exportar</button>
 
-            <Link to="/criarOrdem">
+            <Link to="/criar/pedido">
               <button className={styles.addProduct}>
                 <Plus size={16} /> Pedido
               </button>
@@ -74,6 +92,7 @@ export default function Orders() {
               <th>Quantidade</th>
               <th>Status Pedido</th>
               <th>Data do Pedido</th>
+              <th>Ações</th>
             </tr>
           </thead>
 
@@ -87,6 +106,8 @@ export default function Orders() {
                 <OrderRow
                   key={order.id}
                   order={order}
+                  onApprove={onApprove}
+                  onReject={onReject}
                 />
               ))
             )}

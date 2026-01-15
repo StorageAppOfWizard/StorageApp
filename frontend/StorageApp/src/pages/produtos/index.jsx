@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
 
@@ -12,7 +12,6 @@ import { Plus } from "lucide-react";
 import { toast } from "react-toastify";
 
 export default function Produtos() {
-  const navigate = useNavigate();
 
   const [editableStock, setEditableStock] = useState(null);
   const [inputSearch, setInputSearch] = useState("");

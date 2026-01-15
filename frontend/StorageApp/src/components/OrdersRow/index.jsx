@@ -1,8 +1,9 @@
 import { memo } from "react";
 import styles from "../../styles/pages/order.module.css";
 import { useFetchApi } from "../../hooks/useFetchApi";
+import { CircleCheckBig, CircleOff } from "lucide-react";
 
-const OrderRow = ({ order }) => {
+const OrderRow = ({ order, onApprove, onReject }) => {
 
   const { data: productId, loading } = useFetchApi(`Product.ProductGetById`, { id: order.productId },{enabled: !!order.productId});
 
@@ -35,6 +36,14 @@ const OrderRow = ({ order }) => {
             />
           </td>
           <td>{new Date(order.creationDate).toLocaleDateString()}</td>
+          <td>
+                <span className={styles.actionIcon} onClick={() => onApprove(order.id)}>
+                    <CircleCheckBig size={16} />
+                </span>
+                <span className={styles.actionIcon} onClick={() => onReject(order.id)}>
+                    <CircleOff size={16} />
+                </span>
+            </td>
         </tr>
       )
   )
