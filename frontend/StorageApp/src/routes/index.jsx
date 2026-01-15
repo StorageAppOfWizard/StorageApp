@@ -1,4 +1,4 @@
-import { ToastProvider } from "../contexts/ToastContext";
+import { ToastProvider } from "../providers/ToastProvider.jsx";
 import { Routes, Route } from "react-router-dom";
 
 import PrivateRoute from "./private";

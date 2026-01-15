@@ -1,55 +1,48 @@
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/pages/Singn.module.css";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";
-import { useToast } from "../../contexts/ToastContext";
+import { useToast } from "../../hooks/useToast";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToastOnMutation } from "../../hooks/useToastOnMutation";
 
 export default function Login() {
     const { mutate, loading, error, mutationResult } = useMutateApi("Auth.UserLogin");
-    const { values, handlers, blurHandlers, errors, touched, validate } = useAuthForm("login");
+    const { values, handlers, blurHandlers, errors, touched } = useAuthForm("login");
     const navigate = useNavigate();
     const toast = useToast();
     const { login } = useAuth();
 
-    const successShown = useRef(false);
-    const errorShown = useRef(false);
+    // Hook de toast que retorna função de reset
+    const resetLoginToast = useToastOnMutation(mutationResult, error, {
+        success: "Login efetuado com sucesso!",
+        error: "Erro ao fazer login"
+    });
 
     async function handleLogin(e) {
         e.preventDefault();
-        errorShown.current = false;
-        successShown.current = false;
-
-        if (!validate()) {
+        
+        if (errors.password != null || errors.email != null) {
+            console.log(errors);
             toast.warning("Por favor, preencha todos os campos corretamente");
             return;
         }
 
+        resetLoginToast(); // Reseta antes de executar
         await mutate(values);
     }
 
+    // Navegação após login bem-sucedido
     useEffect(() => {
-        if (mutationResult && !successShown.current) {
-            successShown.current = true;
-
-            toast.success("Login efetuado com sucesso!");
-
+        if (mutationResult) {
             setTimeout(async () => {
                 await login(mutationResult.token);
-
                 navigate("/produtos", { replace: true });
             }, 1000);
         }
-    }, [mutationResult, navigate, toast, login]);
-
-    useEffect(() => {
-        if (error && !errorShown.current) {
-            errorShown.current = true;
-            toast.error("Erro ao fazer login: " + error);
-        }
-    }, [error, toast]);
+    }, [mutationResult, navigate, login]);
 
     return (
         <div className={styles.container}>

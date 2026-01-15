@@ -9,7 +9,7 @@ import ProductRow from "../../components/ProductRow";
 import styles from "../../styles/pages/produtos.module.css";
 
 import { Plus } from "lucide-react";
-import { toast } from "react-toastify";
+import { useToast } from "../../hooks/useToast";
 
 export default function Produtos() {
 
@@ -20,18 +20,15 @@ export default function Produtos() {
   const [productToEdit, setProductToEdit] = useState(null);
 
 
-  const {
-    data: products,
-    loading,
-    error,
-  } = useFetchApi("Product.ProductsGet");
+  const { data: products, loading, error } = useFetchApi("Product.ProductsGet");
   const { data: categorias } = useFetchApi("Category.CategorysGet");
   const { data: marcas } = useFetchApi("Brand.BrandsGet");
-
 
   const { mutate: mutateStock } = useMutateApi("Product.ProductUpdateStock");
   const { mutate: mutateDelete } = useMutateApi("Product.ProductDelete");
   const { mutate: mutateUpdate } = useMutateApi("Product.ProductUpdate");
+
+  const toast = useToast();
 
 
 
@@ -50,7 +47,7 @@ export default function Produtos() {
   const handleStockEdit = async (productId, newStock) => {
     const stockNum = Number(newStock);
 
-    if (isNaN(stockNum) || stockNum < 0) {
+    if (stockNum || stockNum < 0) {
       toast.error("Estoque inválido! Use um número positivo.");
       setEditableStock(false);
       return;
@@ -106,11 +103,11 @@ export default function Produtos() {
 
   const handleDeleteConfirm = async (productId) => {
     try {
-      await mutateDelete({ id: productId });
+      await mutateDelete({ id: productId }, {
+        onSuccess: () => { toast.success(`Produto excluído com sucesso!`); },
+        onError: (err) => { toast.error(`Erro ao excluir produto: ${err?.response.data.errors ?? err.response.data.errors}`); }
+      });
 
-      setLocalProducts((prev) => prev.filter((p) => p.id !== productId));
-
-      toast.success(`Produto excluído com sucesso!`);
     } catch (error) {
       toast.error("Erro ao excluir produto: " + (error?.message ?? error));
     }
