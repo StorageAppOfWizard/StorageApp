@@ -13,7 +13,12 @@ export default function Orders() {
   const [inputSearch, setInputSearch] = useState("");
   const toast = useToast();
 
-  const { data: orders, loading, error, refetch: refetchOrders } = useFetchApi("Order.OrdersMyOrdersGet");
+  const { data: orders,loading,error,refetch: refetchOrders}
+   = useFetchApi(
+    "Order.OrdersMyOrdersGet",
+    {},
+    { page: 1 }
+  );
 
   const { mutate: mutateReject } = useMutateApi("Order.OrdersReject");
   const { mutate: mutateApprove } = useMutateApi("Order.OrdersApprove");

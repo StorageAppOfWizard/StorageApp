@@ -7,7 +7,7 @@ const getEndpointConfig = (endpointPath) => {
   return endpointMap[group]?.[specificEndpoint];
 };
 
-export const useFetchApi = (endpoint, options = {}) => {
+export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,6 +24,7 @@ export const useFetchApi = (endpoint, options = {}) => {
 
       const response = await config.fn({
         ...options,
+        queryParams,
         signal: controller.signal,
       });
 

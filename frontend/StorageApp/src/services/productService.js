@@ -1,8 +1,8 @@
 import { apiMain as api } from "./api";
 
 
-export const getProducts = async ({ signal }) => {
-    const response = await api.get("/product", { signal });
+export const getProducts = async ({ signal, queryParams = {} }) => {
+    const response = await api.get("/product", { signal, params: queryParams });
     return response.data.value || response.data || [];
 };
 

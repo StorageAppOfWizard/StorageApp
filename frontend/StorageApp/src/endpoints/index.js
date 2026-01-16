@@ -3,6 +3,7 @@ import { brandEndpoint } from "./brands";
 import { categoryEndpoint } from "./categories";
 import { authEndpoint } from "./auth";
 import { orderEndpoint } from "./orders";
+import { userEndpoint } from "./user";
 
 export const endpointMap = {
   Product: productEndpoint,
@@ -10,4 +11,5 @@ export const endpointMap = {
   Brand: brandEndpoint,
   Category: categoryEndpoint,
   Auth: authEndpoint,
+  User: userEndpoint,
 };
