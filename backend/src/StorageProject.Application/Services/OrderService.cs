@@ -21,9 +21,9 @@ namespace StorageProject.Application.Services
             _userContextAuth = userContextAuth;
         }
 
-        public async Task<Result<List<OrderDTO>>> GetAllAsync()
+        public async Task<Result<List<OrderDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var order = await _unitOfWork.OrderRepository.GetAll();
+            var order = await _unitOfWork.OrderRepository.GetOrderWithIncludes(page, pageQuantity);
             if (order is null)
                 return Result.Success();
 
@@ -39,12 +39,12 @@ namespace StorageProject.Application.Services
             return Result.Success(order.ToDTO());
         }
 
-        public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync()
+        public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync(int page, int pageQuantity)
         {
 
             if (_userContextAuth.IsAuthenticated is false) return Result.Forbidden();
 
-            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(_userContextAuth.UserId);
+            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(page, pageQuantity, _userContextAuth.UserId);
 
             if (orders is null || !orders.Any())
                 return Result.Success();

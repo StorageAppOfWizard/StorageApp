@@ -19,9 +19,9 @@ namespace StorageProject.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<List<BrandDTO>>> GetAllAsync()
+        public async Task<Result<List<BrandDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var entity = await _unitOfWork.BrandRepository.GetAll();
+            var entity = await _unitOfWork.BrandRepository.GetPagedAsync(page, pageQuantity);
 
             if (entity is null)
                 return Result.Success();

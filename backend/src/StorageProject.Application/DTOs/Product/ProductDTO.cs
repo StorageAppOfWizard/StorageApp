@@ -13,6 +13,7 @@ namespace StorageProject.Application.DTOs.Product
         public Guid CategoryId { get; init; }
         public string BrandName { get; init; } = string.Empty;
         public string CategoryName { get; init; } = string.Empty;
+        public bool IsActive { get; init; }
     }
 
 }

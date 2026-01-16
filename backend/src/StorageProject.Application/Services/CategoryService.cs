@@ -18,9 +18,9 @@ namespace StorageProject.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<List<CategoryDTO>>> GetAllAsync()
+        public async Task<Result<List<CategoryDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var entity = await _unitOfWork.CategoryRepository.GetAll();
+            var entity = await _unitOfWork.CategoryRepository.GetPagedAsync(page, pageQuantity);
 
             if (entity is null)
                 return Result.Success();

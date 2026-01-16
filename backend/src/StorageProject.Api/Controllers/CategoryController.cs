@@ -3,6 +3,7 @@ using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Category;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel;
 using System.Net;
 
 namespace StorageProject.Api.Controllers
@@ -27,10 +28,12 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
         //[Authorize]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery, DefaultValue(1)] int page,
+            [FromQuery, DefaultValue(20)] int pageQuantity)
         {
 
-            var result = await _categoryService.GetAllAsync();
+            var result = await _categoryService.GetAllAsync(page, pageQuantity);
             return result.ToActionResult();
         }
         #endregion

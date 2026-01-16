@@ -10,7 +10,8 @@ namespace StorageProject.Application.Mappers
             return new OrderDTO
             {
                 Id = order.Id,
-                ProductId = order.ProductId,
+                ProductId = order.ProductId, 
+                ProductName = order.Product.Name ?? string.Empty,
                 Quantity = order.QuantityProduct,
                 Status = order.Status,
                 UserId = order.UserId,

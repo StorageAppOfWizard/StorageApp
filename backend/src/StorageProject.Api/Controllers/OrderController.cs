@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Order;
+using System.ComponentModel;
 
 namespace StorageProject.Api.Controllers
 {
@@ -45,18 +46,22 @@ namespace StorageProject.Api.Controllers
 
         [Authorize(Policy = "AdminOrManager")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(
+            [FromQuery, DefaultValue(1)] int page,
+            [FromQuery, DefaultValue(20)] int pageQuantity)
         {
-            var result = await _orderService.GetAllAsync();
+            var result = await _orderService.GetAllAsync(page,pageQuantity);
             return result.ToActionResult();
 
         }
 
         [Authorize]
         [HttpGet("my-orders")]
-        public async Task<IActionResult> GetByUser()
+        public async Task<IActionResult> GetByUser(
+            [FromQuery, DefaultValue(1)] int page,
+            [FromQuery, DefaultValue(20)] int pageQuantity)
         {
-            var result = await _orderService.GetOrdersByUserIdAsync();
+            var result = await _orderService.GetOrdersByUserIdAsync(page, pageQuantity);
             return result.ToActionResult();
 
         }

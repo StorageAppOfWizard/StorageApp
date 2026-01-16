@@ -6,6 +6,7 @@ using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
+using System.Formats.Asn1;
 
 
 //TO DO: explicitar o update
@@ -20,10 +21,22 @@ namespace StorageProject.Application.Services
         }
 
 
-        public async Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity)
+        public async Task<Result<List<ProductDTO>>> GetAllActiveAsync(int page, int pageQuantity)
         {
 
             var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
+
+            if (products is null)
+                return Result.Success();
+
+            var dto = products.Select(product => product.ToDTO()).ToList();
+            return dto;
+        }
+
+        public async Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity)
+        {
+
+            var products = await _unitOfWork.ProductRepository.GetPagedAsync(page, pageQuantity);
 
             if (products is null)
                 return Result.Success();
@@ -97,17 +110,36 @@ namespace StorageProject.Application.Services
                 return Result.NotFound("Not Found Product");
 
             var orders = await _unitOfWork.OrderRepository.GetAll();
-            var hasLinkedPendingOrder = orders.Any(o => o.ProductId == id && o.Status ==OrderStatus.Pending);
-            
+            var hasLinkedOrder = orders.Any(o => o.ProductId == id);
 
-            if (hasLinkedPendingOrder)
-                return Result.Error("Exist a order pending with this product");
+
+            if (hasLinkedOrder)
+                return Result.Error("Exist a order linked with this product");
 
             _unitOfWork.ProductRepository.Delete(product);
 
             await _unitOfWork.CommitAsync();
 
             return Result.SuccessWithMessage("Product was deleted with sucess");
+        }
+
+        public async Task<Result> SoftDeleteAsync(Guid id)
+        {
+            var product = await _unitOfWork.ProductRepository.GetById(id);
+            if (product is null)
+                return Result.NotFound("Not Found Product");
+
+
+            var orders = await _unitOfWork.OrderRepository.GetAll();
+            var hasLinkedOrder = orders.Any(o => o.ProductId == id && o.Status == OrderStatus.Pending);
+
+            if (hasLinkedOrder)
+                return Result.Error("Exist a order pending with this product");
+
+            await _unitOfWork.ProductRepository.SoftDelete(id);
+
+            await _unitOfWork.CommitAsync();
+            return Result.SuccessWithMessage("Product was deactivated with sucess");
         }
 
         public void Dispose()

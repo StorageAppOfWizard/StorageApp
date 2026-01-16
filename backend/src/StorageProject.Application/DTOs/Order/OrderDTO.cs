@@ -6,6 +6,7 @@ namespace StorageProject.Application.DTOs.Order
     {
         public Guid Id { get; set; }
         public Guid ProductId{ get; init; }
+        public string ProductName { get; set; }
         public int Quantity { get; set; }
         public OrderStatus Status{ get; set; }
         public string UserId { get; set; }

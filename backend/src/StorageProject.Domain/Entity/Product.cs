@@ -14,6 +14,7 @@ namespace StorageProject.Domain.Entity
         public ProductStatus Status { get; set; }
         public Guid BrandId { get; set; }
         public Guid CategoryId { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public Product()
         {
@@ -40,5 +41,10 @@ namespace StorageProject.Domain.Entity
             return ProductStatus.Available;
         }
 
+        public void Deactivate()
+        {
+            IsActive = false;
+
+        }
     }
 }
