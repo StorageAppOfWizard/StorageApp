@@ -13,7 +13,7 @@ export default function Orders() {
   const [inputSearch, setInputSearch] = useState("");
   const toast = useToast();
 
-  const { data: orders, loading, error } = useFetchApi("Order.OrdersMyOrdersGet");
+  const { data: orders, loading, error, refetch: refetchOrders } = useFetchApi("Order.OrdersMyOrdersGet");
 
   const { mutate: mutateReject } = useMutateApi("Order.OrdersReject");
   const { mutate: mutateApprove } = useMutateApi("Order.OrdersApprove");
@@ -24,6 +24,7 @@ export default function Orders() {
     await mutateReject({ id }, {
       onSuccess: () => {
         toast.success("Pedido rejeitado com sucesso!");
+        refetchOrders();
       },
       onError: (err) => {
         toast.error(`Erro ao rejeitar pedido: ${err.response.data.errors}`);
@@ -34,9 +35,9 @@ export default function Orders() {
 
   const onApprove = async (id) => {
     await mutateApprove({ id }, {
-      
-      onSuccess: (response) => {
-        toast.success("Pedido aprovado com sucesso! ", response);
+      onSuccess: () => {
+        toast.success("Pedido aprovado com sucesso!");
+        refetchOrders();
       },
       onError: (err) => {
         toast.error(`Erro ao aprovar pedido: ${err.response.data.errors}`);
@@ -61,6 +62,16 @@ export default function Orders() {
       </div>
     );
   }
+
+
+    const filteredOrders = localOrders.filter((p) => {
+    const s = inputSearch.trim().toLowerCase();
+    if (!s) return true;
+
+    return [p.userName, p.productName]
+      .map((v) => (v ?? "").toString().toLowerCase())
+      .some((field) => field.includes(s));
+  });
 
   return (
     <div style={{ marginTop: "60px", padding: "20px" }}>
@@ -104,12 +115,12 @@ export default function Orders() {
           </thead>
 
           <tbody>
-            {localOrders.length === 0 ? (
+            {filteredOrders.length === 0 ? (
               <tr>
                 <td colSpan="6">Nenhum produto cadastrado</td>
               </tr>
             ) : (
-              localOrders.map((order) => (
+              filteredOrders.map((order) => (
                 <OrderRow
                   key={order.id}
                   order={order}

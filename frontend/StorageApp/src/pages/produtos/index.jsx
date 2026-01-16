@@ -20,7 +20,7 @@ export default function Produtos() {
   const [productToEdit, setProductToEdit] = useState(null);
 
 
-  const { data: products, loading, error } = useFetchApi("Product.ProductsGet");
+  const { data: products, loading, error, refetch: refetchProducts } = useFetchApi("Product.ProductsGet");
   const { data: categorias } = useFetchApi("Category.CategorysGet");
   const { data: marcas } = useFetchApi("Brand.BrandsGet");
 
@@ -30,48 +30,34 @@ export default function Produtos() {
 
   const toast = useToast();
 
-
-
   useEffect(() => {
     if (Array.isArray(products)) {
       setLocalProducts(products);
     }
   }, [products]);
 
-  const getStatusFromStock = (stock) => {
-    if (stock === 0) return "OutOfStock";
-    if (stock < 5) return "LowStock";
-    return "Available";
-  };
 
   const handleStockEdit = async (productId, newStock) => {
     const stockNum = Number(newStock);
 
-    if (stockNum || stockNum < 0) {
+    if (stockNum < 0) {
       toast.error("Estoque inválido! Use um número positivo.");
       setEditableStock(false);
       return;
     }
-
-    try {
-      await mutateStock({
-        id: productId,
-        newStock: stockNum,
-      });
-
-      setLocalProducts((prev) =>
-        prev.map((p) =>
-          p.id === productId
-            ? { ...p, quantity: stockNum, status: getStatusFromStock(stockNum) }
-            : p
-        )
-      );
-
-      setEditableStock(false);
-      toast.success("Estoque atualizado com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao atualizar estoque: " + (error?.message ?? error));
-    }
+    await mutateStock({
+      id: productId,
+      newStock: stockNum,
+    }, {
+      onSuccess: () => {
+        setEditableStock(false);
+        toast.success("Estoque atualizado com sucesso!");
+        refetchProducts();
+      },
+      onError: (err) => {
+        toast.error(`Erro ao atualizar estoque: ${err.response.data.errors}`);
+      }
+    });
   };
 
   const handleEdit = useCallback((productId) => {
@@ -81,36 +67,31 @@ export default function Produtos() {
   }, [localProducts]);
 
   const handleSubmitEdit = async (formData, id) => {
-    try {
-      await mutateUpdate({
-        id,
-        ...formData,
+    await mutateUpdate({
+      id,
+      ...formData,
+    },
+      {
+        onSuccess: () => {
+          toast.success("Produto atualizado com sucesso!");
+          setIsEditModalOpen(false);
+          refetchProducts();
+        },
+        onError: (err) => {
+          toast.error(`Erro ao atualizar produto: ${err?.response.data.errors ?? err.response.data.errors}`);
+        }
       });
-
-      toast.success("Produto atualizado!");
-
-      setLocalProducts((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, ...formData } : p))
-      );
-
-      setIsEditModalOpen(false);
-      window.location.reload();
-    } catch (error) {
-      toast.error("Erro ao atualizar: " + (error?.message ?? error));
-    }
   };
 
 
   const handleDeleteConfirm = async (productId) => {
-    try {
-      await mutateDelete({ id: productId }, {
-        onSuccess: () => { toast.success(`Produto excluído com sucesso!`); },
-        onError: (err) => { toast.error(`Erro ao excluir produto: ${err?.response.data.errors ?? err.response.data.errors}`); }
-      });
-
-    } catch (error) {
-      toast.error("Erro ao excluir produto: " + (error?.message ?? error));
-    }
+    await mutateDelete({ id: productId }, {
+      onSuccess: () => {
+        toast.success(`Produto excluído com sucesso!`);
+        refetchProducts();
+      },
+      onError: (err) => { toast.error(`Erro ao excluir produto: ${err?.response.data.errors ?? err.response.data.errors}`); }
+    });
   };
 
   const filteredProducts = localProducts.filter((p) => {

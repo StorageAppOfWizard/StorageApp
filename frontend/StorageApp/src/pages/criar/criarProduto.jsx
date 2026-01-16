@@ -3,10 +3,13 @@ import Tabs from "../../components/Tabs";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import styles from "../../styles/pages/criacao.module.css";
+import { useToast } from "../../hooks/useToast";
 
 export default function CriarProduto() {
   const { data: marcas } = useFetchApi("Brand.BrandsGet");
   const { data: categorias } = useFetchApi("Category.CategorysGet");
+
+  const toast = useToast();
   const { mutate, loading: creating } = useMutateApi("Product.ProductCreate");
 
   const [form, setForm] = useState({
@@ -41,8 +44,11 @@ export default function CriarProduto() {
             brandId: "",
             categoryId: "",
           });
-          window.location.reload();
+          toast.success("Produto criado com sucesso!");
         },
+        onError: (err) => {
+          toast.error(`Erro ao criar produto: ${err.response.data.errors}`);
+        }
       }
     );
   }

@@ -4,13 +4,16 @@ import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import styles from "../../styles/pages/criacao.module.css";
 import stylesOrder from "../../styles/pages/order.module.css";
+import { useToast } from "../../hooks/useToast";
 
 export default function CriarOrder() {
 
 
-  const { data: produtos, loading } = useFetchApi("Product.ProductsGet");
-  const { data: orders, loading: ordersLoading, error: ordersError } = useFetchApi("Order.OrdersGet");
+  const { data: produtos, loading} = useFetchApi("Product.ProductsGet");
+  const { data: orders, loading: ordersLoading, error: ordersError,  refetch: refetchOrders } = useFetchApi("Order.OrdersGet");
+  const toast = useToast();
   const { mutate, loading: creating } = useMutateApi("Order.OrdersCreate")
+
 
   const [form, setForm] = useState({
     productId: "",
@@ -29,17 +32,18 @@ export default function CriarOrder() {
         productId: form.productId,
         quantity: Number(form.quantity)
       },
-      console.log(form),
-
       {
         onSuccess: () => {
-          {
-            setForm({
-              productId: "",
-              quantity: 0,
-            })
-          }
-          window.location.reload();
+          setForm({
+            productId: "",
+            quantity: 0,
+          })
+          toast.success("Pedido criado com sucesso!");
+          refetchOrders();
+        },
+
+        onError: (err) => {
+          toast.error(`Erro ao criar pedido: ${err.response.data.errors}`);
         }
       }
     );
@@ -94,7 +98,7 @@ export default function CriarOrder() {
         </div>
 
         <div className={styles.cadastrado}>
-          <h3 className={styles.subtitle}>Pedidos cadastrados</h3>
+          <h3 className={styles.subtitle}>Últimos pedidos cadastrados</h3>
 
           {ordersLoading && <p>Carregando...</p>}
           {ordersError && <p style={{ color: "red" }}>{ordersError}</p>}

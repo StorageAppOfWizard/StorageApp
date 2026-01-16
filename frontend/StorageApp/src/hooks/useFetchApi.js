@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { endpointMap } from "../endpoints";
 
@@ -12,44 +12,40 @@ export const useFetchApi = (endpoint, options = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     const controller = new AbortController();
-    let isMounted = true;
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const config = getEndpointConfig(endpoint);
-        if (!config) {
-          throw new Error("Endpoint não suportado");
-        }
-
-        const response = await config.fn({
-          ...options,
-          signal: controller.signal,
-        });
-        if (isMounted && response) {
-          const transformedData = config.transform
-            ? config.transform(response)
-            : response;
-          setData(transformedData);
-        }
-      } catch (error) {
-        if (!axios.isCancel(error) && isMounted) {
-          setError(`Erro ao carregar dados: ${error.message}`);
-        }
-      } finally {
-        if (isMounted) setLoading(false);
+    try {
+      setLoading(true);
+      const config = getEndpointConfig(endpoint);
+      if (!config) {
+        throw new Error("Endpoint não suportado");
       }
-    };
 
-    fetchData();
+      const response = await config.fn({
+        ...options,
+        signal: controller.signal,
+      });
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
+      const transformedData = config.transform
+        ? config.transform(response)
+        : response;
+
+      setData(transformedData);
+    } catch (error) {
+      if (!axios.isCancel(error)) {
+        setError(`Erro ao carregar dados: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+
+    return () => controller.abort();
   }, [endpoint, JSON.stringify(options)]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, loading, error, refetch: fetchData };
 };
