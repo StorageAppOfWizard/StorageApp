@@ -39,5 +39,5 @@ export const updateProduct = async (data) => {
 
 
 export const deleteProduct = async ({ id, signal }) => {
-    await api.delete(`/product/${id}`, { signal });
+    await api.delete(`/product/deactivate/${id}`, { signal });
 };

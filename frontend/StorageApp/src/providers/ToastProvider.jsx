@@ -8,8 +8,8 @@ export const ToastProvider = ({ children }) => {
     const addToast = useCallback((message, type = 'info', duration = 3000) => {
         const id = Date.now() + Math.random();
 
-        setToasts((prev) => {
-            return [...prev,{ id, message, type }];
+        setToasts(() => {
+            return [{ id, message, type }];
         });
 
         // Remove automaticamente após o duration

@@ -11,34 +11,36 @@ import { useToast } from "../../hooks/useToast";
 export default function Orders() {
   const [localOrders, setLocalOrders] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
-  
-  const { data: orders, loading, error } = useFetchApi("Order.OrdersMyOrdersGet");
   const toast = useToast();
-  const { 
-    mutate: mutateReject, 
-    mutationResult: rejectResult,
-    error: rejectError 
-  } = useMutateApi("Order.OrdersReject");
-  
-  const { 
-    mutate: mutateApprove,
-    mutationResult: approveResult,
-    error: approveError
-  } = useMutateApi("Order.OrdersApprove");
+
+  const { data: orders, loading, error } = useFetchApi("Order.OrdersMyOrdersGet");
+
+  const { mutate: mutateReject } = useMutateApi("Order.OrdersReject");
+  const { mutate: mutateApprove } = useMutateApi("Order.OrdersApprove");
 
 
-  const onReject = async (id) => {
+
+  async function onReject(id) {
     await mutateReject({ id }, {
-      onSuccess: () => { toast.success("Pedido rejeitado com sucesso! ", rejectResult); },
-      onError: () => { toast.error("Erro ao rejeitar pedido :", rejectError); }
-    }
+      onSuccess: () => {
+        toast.success("Pedido rejeitado com sucesso!");
+      },
+      onError: (err) => {
+        toast.error(`Erro ao rejeitar pedido: ${err.response.data.errors}`);
+      }
+    },
     );
   };
 
   const onApprove = async (id) => {
     await mutateApprove({ id }, {
-      onSuccess: () => { toast.success("Pedido aprovado com sucesso! ", approveResult); },
-      onError: () => { toast.error("Erro ao aprovar pedido :", approveError); }
+      
+      onSuccess: (response) => {
+        toast.success("Pedido aprovado com sucesso! ", response);
+      },
+      onError: (err) => {
+        toast.error(`Erro ao aprovar pedido: ${err.response.data.errors}`);
+      }
     }
     );
   };
@@ -51,7 +53,7 @@ export default function Orders() {
   }, [orders]);
 
   if (loading) return <ProductTableSkeleton />;
-  
+
   if (error) {
     return (
       <div style={{ marginTop: "60px", padding: "20px" }}>

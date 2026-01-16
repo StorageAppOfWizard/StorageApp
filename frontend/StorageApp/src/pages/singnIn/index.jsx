@@ -6,35 +6,35 @@ import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";
 import { useToast } from "../../hooks/useToast";
 import { useAuth } from "../../contexts/AuthContext";
-import { useToastOnMutation } from "../../hooks/useToastOnMutation";
 
 export default function Login() {
-    const { mutate, loading, error, mutationResult } = useMutateApi("Auth.UserLogin");
+    const { mutate, loading, mutationResult } = useMutateApi("Auth.UserLogin");
     const { values, handlers, blurHandlers, errors, touched } = useAuthForm("login");
     const navigate = useNavigate();
     const toast = useToast();
     const { login } = useAuth();
 
-    // Hook de toast que retorna função de reset
-    const resetLoginToast = useToastOnMutation(mutationResult, error, {
-        success: "Login efetuado com sucesso!",
-        error: "Erro ao fazer login"
-    });
 
     async function handleLogin(e) {
         e.preventDefault();
-        
+
         if (errors.password != null || errors.email != null) {
             console.log(errors);
             toast.warning("Por favor, preencha todos os campos corretamente");
             return;
         }
 
-        resetLoginToast(); // Reseta antes de executar
-        await mutate(values);
+        await mutate(values, {
+            onSuccess: () => {
+                toast.success("Login realizado com sucesso!");
+            },
+            onError: (err) => {
+                toast.error(`Erro ao realizar login: ${err.response.data.errors}`);
+            }
+        });
+
     }
 
-    // Navegação após login bem-sucedido
     useEffect(() => {
         if (mutationResult) {
             setTimeout(async () => {

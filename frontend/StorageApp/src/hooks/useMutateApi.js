@@ -45,7 +45,7 @@ export const useMutateApi = (endpoint) => {
 
       let message = "Erro desconhecido.";
 
-      const dataErrors = err.response?.data?.errors;
+      const dataErrors = await err.response?.data?.errors;
 
       if (dataErrors) {
         if (typeof dataErrors === "string") {

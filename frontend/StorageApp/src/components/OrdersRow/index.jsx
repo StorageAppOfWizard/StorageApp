@@ -19,7 +19,7 @@ const OrderRow = ({ order, onApprove, onReject }) => {
         </tr>
       ) : (
         <tr>
-          <td>{productId?.value?.name || "Nome não disponível"}</td>
+          <td>{order.productName || "Nome não disponível"}</td>
           <td>{order.userName || "Sem Usuário"}</td>
           <td>{order.quantity}</td>
           <td>
