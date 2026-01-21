@@ -14,15 +14,13 @@ namespace StorageProject.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllWithIncludesAsync(int page, int pageQuantity, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Product>> GetAllWithIncludesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Products
                     .Where(p => p.IsActive == true)
                     .Include(p => p.Brand)
                     .Include(p => p.Category)
                     .AsNoTracking()
-                    .Skip((page - 1) * pageQuantity)
-                    .Take(pageQuantity)
                     .ToListAsync(cancellationToken) ?? Enumerable.Empty<Product>();
         }
 

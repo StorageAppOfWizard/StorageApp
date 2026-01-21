@@ -10,7 +10,12 @@ export default function CriarOrder() {
 
 
   const { data: produtos, loading} = useFetchApi("Product.ProductsGet");
-  const { data: orders, loading: ordersLoading, error: ordersError,  refetch: refetchOrders } = useFetchApi("Order.OrdersGet");
+  const {
+    data: orders, 
+    loading: ordersLoading, 
+    error: ordersError, 
+    refetch: refetchOrders
+  } = useFetchApi("Order.OrdersGet", {}, { pageQuantity: 10 });
   const toast = useToast();
   const { mutate, loading: creating } = useMutateApi("Order.OrdersCreate")
 

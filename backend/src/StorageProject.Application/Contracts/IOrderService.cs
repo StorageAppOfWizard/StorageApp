@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.DTOs.Order;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Contracts
 {
@@ -11,7 +12,7 @@ namespace StorageProject.Application.Contracts
         Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync(int page, int pageQuantity);
         Task<Result> DeleteOrderAsync(Guid id);
         Task<Result<OrderDTO>> GetByIdAsync(Guid id);
-        Task<Result<List<OrderDTO>>> GetAllAsync(int page, int pageQuantity);
+        Task<Result<PagedItems<OrderDTO>>> GetAllAsync(int page, int pageQuantity);
 
     }
 }
