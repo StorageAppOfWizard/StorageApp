@@ -10,6 +10,7 @@ export default function CriarOrder() {
 
 
   const { data: produtos, loading} = useFetchApi("Product.ProductsGet");
+
   const {
     data: orders, 
     loading: ordersLoading, 
@@ -59,9 +60,10 @@ export default function CriarOrder() {
     <div style={{ marginTop: "60px", padding: "20px" }}>
       <Tabs
         tabs={[
-          { value: "product", label: "Criar Produto", to: "/criar/produto" },
+          { value: "pedidos", label: "Criar Pedido", to: "/criar/pedido" },
+          { value: "ordem", label: "Últimos Pedidos", to: "/criar/ultimos-pedidos" },
         ]}
-        currentValue="order"
+        currentValue="pedidos"
       />
 
       <div className={styles.container}>
@@ -79,7 +81,7 @@ export default function CriarOrder() {
               required
             >
               <option value="">Selecione um produto</option>
-              {produtos?.map((m) => (
+              {produtos.items?.map((m) => (
                 <option key={m.id} value={m.id}>{m.name}</option>
               ))}
             </select>
@@ -100,53 +102,6 @@ export default function CriarOrder() {
             </button>
           </form>
 
-        </div>
-
-        <div className={styles.cadastrado}>
-          <h3 className={styles.subtitle}>Últimos pedidos cadastrados</h3>
-
-          {ordersLoading && <p>Carregando...</p>}
-          {ordersError && <p style={{ color: "red" }}>{ordersError}</p>}
-
-          {!ordersLoading && (
-            <div className={styles.tableContainer}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Produto</th>
-                    <th>Quantidade</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders?.map((order) => (
-                    loading ? (
-                      <tr key={order.id}>
-                        <td>Carregando...</td>
-                      </tr>
-                    ) : (
-                      <tr key={order.id}>
-                        <td>{order.productName}</td>
-                        <td>{order.quantity}</td>
-                        <td>
-                          <span
-                            className={stylesOrder.statusDot}
-                            style={{
-                              backgroundColor:
-                                order.status === "Approved"
-                                  ? "#4caf50"
-                                  : order.status === "Pending"
-                                    ? "#ffca28"
-                                    : "#f44336",
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    )))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       </div>
 

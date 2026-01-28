@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
 
@@ -29,10 +29,12 @@ export default function Produtos() {
   const { mutate: mutateUpdate } = useMutateApi("Product.ProductUpdate");
 
   const toast = useToast();
+  const navigate =useNavigate();
 
   useEffect(() => {
-    if (Array.isArray(products)) {
-      setLocalProducts(products);
+    if (Array.isArray(products.items)) {
+      setLocalProducts(products.items);
+      
     }
   }, [products]);
 
@@ -93,6 +95,14 @@ export default function Produtos() {
       onError: (err) => { toast.error(`Erro ao excluir produto: ${err?.response.data.errors ?? err.response.data.errors}`); }
     });
   };
+
+  const handleOrder = (productId) => {
+    navigate('/criar/pedido', {
+      state:{
+        productId: productId
+      }
+    });
+  }
 
   const filteredProducts = localProducts.filter((p) => {
     const s = inputSearch.trim().toLowerCase();
@@ -168,6 +178,7 @@ export default function Produtos() {
                   onStockEdit={handleStockEdit}
                   onEdit={handleEdit}
                   onDelete={handleDeleteConfirm}
+                  onOrder={handleOrder}
                 />
               ))
             )}

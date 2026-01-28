@@ -1,4 +1,4 @@
-import { ShoppingCart, Package, Users, DollarSign, Settings, PackagePlus } from 'lucide-react';
+import { ShoppingCart, Package, Users, DollarSign, Settings, PackagePlus, Clock  } from 'lucide-react';
 
 export const menuItems = [
     { name: "Pedidos", icon: ShoppingCart, path: "/pedidos" },
@@ -22,4 +22,5 @@ export const headerData = {
     "/criar/marca": { title: "Novos Produtos", icon: PackagePlus },
     "/criar/categoria": { title: "Novos Produtos", icon: PackagePlus },
     "/criar/pedido": { title: "Novos Pedidos", icon: ShoppingCart },
+    "/criar/ultimos-pedidos": { title: "Ultimos Pedidos Cadastrados", icon: ShoppingCart },
 };
