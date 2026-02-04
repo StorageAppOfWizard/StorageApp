@@ -3,11 +3,13 @@ services:
     image: postgres:latest
     container_name: dbproduct
     environment:
+      ConnectionStrings__StorageContext: User ID=root;Password=Lagavi30!;Host=dbproduct;Port=5432;Database=products;
       POSTGRES_USER: root
       POSTGRES_PASSWORD: Lagavi30!
       POSTGRES_DB: products
       POOLING: "true"
       PGDATA: /var/lib/postgresql/data/pgdata
+
     ports:
         - "5432:5432"
     user: root
