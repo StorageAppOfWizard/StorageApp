@@ -4,6 +4,7 @@ using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Product;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel;
 using System.Net;
 
 namespace StorageProject.Api.Controllers
@@ -21,18 +22,34 @@ namespace StorageProject.Api.Controllers
             _productService = productService;
         }
 
-        #region Get
+        #region GetAll
+
+        [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+        [HttpGet("all/")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Get(
+            [FromQuery, DefaultValue(1)] int page,
+            [FromQuery, DefaultValue(20)] int pageQuantity)
+        {
+            var result = await _productService.GetAllAsync(page, pageQuantity);
+            return result.ToActionResult();
+        }
+        #endregion
+
+        #region GetAllActive
 
         [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Get(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageQuantity = 20)
+        public async Task<IActionResult> GetActive(
+            [FromQuery, DefaultValue(1)] int page,
+            [FromQuery, DefaultValue(20)] int pageQuantity)
         {
-            var result = await _productService.GetAllAsync(page, pageQuantity);
+            var result = await _productService.GetAllActiveAsync(page, pageQuantity);
             return result.ToActionResult();
         }
         #endregion
@@ -108,6 +125,20 @@ namespace StorageProject.Api.Controllers
             var result = await _productService.RemoveAsync(id);
             return result.ToActionResult();
         }
+        #endregion
+
+        #region SoftDelete
+        [SwaggerResponse((int)HttpStatusCode.OK, "Product Deactivated")]
+        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+        [HttpDelete("deactivate/{id:Guid}")]
+
+        public async Task<IActionResult> SoftDelete(Guid id)
+        {
+            var result = await _productService.SoftDeleteAsync(id);
+            return result.ToActionResult();
+        }
+
         #endregion
     }
 }

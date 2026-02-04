@@ -26,7 +26,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
             _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(cancellationToken)).ReturnsAsync(list);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
             Assert.True(result.IsSuccess);
@@ -42,7 +42,7 @@ namespace StorageProject.Tests.Services.CategoryServiceTest
             _fixture.UnitOfWorkMock.Setup(c => c.CategoryRepository.GetAll(cancellationToken)).ReturnsAsync(value:null);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
             Assert.True(result.IsSuccess);

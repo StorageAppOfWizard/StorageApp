@@ -1,4 +1,4 @@
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import styles from "../../styles/components/header.module.css";
 import { Settings } from "lucide-react";
 import { headerData } from "../../data/menuItems";

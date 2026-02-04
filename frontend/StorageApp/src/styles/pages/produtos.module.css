@@ -51,7 +51,7 @@
 }
 
 .export {
-    background-color: #2DD0A9;
+    background-color: #2dd043;
     color: var(--cor-50);
     font-weight: 600;
 }
@@ -92,15 +92,13 @@
 }
 
 .productTable th {
-    background-color: var(--cor-800);
-    color: var(--cor-50);
+    background-color: transparent;
+    color: var(--cor-700);
     font-weight: 600;
     text-align: center;
     cursor: pointer;
-}
-
-.productTable th:hover {
-    background-color: var(--cor-700);
+    text-transform: uppercase;
+    font-size: .8rem;
 }
 
 .productTable td {
@@ -169,7 +167,7 @@
 .actionIcon {
     margin-left: 10px;
     cursor: pointer;
-    color: var(--cor-500);
+    color: var(--cor-500) !important;
     transition: color 0.2s;
 }
 

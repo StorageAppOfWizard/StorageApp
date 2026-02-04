@@ -1,8 +1,9 @@
 import { memo } from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, ShoppingCart } from "lucide-react";
 import styles from "../../styles/pages/produtos.module.css";
+import { Link } from "react-router-dom";
 
-const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, setEditableStock }) => {
+const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, setEditableStock, onOrder }) => {
 
     return (
         <tr>
@@ -49,6 +50,9 @@ const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, set
                 </span>
                 <span className={styles.actionIcon} onClick={() => onDelete(product.id)}>
                     <Trash2 size={16} />
+                </span>
+                <span className={styles.actionIcon}>
+                    <ShoppingCart size={16} onClick={() => onOrder(product.id)}/>
                 </span>
             </td>
         </tr>

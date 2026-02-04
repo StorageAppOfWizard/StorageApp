@@ -48,7 +48,7 @@ namespace StorageProject.Tests.ProductControllerTest
             _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.Success(fakeList));
 
             //Act
-            var result = await _fixture.Controller.Get();
+            var result = await _fixture.Controller.Get(It.IsAny<int>(), It.IsAny<int>());
 
             var objectResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(200,objectResult.StatusCode);
@@ -64,7 +64,7 @@ namespace StorageProject.Tests.ProductControllerTest
             _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.NotFound("Products Not Found"));
 
             //Act
-            var result = await _fixture.Controller.Get();
+            var result = await _fixture.Controller.Get(It.IsAny<int>(), It.IsAny<int>());
 
             var objectResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, objectResult.StatusCode);
@@ -78,7 +78,7 @@ namespace StorageProject.Tests.ProductControllerTest
             _fixture.ProductServiceMock.Setup(g => g.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("Unexpected Error"));
 
             //Act
-            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get());
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get(It.IsAny<int>(), It.IsAny<int>()));
 
             //Assert
             Assert.Equal("Unexpected Error", exception.Message);

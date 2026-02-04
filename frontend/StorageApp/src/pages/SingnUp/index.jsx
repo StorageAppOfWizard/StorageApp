@@ -4,7 +4,7 @@ import styles from "../../styles/pages/Singn.module.css";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { useAuthForm } from "../../hooks/useAuthForm";
 import { ValidatedInput } from "../../components/ValidateInput";
-import { useToast } from "../../contexts/ToastContext";
+import { useToast } from "../../hooks/useToast";
 
 export default function SingnUp() {
     const [formError, setFormError] = useState(null);
@@ -21,7 +21,6 @@ export default function SingnUp() {
         blurHandlers,
         errors,
         touched,
-        validate,
         resetForm
     } = useAuthForm("register");
 
@@ -30,10 +29,11 @@ async function handleSignUp(e) {
     setFormError(null);
     errorShown.current = false;
 
-    if (!validate()) {
-        toast.warning("Por favor, corrija os erros no formulário");
-        return;
-    }
+    if (errors.password != null || errors.email != null) {
+            console.log(errors);
+            toast.warning("Por favor, preencha todos os campos corretamente");
+            return;
+        }
 
     successShown.current = false;
     await mutate(values);

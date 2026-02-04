@@ -1,16 +1,35 @@
 import { useState } from "react";
 import Tabs from "../../components/Tabs";
-import { useCreateTabs } from "../../hooks/components/useCreateTabs"
+import { useFetchApi } from "../../hooks/useFetchApi";
+import { useMutateApi } from "../../hooks/useMutateApi";
+import styles from "../../styles/pages/criacao.module.css";
 
 export default function CriarCategory() {
-  const { tabs, current } = useCreateTabs();
+  const [nomeCategoria, setnomeCategoria] = useState("");
+  const [DescriptCategoria, setdescriptCategoria] = useState("");
 
-  const [nome, setNome] = useState("");
+  const { data: categorias, loading, error } = useFetchApi("Category.CategorysGet");
+  const { mutate, loading: creating } = useMutateApi("Category.CategoryCreate")
 
-  function handleSubmit(e) {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Categoria criada!");
-  }
+
+    await mutate(
+      {
+        name: nomeCategoria,
+        description: DescriptCategoria
+      },
+      {
+        onSuccess: () => {
+          setnomeCategoria("");
+          setdescriptCategoria("");
+          window.location.reload();
+        }
+      }
+    );
+
+  };
 
   return (
     <div style={{ marginTop: "60px", padding: "20px" }}>
@@ -18,25 +37,69 @@ export default function CriarCategory() {
         tabs={[
           { value: "product", label: "Criar Produto", to: "/criar/produto" },
           { value: "brand", label: "Criar Marca", to: "/criar/marca" },
-          { value: "category", label: "Criar Categoria", to: "/criar/categoria" }
+          { value: "category", label: "Criar Categoria", to: "/criar/categoria" },
         ]}
-        currentValue={current}
+        currentValue="category"
       />
 
-      <h2>Criar Categoria</h2>
+      <div className={styles.container}>
+        <div className={styles.criar}>
+          <h2 className={styles.title}>Criar Categoria</h2>
 
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          Nome da Categoria:
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
-        </label>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label className={styles.label}> Nome da Categoria</label>
+            <input
+              type="text"
+              className={styles.input}
+              value={nomeCategoria}
+              onChange={(e) => setnomeCategoria(e.target.value)}
+              required
+            />
+            
+            <label className={styles.label}>Descrição</label>
+            <textarea
+              type="text"
+              className={styles.textarea}
+              value={DescriptCategoria}
+              onChange={(e) => setdescriptCategoria(e.target.value)}
+            >
+            </textarea>
 
-        <button className="btn" type="submit">Criar Categoria</button>
-      </form>
+
+            <button className={styles.btn} disabled={creating}>
+              {creating ? "Salvando..." : "Criar Categoria"}
+            </button>
+          </form>
+
+        </div>
+
+        <div className={styles.cadastrado}>
+          <h3 className={styles.subtitle}>Categorias cadastradas</h3>
+
+          {loading && <p>Carregando...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+
+          {!loading && (
+            <div className={styles.tableContainer}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categorias?.map((categorias) => (
+                    <tr key={categorias.id}>
+                      <td>{categorias.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 }

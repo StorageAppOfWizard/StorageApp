@@ -27,7 +27,9 @@ namespace StorageProject.Tests.Services.BrandServiceTest
             _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(cancellationToken)).ReturnsAsync(list);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            int page = 1;
+            int pageQuantity = 10;
+            var result = await _fixture.Service.GetAllAsync(page, pageQuantity);
 
             //Assert
             Assert.True(result.IsSuccess);
@@ -43,7 +45,7 @@ namespace StorageProject.Tests.Services.BrandServiceTest
             _fixture.UnitOfWorkMock.Setup(c => c.BrandRepository.GetAll(cancellationToken)).ReturnsAsync(value:null);
 
             //Act
-            var result = await _fixture.Service.GetAllAsync();
+            var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
 
             //Assert
             Assert.True(result.IsSuccess);

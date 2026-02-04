@@ -1,24 +1,56 @@
 import styles from "../../styles/pages/order.module.css";
 import { useFetchApi } from './../../hooks/useFetchApi';
-import { useNavigate, Link } from "react-router-dom";
+import { useMutateApi } from "../../hooks/useMutateApi";
+import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import OrderRow from "../../components/OrdersRow";
 import { useEffect, useState } from 'react';
 import ProductTableSkeleton from "../../components/ProductTableSkeleton";
-
+import { useToast } from "../../hooks/useToast";
 
 export default function Orders() {
-
-  const navigate = useNavigate();
-  
   const [localOrders, setLocalOrders] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
+  const toast = useToast();
 
-  const {
-    data: orders,
-    loading,
-    error,
-  } = useFetchApi("Order.OrdersGet");
+  const { data: orders,loading,error,refetch: refetchOrders}
+   = useFetchApi(
+    "Order.OrdersMyOrdersGet",
+    {},
+    { page: 1 }
+  );
+
+  const { mutate: mutateReject } = useMutateApi("Order.OrdersReject");
+  const { mutate: mutateApprove } = useMutateApi("Order.OrdersApprove");
+
+
+
+  async function onReject(id) {
+    await mutateReject({ id }, {
+      onSuccess: () => {
+        toast.success("Pedido rejeitado com sucesso!");
+        refetchOrders();
+      },
+      onError: (err) => {
+        toast.error(`Erro ao rejeitar pedido: ${err.response.data.errors}`);
+      }
+    },
+    );
+  };
+
+  const onApprove = async (id) => {
+    await mutateApprove({ id }, {
+      onSuccess: () => {
+        toast.success("Pedido aprovado com sucesso!");
+        refetchOrders();
+      },
+      onError: (err) => {
+        toast.error(`Erro ao aprovar pedido: ${err.response.data.errors}`);
+      }
+    }
+    );
+  };
+
 
   useEffect(() => {
     if (Array.isArray(orders)) {
@@ -26,24 +58,8 @@ export default function Orders() {
     }
   }, [orders]);
 
-  // const getStatusOrder = (status) => {
-  //   if (status === "Pending") return "Pending";
-  //   if (status === "Approved") return "Approved";
-  //   return "Rejected";
-  // };
-
-
-  const filteredOrders = localOrders.filter((p) => {
-    const s = inputSearch.trim().toLowerCase();
-    if (!s) return true;
-
-    return [p.name, p.categoryName, p.brand]
-      .map((v) => (v ?? "").toString().toLowerCase())
-      .some((field) => field.includes(s));
-  });
-
-
   if (loading) return <ProductTableSkeleton />;
+
   if (error) {
     return (
       <div style={{ marginTop: "60px", padding: "20px" }}>
@@ -52,20 +68,30 @@ export default function Orders() {
     );
   }
 
+
+    const filteredOrders = localOrders.filter((p) => {
+    const s = inputSearch.trim().toLowerCase();
+    if (!s) return true;
+
+    return [p.userName, p.productName]
+      .map((v) => (v ?? "").toString().toLowerCase())
+      .some((field) => field.includes(s));
+  });
+
   return (
     <div style={{ marginTop: "60px", padding: "20px" }}>
       <div className={styles.container}>
         <div className={styles.header}>
           <h2>
             <span className={styles.itemCount}>
-              {filteredOrders.length} itens cadastrados
+              {localOrders.length} pedidos cadastrados
             </span>
           </h2>
 
           <div className={styles.actions}>
             <input
               type="text"
-              placeholder="Item, Categoria ou Marca"
+              placeholder="Solicitante, Nome Produto"
               className={styles.search}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -73,9 +99,9 @@ export default function Orders() {
 
             <button className={styles.export}>Exportar</button>
 
-            <Link to="/criar">
+            <Link to="/criar/pedido">
               <button className={styles.addProduct}>
-                <Plus size={16} /> Produto
+                <Plus size={16} /> Pedido
               </button>
             </Link>
           </div>
@@ -84,11 +110,11 @@ export default function Orders() {
         <table className={styles.productTable}>
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Marca</th>
-              <th>Estoque</th>
-              <th>Status</th>
+              <th>Nome do Produto</th>
+              <th>Solicitante</th>
+              <th>Quantidade</th>
+              <th>Status Pedido</th>
+              <th>Data do Pedido</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -103,6 +129,8 @@ export default function Orders() {
                 <OrderRow
                   key={order.id}
                   order={order}
+                  onApprove={onApprove}
+                  onReject={onReject}
                 />
               ))
             )}

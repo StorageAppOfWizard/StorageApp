@@ -22,13 +22,16 @@ namespace StorageProject.Application.Services
             _userContextAuth = userContextAuth;
         }
 
-        public async Task<Result<List<OrderDTO>>> GetAllAsync()
+        public async Task<Result<PagedItems<OrderDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var order = await _unitOfWork.OrderRepository.GetAll();
+            var order = await _unitOfWork.OrderRepository.GetOrderWithIncludes();
             if (order is null)
                 return Result.Success();
 
-            return Result.Success(order.Select(o => o.ToDTO()).ToList());
+            var dtoList = order.Select(o=> o.ToDTO()).ToList();
+            var pagedList = new PagedItems<OrderDTO>(dtoList, page, pageQuantity);
+
+            return Result.Success(pagedList);
         }
 
         public async Task<Result<OrderDTO>> GetByIdAsync(Guid id)
@@ -40,12 +43,12 @@ namespace StorageProject.Application.Services
             return Result.Success(order.ToDTO());
         }
 
-        public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync()
+        public async Task<Result<List<OrderDTO>>> GetOrdersByUserIdAsync(int page, int pageQuantity)
         {
 
             if (_userContextAuth.IsAuthenticated is false) return Result.Forbidden();
 
-            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(_userContextAuth.UserId);
+            var orders = await _unitOfWork.OrderRepository.GetOrdersByUserId(page, pageQuantity, _userContextAuth.UserId);
 
             if (orders is null || !orders.Any())
                 return Result.Success();
@@ -64,12 +67,13 @@ namespace StorageProject.Application.Services
                 return Result.Error("There is not sufficient quantity for this order");
             
             var userId = _userContextAuth.UserId;
+            var username = _userContextAuth.UserName;
 
             if (userId is null)
                 return Result.Unauthorized("Sign in for create a order");
 
             existingProduct.Quantity -= dto.Quantity;
-            await _unitOfWork.OrderRepository.Create(dto.ToEntity(userId));
+            await _unitOfWork.OrderRepository.Create(dto.ToEntity(userId, username));
 
             await _unitOfWork.CommitAsync();
             return Result.SuccessWithMessage("Order Created");

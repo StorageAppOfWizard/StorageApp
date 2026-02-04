@@ -12,6 +12,7 @@ namespace StorageProject.Infrastructure.Configurations
             builder.Property(x => x.Name).HasMaxLength(20).IsRequired();
             builder.Property(x => x.Quantity).HasMaxLength(8).IsRequired();
             builder.Property(x => x.Description).HasMaxLength(200);
+            builder.Property(x => x.IsActive).IsRequired();
 
             // Relations
             builder

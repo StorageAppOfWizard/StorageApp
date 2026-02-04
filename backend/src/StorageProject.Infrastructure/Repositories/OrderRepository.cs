@@ -14,15 +14,25 @@ namespace StorageProject.Infrastructure.Repositories
             _context = context;
         }
 
-        public void CancelOrder(Order order)
+        public async Task<IEnumerable<Order>> GetOrdersByUserId(int page, int pageQuantity, string userId, CancellationToken cancellationToken = default)
         {
-           
-            _context.Orders.Update(order);
+            return await _context.Orders
+                .Where(o => o.UserId == userId)
+                .OrderByDescending(o=>o.CreationDate)
+                .Include(o => o.Product)
+                .Skip((page - 1) * pageQuantity)
+                .Take(pageQuantity)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByUserId(string userId)
+        public async Task<IEnumerable<Order>> GetOrderWithIncludes(CancellationToken cancellationToken = default)
         {
-            return await _context.Orders.Where(o => o.UserId == userId).AsNoTracking().ToListAsync();
+            return await _context.Orders
+                .Include(o => o.Product)
+                .OrderByDescending(o => o.CreationDate)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
     }
 }

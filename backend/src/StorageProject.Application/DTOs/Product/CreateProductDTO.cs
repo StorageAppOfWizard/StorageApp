@@ -7,6 +7,7 @@
         public int Quantity { get; init; }
         public Guid BrandId { get; init; }
         public Guid CategoryId { get; init; }
+        public bool IsActive { get; init; } = true;
 
     }
 

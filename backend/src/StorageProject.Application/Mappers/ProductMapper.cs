@@ -19,8 +19,9 @@ namespace StorageProject.Application.Mappers
                 CategoryName = product.Category.Name ?? string.Empty,
                 BrandId = product.BrandId,
                 CategoryId = product.CategoryId,
+                IsActive = product.IsActive
 
-                
+
             };
         }
         public static Product ToEntity(this CreateProductDTO dto)
@@ -33,7 +34,8 @@ namespace StorageProject.Application.Mappers
                 Quantity = dto.Quantity,
                 BrandId = dto.BrandId,
                 CategoryId = dto.CategoryId,
-                
+                IsActive = dto.IsActive
+
             };
         }
 

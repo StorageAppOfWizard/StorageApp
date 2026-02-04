@@ -74,7 +74,7 @@ namespace StorageProject.Tests.ProductControllerTest
             var ProductId = Guid.NewGuid();
             _fixture.ProductServiceMock.Setup(s => s.GetAllAsync(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception("Unexpected Error"));
             //Act
-            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get());
+            var exception = await Assert.ThrowsAsync<Exception>(() => _fixture.Controller.Get(It.IsAny<int>(), It.IsAny<int>()));
 
             //Assert
             Assert.Equal("Unexpected Error", exception.Message);
