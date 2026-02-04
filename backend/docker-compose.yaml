@@ -1,47 +1,43 @@
 services:
-  sqlserver-product:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver-product
+  dbproduct:
+    image: postgres:latest
+    container_name: dbproduct
     environment:
-      - SA_PASSWORD=Lagavi30!
-      - ACCEPT_EULA=Y
-    user: root
-    # volumes:
-    #   - backend_sql_data:/var/opt/mssql
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Lagavi30!
+      POSTGRES_DB: products
+      POOLING: "true"
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "1433:1433"
+        - "5432:5432"
+    user: root
+
     networks:
       - app-network
       
-  api-product:
+  apiproduct:
     build: 
-      context: ./
-      # args:
-      #   LICENSE_KEY: ${LICENSE_KEY}
-    container_name: api-product
+      context: .
+    container_name: apiproduct 
     ports:
       - "8000:8000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
     depends_on:
-      - sqlserver-product
+      - dbproduct
     networks:
       - app-network
-      
-  newrelic-infra:
+
+  agent:
     container_name: newrelic-infra
     build:
-      context: ./
+      context: .
       dockerfile: newrelic-infra.dockerfile
     cap_add:
       - SYS_PTRACE
-    networks:
-      - app-network 
+    network_mode: bridge
     pid: host
     privileged: true
-    depends_on:
-      - api-product
     volumes:
       - "/:/host:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -52,4 +48,4 @@ networks:
     driver: bridge
     
 volumes:
-  backend-api-product:
+  PGDATA:
