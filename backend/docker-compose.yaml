@@ -29,29 +29,27 @@ services:
     networks:
       - app-network
       
-  # newrelic-infra:
-  #   container_name: newrelic-infra
-  #   build:
-  #     context: ./
-  #     dockerfile: newrelic-infra.dockerfile
-  #   environment:
-  #     - NRIA_LICENSE_KEY=${LICENSE_KEY}
-  #   cap_add:
-  #     - SYS_PTRACE
-  #   networks:
-  #     - app-network 
-  #   pid: host
-  #   privileged: true
-  #   depends_on:
-  #     - api-product
-  #   volumes:
-  #     - "/:/host:ro"
-  #     - "/var/run/docker.sock:/var/run/docker.sock"
-  #   restart: unless-stopped
+  newrelic-infra:
+    container_name: newrelic-infra
+    build:
+      context: ./
+      dockerfile: newrelic-infra.dockerfile
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - app-network 
+    pid: host
+    privileged: true
+    depends_on:
+      - api-product
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: unless-stopped
     
 networks:
   app-network:
     driver: bridge
     
-# volumes:
-#   backend_sql_data:
+volumes:
+  backend-api-product:
