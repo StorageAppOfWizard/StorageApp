@@ -12,7 +12,15 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { enabled = true, ...restQueryParams } = queryParams;
+
   const fetchData = useCallback(async () => {
+
+    if(!enabled) {
+      setLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
 
     try {
@@ -24,7 +32,7 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
 
       const response = await config.fn({
         ...options,
-        queryParams,
+        queryParams : restQueryParams,
         signal: controller.signal,
       });
 
@@ -42,7 +50,7 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
     }
 
     return () => controller.abort();
-  }, [endpoint, JSON.stringify(options)]);
+  }, [endpoint, JSON.stringify(options), JSON.stringify(restQueryParams)]);
 
   useEffect(() => {
     fetchData();
