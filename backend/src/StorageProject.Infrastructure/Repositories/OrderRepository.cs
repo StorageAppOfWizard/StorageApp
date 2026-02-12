@@ -18,6 +18,7 @@ namespace StorageProject.Infrastructure.Repositories
         {
             return await _context.Orders
                 .Where(o => o.UserId == userId)
+                .OrderByDescending(o=>o.CreationDate)
                 .Include(o => o.Product)
                 .Skip((page - 1) * pageQuantity)
                 .Take(pageQuantity)
@@ -25,12 +26,11 @@ namespace StorageProject.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Order>> GetOrderWithIncludes(int page, int pageQuantity, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Order>> GetOrderWithIncludes(CancellationToken cancellationToken = default)
         {
             return await _context.Orders
                 .Include(o => o.Product)
-                .Skip((page - 1) * pageQuantity)
-                .Take(pageQuantity)
+                .OrderByDescending(o => o.CreationDate)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }

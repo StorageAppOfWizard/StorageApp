@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using StorageProject.Application.DTOs.Product;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Contracts
 {
@@ -11,7 +12,7 @@ namespace StorageProject.Application.Contracts
         }
 
         Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity);
-        Task<Result<List<ProductDTO>>> GetAllActiveAsync(int page, int pageQuantity);
+        Task<Result<PagedItems<ProductDTO>>> GetAllActiveAsync(int page, int pageQuantity);
         Task<Result<ProductDTO>> GetByIdAsync(Guid id);
         Task<Result> CreateAsync(CreateProductDTO createProductDTO);
         Task<Result> UpdateAsync(UpdateProductDTO changeProductDTO);

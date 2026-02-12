@@ -4,6 +4,7 @@ using StorageProject.Application.DTOs.Order;
 using StorageProject.Application.Mappers;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Application.Services
 {
@@ -21,13 +22,16 @@ namespace StorageProject.Application.Services
             _userContextAuth = userContextAuth;
         }
 
-        public async Task<Result<List<OrderDTO>>> GetAllAsync(int page, int pageQuantity)
+        public async Task<Result<PagedItems<OrderDTO>>> GetAllAsync(int page, int pageQuantity)
         {
-            var order = await _unitOfWork.OrderRepository.GetOrderWithIncludes(page, pageQuantity);
+            var order = await _unitOfWork.OrderRepository.GetOrderWithIncludes();
             if (order is null)
                 return Result.Success();
 
-            return Result.Success(order.Select(o => o.ToDTO()).ToList());
+            var dtoList = order.Select(o=> o.ToDTO()).ToList();
+            var pagedList = new PagedItems<OrderDTO>(dtoList, page, pageQuantity);
+
+            return Result.Success(pagedList);
         }
 
         public async Task<Result<OrderDTO>> GetByIdAsync(Guid id)

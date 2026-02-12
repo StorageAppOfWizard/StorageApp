@@ -167,7 +167,7 @@
 .actionIcon {
     margin-left: 10px;
     cursor: pointer;
-    color: var(--cor-500);
+    color: var(--cor-500) !important;
     transition: color 0.2s;
 }
 

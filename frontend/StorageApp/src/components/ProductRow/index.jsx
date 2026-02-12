@@ -51,17 +51,9 @@ const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, set
                 <span className={styles.actionIcon} onClick={() => onDelete(product.id)}>
                     <Trash2 size={16} />
                 </span>
-                    {/* Provisório para criar pedido (mandando para a página de criar produto) */}
                 <span className={styles.actionIcon}>
-                    <Link to={"/criar/pedido"}>
-                        <ShoppingCart size={16} />
-                    </Link>
+                    <ShoppingCart size={16} onClick={() => onOrder(product.id)}/>
                 </span>
-
-                {/* Com um clique no carrinho de compras, abrir modal para criar pedido para este produto
-                <span className={styles.actionIcon} onClick={() => onOrder(product.id)}>
-                    <ShoppingCart size={16}/>
-                </span> */}
             </td>
         </tr>
     );

@@ -6,7 +6,7 @@ using StorageProject.Application.Mappers;
 using StorageProject.Application.Validators;
 using StorageProject.Domain.Contracts;
 using StorageProject.Domain.Entities.Enums;
-using System.Formats.Asn1;
+using StorageProject.Domain.Entity;
 
 
 //TO DO: explicitar o update
@@ -21,16 +21,18 @@ namespace StorageProject.Application.Services
         }
 
 
-        public async Task<Result<List<ProductDTO>>> GetAllActiveAsync(int page, int pageQuantity)
+        public async Task<Result<PagedItems<ProductDTO>>> GetAllActiveAsync(int page, int pageQuantity)
         {
-
-            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync(page, pageQuantity);
+            var products = await _unitOfWork.ProductRepository.GetAllWithIncludesAsync();
 
             if (products is null)
-                return Result.Success();
+                return Result<PagedItems<ProductDTO>>.Success(null);
 
-            var dto = products.Select(product => product.ToDTO()).ToList();
-            return dto;
+            var dtoList = products.Select(product => product.ToDTO()).ToList();
+
+            var pagedDto = new PagedItems<ProductDTO>(dtoList, page, pageQuantity);
+
+            return Result.Success(pagedDto);
         }
 
         public async Task<Result<List<ProductDTO>>> GetAllAsync(int page, int pageQuantity)
@@ -96,6 +98,7 @@ namespace StorageProject.Application.Services
         public async Task<Result> UpdateQuantityAsync(UpdateProductQuantityDTO dto)
         {
             var entity = await _unitOfWork.ProductRepository.GetById(dto.Id);
+
             dto.ToEntity(entity);
             _unitOfWork.ProductRepository.Update(entity);
             await _unitOfWork.CommitAsync();
