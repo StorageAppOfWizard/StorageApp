@@ -39,10 +39,6 @@ export default function RoutesApp() {
             <Route path="/criar/marca" element={<CriarBrand />} />
             <Route path="/criar/categoria" element={<CriarCategory />} />
             <Route path="/criar/pedido" element={<CriarOrder />} />
-
-
-
-
             <Route path="/pedidos" element={<Orders />} />
             <Route path="/configuracoes" element={<Configuracoes />} />
           </Route>

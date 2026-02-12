@@ -1,33 +1,40 @@
 services:
-  sqlserver-product:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver-product
-    environment:
-      - SA_PASSWORD=Lagavi30!
-      - ACCEPT_EULA=Y
-    user: root
-    # volumes:
-    #   - backend_sql_data:/var/opt/mssql
-    ports:
-      - "1433:1433"
-    networks:
-      - app-network
+  dbpostgres:
+      container_name: dbpostgres
+      image: postgres:latest
+      environment:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: Lagavi30!
+          POSTGRES_DB: products_azamara
+          POOLING: "true"
+          PGDATA: /var/lib/postgresql/data/pgdata
+      ports:
+          - "5432:5432"
+      volumes:
+          - backend_sql_data:/var/lib/postgresql/data
+      healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U root"]
+          interval: 10s
+          timeout: 5s
+          retries: 5
+      networks:
+          - app-network
       
-  api-product:
-    build: 
-      context: ./
-      # args:
-      #   LICENSE_KEY: ${LICENSE_KEY}
-    container_name: api-product
-    ports:
-      - "8000:8000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
-    depends_on:
-      - sqlserver-product
-    networks:
-      - app-network
+  # api-product:
+  #   build: 
+  #     context: ./
+  #     # args:
+  #     #   LICENSE_KEY: ${LICENSE_KEY}
+  #   container_name: api-product
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
+  #   depends_on:
+  #     - sqlserver-product
+  #   networks:
+  #     - app-network
       
   # newrelic-infra:
   #   container_name: newrelic-infra
@@ -53,5 +60,5 @@ networks:
   app-network:
     driver: bridge
     
-# volumes:
-#   backend_sql_data:
+volumes:
+  backend_sql_data:
