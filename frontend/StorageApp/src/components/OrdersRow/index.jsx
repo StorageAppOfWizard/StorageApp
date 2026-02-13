@@ -3,7 +3,7 @@ import styles from "../../styles/pages/order.module.css";
 import { CircleCheckBig, CircleOff } from "lucide-react";
 
 const OrderRow = ({ order, onApprove, onReject }) => {
-
+  
   return (
     <tr>
       <td>{order.productName || "Nome não disponível"}</td>
