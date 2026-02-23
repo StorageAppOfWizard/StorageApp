@@ -11,7 +11,8 @@ namespace StorageProject.Api.Configurations
         {
             var connectionString = configuration.GetConnectionString("StorageContext");
             services.AddDbContext<AppDbContext>(options =>
-                                                options.UseNpgsql(connectionString)) ;
+                                                options.UseNpgsql(connectionString, o => o.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null))
+                                                );
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             
