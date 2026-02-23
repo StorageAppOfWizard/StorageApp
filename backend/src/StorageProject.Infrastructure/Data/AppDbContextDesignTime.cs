@@ -10,7 +10,7 @@ namespace StorageProject.Infrastructure.Data
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            var connectionString = "User ID=root;Password=Lagavi30!;Host=localhost;Port=5432;Database=products;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Lifetime=0;";
+            var connectionString = "User ID=root;Password=Lagavi30!;Host=dbproduct;Port=5432;Database=products;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Lifetime=0;";
             optionsBuilder.UseNpgsql(connectionString);
 
             return new AppDbContext(optionsBuilder.Options);
