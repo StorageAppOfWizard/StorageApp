@@ -9,6 +9,13 @@ services:
       POOLING: "true"
       PGDATA: /var/lib/postgresql/data/pgdata
 
+    volumes:
+          - user_data:/var/lib/postgresql/data
+    healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U root"]
+          interval: 10s
+          timeout: 5s
+          retries: 5
     ports:
         - "5432:5432"
     user: root
@@ -19,16 +26,14 @@ services:
   api-product:
     build: 
       context: ./
-      # args:
-      #   LICENSE_KEY: ${LICENSE_KEY}
     container_name: api-product
     ports:
       - "8000:8000"
     environment:
+      - ConnectionStrings__StorageContext=User ID=root;Password=Lagavi30!;Host=dbproduct;Database=products;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Lifetime=0;
       - ASPNETCORE_ENVIRONMENT=Development
-      # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
     depends_on:
-      - sqlserver-product
+      - dbproduct
     networks:
       - app-network
 
@@ -37,5 +42,5 @@ networks:
   app-network:
     driver: bridge
     
-# volumes:
-#   backend_sql_data:
+volumes:
+  user_data:
