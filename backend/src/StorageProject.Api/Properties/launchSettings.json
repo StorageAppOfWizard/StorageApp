@@ -15,6 +15,13 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
+        "OTEL_SERVICE_NAME": "getting-started-dotnet",
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otlp.nr-data.net",
+        "OTEL_EXPORTER_OTLP_HEADERS": "api-key=",
+        "OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT": "4095",
+        "OTEL_EXPORTER_OTLP_COMPRESSION": "gzip",
+        "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+        "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,

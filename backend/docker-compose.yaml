@@ -16,17 +16,19 @@ services:
     networks:
       - app-network
       
-  apiproduct:
+  api-product:
     build: 
-      context: .
-    container_name: apiproduct 
+      context: ./
+      # args:
+      #   LICENSE_KEY: ${LICENSE_KEY}
+    container_name: api-product
     ports:
       - "8000:8000"
     environment:
-      ConnectionStrings__StorageContext: User ID=root;Password=Lagavi30!;Host=dbproduct;Port=5432;Database=products;
-      ASPNETCORE_ENVIRONMENT: Development
+      - ASPNETCORE_ENVIRONMENT=Development
+      # - NEW_RELIC_LICENSE_KEY=${LICENSE_KEY}
     depends_on:
-      - dbproduct
+      - sqlserver-product
     networks:
       - app-network
 
@@ -35,5 +37,5 @@ networks:
   app-network:
     driver: bridge
     
-volumes:
-  PGDATA:
+# volumes:
+#   backend_sql_data:
