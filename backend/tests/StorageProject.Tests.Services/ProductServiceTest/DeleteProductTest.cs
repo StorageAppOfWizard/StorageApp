@@ -1,9 +1,7 @@
 ﻿using Ardalis.Result;
 using Moq;
-using StorageProject.Application.Contracts;
 using StorageProject.Domain.Entities.Enums;
 using StorageProject.Domain.Entity;
-using System.Data;
 
 namespace StorageProject.Tests.Services.ProductServiceTest
 {
@@ -22,13 +20,9 @@ namespace StorageProject.Tests.Services.ProductServiceTest
         {
             //Arrange
             var product = new Product { Id = Guid.NewGuid(), Name ="Teste"};
-            var order = new Order { Id = Guid.NewGuid(), ProductId = product.Id, UserId = "idVálido", QuantityProduct = 10 };
-            order.UpdateStatus(OrderStatus.Reject);
-
-            var orders = new List<Order> {order};
             
             _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetById(product.Id, cancellationToken)).ReturnsAsync(product);
-            _fixture.UnitOfWorkMock.Setup(c => c.OrderRepository.GetAll(cancellationToken)).ReturnsAsync(orders);
+            _fixture.UnitOfWorkMock.Setup(c => c.OrderRepository.GetAll(cancellationToken)).ReturnsAsync(value: []);
 
             //Act
             var result = await _fixture.Service.RemoveAsync(product.Id);

@@ -32,7 +32,7 @@ namespace StorageProject.Tests.Services.ProductServiceTest
                 },
             };
 
-            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetAllWithIncludesAsync(It.IsAny<int>(), It.IsAny<int>(), cancellationToken)).ReturnsAsync(list);
+            _fixture.UnitOfWorkMock.Setup(c => c.ProductRepository.GetAllWithIncludesAsync(cancellationToken)).ReturnsAsync(list);
 
             //Act
             var result = await _fixture.Service.GetAllAsync(It.IsAny<int>(), It.IsAny<int>());
