@@ -1,6 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using StorageProject.Application.Validators;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -34,7 +38,7 @@ namespace StorageProject.Api.Configurations
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(key)),
                         NameClaimType = "unique_name",
- 
+
                     };
                 });
 
@@ -44,6 +48,16 @@ namespace StorageProject.Api.Configurations
                 options.AddPolicy("Manager", policy => policy.RequireRole("Manager"));
                 options.AddPolicy("AdminOrManager", policy => policy.RequireRole("Manager", "Admin"));
             });
+
+            services.AddOpenTelemetry()
+                .ConfigureResource(r => r.AddService("ProductApi"))
+                .WithTracing(t =>
+                {
+                    t.AddAspNetCoreInstrumentation()
+                    .AddOtlpExporter();
+                })
+                .WithLogging(l => l.AddOtlpExporter())
+                .WithMetrics(m=>m.AddMeter());
 
             services.AddControllers()
                 .AddJsonOptions(options =>
