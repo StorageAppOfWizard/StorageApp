@@ -6,7 +6,6 @@ namespace StorageProject.Api.Configurations
     {
         public static void UseCustomMiddleware(this WebApplication app)
         {
-            app.UseMiddleware<LoggingMiddleware>();
             app.UseMiddleware<MiddlewareException>();
         }
     }
