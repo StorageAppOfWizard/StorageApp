@@ -16,6 +16,7 @@ import CriarBrand from "../pages/criar/criarBrand"
 import CriarCategory from "../pages/criar/criarCategory"
 import CriarOrder from "../pages/criar/criarOrder";
 import UltimosPedidos from "../pages/criar/ultimosPedidos.jsx";
+import Users from "../pages/users";
 
 export default function RoutesApp() {
 
@@ -41,7 +42,7 @@ export default function RoutesApp() {
             <Route path="/criar/categoria" element={<CriarCategory />} />
             <Route path="/criar/pedido" element={<CriarOrder />} />
             <Route path="/criar/ultimos-pedidos" element={<UltimosPedidos />} />
-
+            <Route path="/usuarios" element={<Users />} />
 
 
 

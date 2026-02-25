@@ -3,9 +3,9 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useMutateApi } from "../../hooks/useMutateApi";
 
-import EditProductModal from "../../components/EditProductModal";
-import ProductTableSkeleton from "../../components/ProductTableSkeleton";
-import ProductRow from "../../components/ProductRow";
+import EditProductModal from "../../components/layout/EditProductModal";
+import ProductTableSkeleton from "../../components/ui/ProductTableSkeleton";
+import ProductRow from "../../components/layout/ProductRow";
 import styles from "../../styles/pages/produtos.module.css";
 
 import { Plus } from "lucide-react";

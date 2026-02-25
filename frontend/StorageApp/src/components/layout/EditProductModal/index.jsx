@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "../../styles/components/EditPopup.module.css";
+import styles from "../../../styles/components/EditPopup.module.css";
 import { Copy } from "lucide-react";
 
 export default function EditProductModal({
