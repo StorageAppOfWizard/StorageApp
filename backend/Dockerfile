@@ -4,7 +4,7 @@ WORKDIR /App
 COPY . ./
 RUN dotnet restore "StorageProject.sln"
 RUN dotnet test "tests/StorageProject.Tests.Controller/StorageProject.Tests.Controller.csproj"
-#RUN dotnet test "tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj"
+RUN dotnet test "tests/StorageProject.Tests.Services/StorageProject.Tests.Services.csproj"
 RUN dotnet publish "./src/StorageProject.Api/StorageProject.Api.csproj" -c Release -o /App/publish
 
 # Runtime stage
