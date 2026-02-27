@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cor-300);
+}
+
+.button {
+  padding: 8px 12px;
+  border: 1px solid var(--cor-300);
+  background-color: var(--cor-50);
+  color: var(--cor-800);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 36px;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--cor-200);
+  border-color: var(--cor-500);
+}
+
+.button.active {
+  background-color: var(--cor-details);
+  color: var(--cor-50);
+  border-color: var(--cor-details);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.info {
+  font-size: 0.9em;
+  color: var(--cor-600);
+}

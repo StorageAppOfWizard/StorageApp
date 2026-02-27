@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
         setToken(storedToken);
 
         try {
-          const fullUser = await Auth.UserDataFromToken.fn(storedToken);
+          const fullUser = await Auth.UserDataFromToken.fn({ token: storedToken });
 
           if (fullUser) {
             setUser(prev => ({
@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
       setUser(baseUser);
 
       try {
-        const fullUser = await Auth.UserDataFromToken.fn(tokenString);
+        const fullUser = await Auth.UserDataFromToken.fn({ token: tokenString });
         if (fullUser) {
           setUser(prev => ({ ...prev, ...fullUser }));
         }
