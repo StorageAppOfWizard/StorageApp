@@ -20,8 +20,6 @@ namespace StorageProject.Infrastructure.Repositories
                 .Where(o => o.UserId == userId)
                 .OrderByDescending(o=>o.CreationDate)
                 .Include(o => o.Product)
-                .Skip((page - 1) * pageQuantity)
-                .Take(pageQuantity)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
