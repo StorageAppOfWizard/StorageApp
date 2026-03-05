@@ -14,14 +14,11 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
 
   const { enabled = true, ...restQueryParams } = queryParams;
 
-  const fetchData = useCallback(async () => {
-
-    if(!enabled) {
+  const fetchData = useCallback(async (signal) => {
+    if (!enabled) {
       setLoading(false);
       return;
     }
-
-    const controller = new AbortController();
 
     try {
       setLoading(true);
@@ -32,8 +29,8 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
 
       const response = await config.fn({
         ...options,
-        queryParams : restQueryParams,
-        signal: controller.signal,
+        queryParams: restQueryParams,
+        signal,
       });
 
       const transformedData = config.transform
@@ -48,12 +45,12 @@ export const useFetchApi = (endpoint, options = {}, queryParams={}) => {
     } finally {
       setLoading(false);
     }
-
-    return () => controller.abort();
   }, [endpoint, JSON.stringify(options), JSON.stringify(restQueryParams)]);
 
   useEffect(() => {
-    fetchData();
+    const controller = new AbortController();
+    fetchData(controller.signal);
+    return () => controller.abort();
   }, [fetchData]);
 
   return { data, loading, error, refetch: fetchData };

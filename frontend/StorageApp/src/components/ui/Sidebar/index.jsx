@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu } from 'lucide-react';
-import styles from '../../styles/components/sidebar.module.css';
-import { menuItems } from '../../data/menuItems';
+import styles from '../../../styles/components/sidebar.module.css';
+import { menuItems } from '../../../data/menuItems';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);

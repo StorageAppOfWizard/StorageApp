@@ -1,4 +1,4 @@
-import Tabs from "../../components/Tabs";
+import Tabs from "../../components/ui/Tabs";
 import { useLocation } from "react-router-dom";
 
 export default function Create() {

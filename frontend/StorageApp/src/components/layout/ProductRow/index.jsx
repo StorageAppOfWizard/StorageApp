@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Edit, Trash2, ShoppingCart } from "lucide-react";
-import styles from "../../styles/pages/produtos.module.css";
+import styles from "../../../styles/pages/produtos.module.css";
 import { Link } from "react-router-dom";
 
 const ProductRow = ({ product, editableStock, onStockEdit, onEdit, onDelete, setEditableStock, onOrder }) => {

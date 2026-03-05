@@ -1,8 +1,8 @@
 import { useLocation, Link } from "react-router-dom";
-import styles from "../../styles/components/header.module.css";
+import styles from "../../../styles/components/header.module.css";
 import { Settings } from "lucide-react";
-import { headerData } from "../../data/menuItems";
-import { useAuth } from "../../contexts/AuthContext";
+import { headerData } from "../../../data/menuItems";
+import { useAuth } from "../../../contexts/AuthContext";
 
 export default function Header({ overrideTitle, overrideIcon }) {
   const { user, loading: userLoading } = useAuth();

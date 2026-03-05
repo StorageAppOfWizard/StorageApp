@@ -3,9 +3,9 @@ import { useFetchApi } from './../../hooks/useFetchApi';
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
-import OrderRow from "../../components/OrdersRow";
+import OrderRow from "../../components/layout/OrdersRow";
 import { useEffect, useState } from 'react';
-import ProductTableSkeleton from "../../components/ProductTableSkeleton";
+import ProductTableSkeleton from "../../components/ui/ProductTableSkeleton";
 import { useToast } from "../../hooks/useToast";
 
 export default function Orders() {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Tabs from "../../components/Tabs";
+import Tabs from "../../components/ui/Tabs";
 import { useMutateApi } from "../../hooks/useMutateApi";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import styles from "../../styles/pages/criacao.module.css";

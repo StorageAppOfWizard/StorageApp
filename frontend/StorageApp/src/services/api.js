@@ -18,3 +18,13 @@ export const apiAuth = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// automatically attach token on every request
+apiAuth.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
