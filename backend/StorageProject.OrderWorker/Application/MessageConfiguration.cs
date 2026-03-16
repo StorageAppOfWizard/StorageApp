@@ -4,12 +4,12 @@ using StorageProject.OrderWorker.Contracts;
 
 namespace StorageProject.OrderWorker.Message
 {
-    public class MessageTopology : IMessageTopology
+    public class MessageConfiguration : IMessageConfiguration
     {
         private readonly IMessageConnection _connection;
         private readonly IConfiguration _configuration;
 
-        public MessageTopology(IMessageConnection connection, IConfiguration configuration)
+        public MessageConfiguration(IMessageConnection connection, IConfiguration configuration)
         {
             _connection = connection;
             _configuration = configuration;

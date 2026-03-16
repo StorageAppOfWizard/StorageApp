@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client.Events;
 
-namespace StorageProject.Application.Contracts
+namespace StorageProject.OrderWorker.Contracts
 {
     public interface IQueueDispatchHandler
     {

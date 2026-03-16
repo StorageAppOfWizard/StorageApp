@@ -1,6 +1,5 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using StorageProject.Application.Contracts;
 using StorageProject.Application.Handlers;
 using StorageProject.OrderWorker.Contracts;
 using System.Text;
@@ -10,11 +9,11 @@ namespace StorageProject.OrderWorker.Message
     public partial class MessageConsumer : IMessageConsumer
     {
         private readonly IMessageConnection _connection;
-        private readonly IMessageTopology _topology;
+        private readonly IMessageConfiguration _topology;
         private readonly IConfiguration _configuration;
         private readonly IQueueDispatchHandler _queueDispatchHandler;
 
-        public MessageConsumer(IMessageConnection connection, IMessageTopology topology, IConfiguration configuration, IQueueDispatchHandler queueDispatchHandler)
+        public MessageConsumer(IMessageConnection connection, IMessageConfiguration topology, IConfiguration configuration, IQueueDispatchHandler queueDispatchHandler)
         {
             _connection = connection;
             _topology = topology;

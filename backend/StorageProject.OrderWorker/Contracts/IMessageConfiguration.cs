@@ -2,7 +2,7 @@
 
 namespace StorageProject.OrderWorker.Contracts
 {
-    public interface IMessageTopology
+    public interface IMessageConfiguration
     {
         public Task ConfigureAsync(IChannel channel);
     }
