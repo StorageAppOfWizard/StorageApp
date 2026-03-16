@@ -9,7 +9,7 @@ namespace StorageProject.OrderWorker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _messageConsumer.ConsumerMessage();
+            await _messageConsumer.ConsumerMessage();
 
             while (!stoppingToken.IsCancellationRequested)
             {

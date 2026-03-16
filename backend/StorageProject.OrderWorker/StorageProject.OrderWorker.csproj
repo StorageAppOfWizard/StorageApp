@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\StorageProject.Application\StorageProject.Application.csproj" />
+  </ItemGroup>
 </Project>

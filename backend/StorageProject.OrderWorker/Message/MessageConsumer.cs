@@ -1,5 +1,7 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using StorageProject.Application.Contracts;
+using StorageProject.Application.Handlers;
 using StorageProject.OrderWorker.Contracts;
 using System.Text;
 
@@ -10,12 +12,14 @@ namespace StorageProject.OrderWorker.Message
         private readonly IMessageConnection _connection;
         private readonly IMessageTopology _topology;
         private readonly IConfiguration _configuration;
+        private readonly IQueueDispatchHandler _queueDispatchHandler;
 
-        public MessageConsumer(IMessageConnection connection, IMessageTopology topology, IConfiguration configuration)
+        public MessageConsumer(IMessageConnection connection, IMessageTopology topology, IConfiguration configuration, IQueueDispatchHandler queueDispatchHandler)
         {
             _connection = connection;
             _topology = topology;
             _configuration = configuration;
+            _queueDispatchHandler = queueDispatchHandler;
         }
 
         public async Task ConsumerMessage()
@@ -29,7 +33,10 @@ namespace StorageProject.OrderWorker.Message
             {
                 var body =  ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($" [x] Received {message}");
+
+                await _queueDispatchHandler.DispatchHandler(message,ea);
+
+                Console.WriteLine($" [x] Received {message} \n Routing Key: {ea.RoutingKey}");
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);            
             };
 

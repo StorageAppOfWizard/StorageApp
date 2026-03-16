@@ -1,3 +1,5 @@
+using StorageProject.Application.Contracts;
+using StorageProject.Application.Handlers;
 using StorageProject.OrderWorker;
 using StorageProject.OrderWorker.Contracts;
 using StorageProject.OrderWorker.Message;
@@ -17,6 +19,7 @@ builder.Services.AddSingleton<IMessageConnection>(sp =>
 
 builder.Services.AddSingleton<IMessageConsumer, MessageConsumer>();
 builder.Services.AddSingleton<IMessageTopology, MessageTopology>();
+builder.Services.AddSingleton<IQueueDispatchHandler, QueueDispatchHandler>();
 
 var host = builder.Build();
 host.Run();
