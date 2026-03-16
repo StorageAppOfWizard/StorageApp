@@ -1,13 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using RabbitMQ.Client;
-using StorageProject.Application.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RabbitMQ.Client;
+using StorageProject.OrderWorker.Contracts;
 
-namespace StorageProject.Application
+namespace StorageProject.OrderWorker.Message
 {
     public class MessageConnection : IMessageConnection
     {
@@ -20,9 +14,9 @@ namespace StorageProject.Application
         }
 
 
-        public void ConnectionMessage(IConfiguration configuration)
+        public async void ConnectionMessage(IConfiguration configuration)
         {
-            _factory = new ConnectionFactory()
+           _factory = new ConnectionFactory()
             {
                 HostName = configuration["RabbitMQ:HostName"],
                 Port = int.Parse(configuration["RabbitMQ:Port"]),
@@ -31,6 +25,12 @@ namespace StorageProject.Application
                 VirtualHost = configuration["RabbitMQ:VirtualHost"],
                 AutomaticRecoveryEnabled = true,
                 NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+                
+                Ssl =
+                {
+                    ServerName = configuration["RabbitMQ:HostName"],
+                    Enabled= false
+                }
 
             };
         }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using StorageProject.Application.Contracts;
+using StorageProject.OrderWorker.Contracts;
 
-namespace StorageProject.Application
+namespace StorageProject.OrderWorker.Message
 {
     public class MessageTopology : IMessageTopology
     {

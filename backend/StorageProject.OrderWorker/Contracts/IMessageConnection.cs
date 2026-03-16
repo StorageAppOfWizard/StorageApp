@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace StorageProject.Application.Contracts
+namespace StorageProject.OrderWorker.Contracts
 {
     public interface IMessageConnection
     {
