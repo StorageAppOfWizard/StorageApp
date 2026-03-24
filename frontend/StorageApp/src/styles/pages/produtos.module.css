@@ -171,6 +171,10 @@
     transition: color 0.2s;
 }
 
+.actionIcon:hover {
+    color: var(--cor-details) !important;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
