@@ -1,4 +1,4 @@
-using StorageProject.OrderWorker.Contracts;
+using StorageProject.OrderWorker.Contracts.Consumer;
 
 namespace StorageProject.OrderWorker
 {
@@ -9,7 +9,7 @@ namespace StorageProject.OrderWorker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _messageConsumer.ConsumerMessage();
+            await _messageConsumer.ConsumerMessage(stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {

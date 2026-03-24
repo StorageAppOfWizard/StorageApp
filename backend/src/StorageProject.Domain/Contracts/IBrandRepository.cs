@@ -1,4 +1,6 @@
-﻿using StorageProject.Domain.Entity;
+﻿
+
+using StorageProject.Domain.Entity;
 
 namespace StorageProject.Domain.Contracts
 {

@@ -1,8 +1,10 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using StorageProject.Application.Handlers;
-using StorageProject.OrderWorker.Contracts;
-using System.Text;
+using StorageProject.Application.DTOs.Messages;
+using StorageProject.OrderWorker.Contracts.Configuration;
+using StorageProject.OrderWorker.Contracts.Consumer;
+using StorageProject.OrderWorker.Contracts.Handler;
+using System.Text.Json;
 
 namespace StorageProject.OrderWorker.Message
 {
@@ -21,7 +23,7 @@ namespace StorageProject.OrderWorker.Message
             _queueDispatchHandler = queueDispatchHandler;
         }
 
-        public async Task ConsumerMessage()
+        public async Task ConsumerMessage(CancellationToken cancellationToken)
         {
 
             var channel = await _connection.GetConnection().CreateChannelAsync();
@@ -30,13 +32,19 @@ namespace StorageProject.OrderWorker.Message
 
             consumer.ReceivedAsync += async (model, ea) =>
             {
-                var body =  ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
+                var body = ea.Body.ToArray();
+                var message = JsonSerializer.Deserialize<MessageEnvelope>(body);
 
-                await _queueDispatchHandler.DispatchHandler(message,ea);
+                await (message.EventType switch
+                {
+                    "pedido.criado" => _queueDispatchHandler.DispatchAsync(message.Payload.Deserialize<OrderCreatedMessage>(), cancellationToken),
+
+                }
+                 );
 
                 Console.WriteLine($" [x] Received {message} \n Routing Key: {ea.RoutingKey}");
-                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);            
+
+                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
             await channel.BasicConsumeAsync

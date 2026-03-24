@@ -1,5 +1,11 @@
+using StorageProject.Application.DTOs.Messages;
+using StorageProject.Domain.Contracts;
+using StorageProject.Infrastructure.Repositories;
 using StorageProject.OrderWorker;
-using StorageProject.OrderWorker.Contracts;
+using StorageProject.OrderWorker.Application.Configuration;
+using StorageProject.OrderWorker.Contracts.Configuration;
+using StorageProject.OrderWorker.Contracts.Consumer;
+using StorageProject.OrderWorker.Contracts.Handler;
 using StorageProject.OrderWorker.Handler;
 using StorageProject.OrderWorker.Message;
 
@@ -18,7 +24,10 @@ builder.Services.AddSingleton<IMessageConnection>(sp =>
 
 builder.Services.AddSingleton<IMessageConsumer, MessageConsumer>();
 builder.Services.AddSingleton<IMessageConfiguration, MessageConfiguration>();
-builder.Services.AddSingleton<IQueueDispatchHandler, QueueDispatchHandler>();
+builder.Services.AddSingleton<IMessageHandler<OrderCreatedMessage>, OrderCreatedHandler>();
+builder.Services.AddSingleton<IQueueDispatchHandler, QueueDispatcherHandler>();
+// colocar DI UnitOfWork 
+// ver mais sobre IServiceScopeFactory 
 
 var host = builder.Build();
 host.Run();

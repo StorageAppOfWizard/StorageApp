@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace StorageProject.OrderWorker.Contracts
+namespace StorageProject.OrderWorker.Contracts.Configuration
 {
     public interface IMessageConfiguration
     {

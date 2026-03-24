@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\StorageProject.Application\StorageProject.Application.csproj" />
+    <ProjectReference Include="..\src\StorageProject.Infrastructure\StorageProject.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
