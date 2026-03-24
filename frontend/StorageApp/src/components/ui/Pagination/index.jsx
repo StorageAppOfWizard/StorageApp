@@ -38,7 +38,6 @@ export default function Pagination({
       </button>
 
       {pages.map((page) => {
-        // mostrar apenas algumas páginas próximas
         if (
           page === 1 ||
           page === totalPages ||
