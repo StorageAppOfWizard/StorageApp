@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <Compile Remove="Entity\Product\**" />
+    <EmbeddedResource Remove="Entity\Product\**" />
+    <None Remove="Entity\Product\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entity\Product\" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="MassTransit" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
   </ItemGroup>
 
 </Project>

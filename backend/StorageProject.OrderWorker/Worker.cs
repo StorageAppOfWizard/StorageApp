@@ -1,20 +1,14 @@
-using StorageProject.OrderWorker.Contracts.Consumer;
+using MassTransit;
 
 namespace StorageProject.OrderWorker
 {
-    public class Worker(IMessageConsumer messageConsumer) : BackgroundService
+    public class Worker() : BackgroundService
     {
-        private readonly IMessageConsumer _messageConsumer = messageConsumer;
-
-
+        
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _messageConsumer.ConsumerMessage(stoppingToken);
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(1000, stoppingToken);
-            }
+           await Task.Delay(1000, stoppingToken);
         }
     }
 }
