@@ -1,14 +1,14 @@
 using MassTransit;
+using StorageProject.Application.DTOs.Messages;
 using StorageProject.OrderWorker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddMassTransit(x =>
 {
-    //todos consumers herdando de IConsumer
-    x.AddConsumers(typeof(Program).Assembly);
 
 
+    x.AddConsumer<CurrentMessageConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
@@ -16,6 +16,7 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
+
         cfg.ConfigureEndpoints(context);
     });
 
