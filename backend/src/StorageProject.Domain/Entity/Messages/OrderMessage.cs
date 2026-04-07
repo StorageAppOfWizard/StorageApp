@@ -1,4 +1,5 @@
-﻿namespace StorageProject.Application.DTOs.Messages
+﻿namespace StorageApp.Orders.Domain.Entity
+    //mesmo namespace do micro de orders
 {
     public record class OrderMessage
     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11527.330 d18.3
+VisualStudioVersion = 18.3.11527.330
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Domain", "src\StorageProject.Domain\StorageProject.Domain.csproj", "{EC00641A-E5F3-4731-9A5F-3EDCD61B7036}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Tests.Controller", "tests\StorageProject.Tests.Controller\StorageProject.Tests.Controller.csproj", "{798BDA3F-2861-DF0D-E9FA-0B58034DA326}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.Tests.Services", "tests\StorageProject.Tests.Services\StorageProject.Tests.Services.csproj", "{FB72D1E5-E046-BE07-489F-B945ED9E8F02}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageProject.OrderWorker", "StorageProject.OrderWorker\StorageProject.OrderWorker.csproj", "{E8863489-2F1E-4604-8E64-13D32FCE706C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +49,6 @@ Global
 		{FB72D1E5-E046-BE07-489F-B945ED9E8F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB72D1E5-E046-BE07-489F-B945ED9E8F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB72D1E5-E046-BE07-489F-B945ED9E8F02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8863489-2F1E-4604-8E64-13D32FCE706C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8863489-2F1E-4604-8E64-13D32FCE706C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8863489-2F1E-4604-8E64-13D32FCE706C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8863489-2F1E-4604-8E64-13D32FCE706C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +60,6 @@ Global
 		{C640383A-E020-4695-8B9D-E6A3D920756D} = {F4596D26-0B53-4044-AFE2-D5BEE994F241}
 		{798BDA3F-2861-DF0D-E9FA-0B58034DA326} = {FACF27DF-6596-4618-BD55-5169433F150B}
 		{FB72D1E5-E046-BE07-489F-B945ED9E8F02} = {FACF27DF-6596-4618-BD55-5169433F150B}
-		{E8863489-2F1E-4604-8E64-13D32FCE706C} = {F4596D26-0B53-4044-AFE2-D5BEE994F241}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33F8C024-43DC-4A3B-94A0-1826E918AC58}
