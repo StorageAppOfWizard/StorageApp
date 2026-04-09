@@ -17,7 +17,7 @@ namespace StorageProject.Application.Contracts
         Task<Result> CreateAsync(CreateProductDTO createProductDTO);
         Task<Result> UpdateAsync(UpdateProductDTO changeProductDTO);
         Task <Result> UpdateQuantityAsync(UpdateProductQuantityDTO quantityDTO);
-        Task<Result> RemoveAsync(Guid id);
-        Task <Result> SoftDeleteAsync(Guid id);  
+        //Task<Result> RemoveAsync(Guid id);
+        //Task <Result> SoftDeleteAsync(Guid id);  
     }
 }

@@ -29,7 +29,7 @@ namespace StorageProject.Application.Services
                 return Result<PagedItems<ProductDTO>>.Success(null);
 
             var dtoList = products.Select(product => product.ToDTO()).ToList();
-
+            
             var pagedDto = new PagedItems<ProductDTO>(dtoList, page, pageQuantity);
 
             return Result.Success(pagedDto);
@@ -106,44 +106,44 @@ namespace StorageProject.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> RemoveAsync(Guid id)
-        {
-            var product = await _unitOfWork.ProductRepository.GetById(id);
-            if (product is null)
-                return Result.NotFound("Not Found Product");
+        //public async Task<Result> RemoveAsync(Guid id)
+        //{
+        //    var product = await _unitOfWork.ProductRepository.GetById(id);
+        //    if (product is null)
+        //        return Result.NotFound("Not Found Product");
 
-            var orders = await _unitOfWork.OrderRepository.GetAll();
-            var hasLinkedOrder = orders.Any(o => o.ProductId == id);
-
-
-            if (hasLinkedOrder)
-                return Result.Error("Exist a order linked with this product");
-
-            _unitOfWork.ProductRepository.Delete(product);
-
-            await _unitOfWork.CommitAsync();
-
-            return Result.SuccessWithMessage("Product was deleted with sucess");
-        }
-
-        public async Task<Result> SoftDeleteAsync(Guid id)
-        {
-            var product = await _unitOfWork.ProductRepository.GetById(id);
-            if (product is null)
-                return Result.NotFound("Not Found Product");
+        //    var orders = await _unitOfWork.OrderRepository.GetAll();
+        //    var hasLinkedOrder = orders.Any(o => o.ProductId == id);
 
 
-            var orders = await _unitOfWork.OrderRepository.GetAll();
-            var hasLinkedOrder = orders.Any(o => o.ProductId == id && o.Status == OrderStatus.Pending);
+        //    if (hasLinkedOrder)
+        //        return Result.Error("Exist a order linked with this product");
 
-            if (hasLinkedOrder)
-                return Result.Error("Exist a order pending with this product");
+        //    _unitOfWork.ProductRepository.Delete(product);
 
-            await _unitOfWork.ProductRepository.SoftDelete(id);
+        //    await _unitOfWork.CommitAsync();
 
-            await _unitOfWork.CommitAsync();
-            return Result.SuccessWithMessage("Product was deactivated with sucess");
-        }
+        //    return Result.SuccessWithMessage("Product was deleted with sucess");
+        //}
+
+        //public async Task<Result> SoftDeleteAsync(Guid id)
+        //{
+        //    var product = await _unitOfWork.ProductRepository.GetById(id);
+        //    if (product is null)
+        //        return Result.NotFound("Not Found Product");
+
+
+        //    var orders = await _unitOfWork.OrderRepository.GetAll();
+        //    var hasLinkedOrder = orders.Any(o => o.ProductId == id && o.Status == OrderStatus.Pending);
+
+        //    if (hasLinkedOrder)
+        //        return Result.Error("Exist a order pending with this product");
+
+        //    await _unitOfWork.ProductRepository.SoftDelete(id);
+
+        //    await _unitOfWork.CommitAsync();
+        //    return Result.SuccessWithMessage("Product was deactivated with sucess");
+        //}
 
         public void Dispose()
         {

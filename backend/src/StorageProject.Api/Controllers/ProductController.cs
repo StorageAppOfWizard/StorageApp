@@ -1,144 +1,144 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using StorageProject.Api.Extensions;
-using StorageProject.Application.Contracts;
-using StorageProject.Application.DTOs.Product;
-using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel;
-using System.Net;
+﻿//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using StorageProject.Api.Extensions;
+//using StorageProject.Application.Contracts;
+//using StorageProject.Application.DTOs.Product;
+//using Swashbuckle.AspNetCore.Annotations;
+//using System.ComponentModel;
+//using System.Net;
 
-namespace StorageProject.Api.Controllers
-{
+//namespace StorageProject.Api.Controllers
+//{
 
-    [Route("/product")]
-    [ApiController]
-    public class ProductController : ControllerBase
-    {
+//    [Route("/product")]
+//    [ApiController]
+//    public class ProductController : ControllerBase
+//    {
 
-        private readonly IProductService _productService;
+//        private readonly IProductService _productService;
 
-        public ProductController(IProductService productService)
-        {
-            _productService = productService;
-        }
+//        public ProductController(IProductService productService)
+//        {
+//            _productService = productService;
+//        }
 
-        #region GetAll
+//        #region GetAll
 
-        [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpGet("all/")]
-        [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Get(
-            [FromQuery, DefaultValue(1)] int page,
-            [FromQuery, DefaultValue(20)] int pageQuantity)
-        {
-            var result = await _productService.GetAllAsync(page, pageQuantity);
-            return result.ToActionResult();
-        }
-        #endregion
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpGet("all/")]
+//        [Authorize(Policy = "Admin")]
+//        public async Task<IActionResult> Get(
+//            [FromQuery, DefaultValue(1)] int page,
+//            [FromQuery, DefaultValue(20)] int pageQuantity)
+//        {
+//            var result = await _productService.GetAllAsync(page, pageQuantity);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region GetAllActive
+//        #region GetAllActive
 
-        [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetActive(
-            [FromQuery, DefaultValue(1)] int page,
-            [FromQuery, DefaultValue(20)] int pageQuantity)
-        {
-            var result = await _productService.GetAllActiveAsync(page, pageQuantity);
-            return result.ToActionResult();
-        }
-        #endregion
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Return all Products")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Products Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpGet]
+//        [Authorize]
+//        public async Task<IActionResult> GetActive(
+//            [FromQuery, DefaultValue(1)] int page,
+//            [FromQuery, DefaultValue(20)] int pageQuantity)
+//        {
+//            var result = await _productService.GetAllActiveAsync(page, pageQuantity);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region GetByID
-        [SwaggerResponse((int)HttpStatusCode.OK, "Return Product")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpGet("{id:Guid}")]
-        [Authorize(Policy = "AdminOrManager")]
-        public async Task<IActionResult> GetById([FromRoute] Guid id)
-        {
-            var result = await _productService.GetByIdAsync(id);
-            return result.ToActionResult();
-        }
-        #endregion
+//        #region GetByID
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Return Product")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpGet("{id:Guid}")]
+//        [Authorize(Policy = "AdminOrManager")]
+//        public async Task<IActionResult> GetById([FromRoute] Guid id)
+//        {
+//            var result = await _productService.GetByIdAsync(id);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region Create
-        [SwaggerResponse((int)HttpStatusCode.Created, "Product Created")]
-        [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Product")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpPost]
-        //[Authorize(Policy = "AdminOrManager")]
-        public async Task<IActionResult> Create([FromBody] CreateProductDTO dto)
-        {
-            var result = await _productService.CreateAsync(dto);
-            return result.ToActionResult();
-        }
-        #endregion
+//        #region Create
+//        [SwaggerResponse((int)HttpStatusCode.Created, "Product Created")]
+//        [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
+//        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for create Product")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpPost]
+//        //[Authorize(Policy = "AdminOrManager")]
+//        public async Task<IActionResult> Create([FromBody] CreateProductDTO dto)
+//        {
+//            var result = await _productService.CreateAsync(dto);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region Update
-        [SwaggerResponse((int)HttpStatusCode.OK, "Product Updated")]
-        [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Product")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpPut]
-        //[Authorize(Policy = "AdminOrManager")]
-        public async Task<IActionResult> Update([FromBody] UpdateProductDTO dto)
-        {
+//        #region Update
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Product Updated")]
+//        [SwaggerResponse((int)HttpStatusCode.Conflict, "Product already exist")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Error for update Product")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpPut]
+//        //[Authorize(Policy = "AdminOrManager")]
+//        public async Task<IActionResult> Update([FromBody] UpdateProductDTO dto)
+//        {
 
-            var result = await _productService.UpdateAsync(dto);
-            return result.ToActionResult();
-        }
-        #endregion
+//            var result = await _productService.UpdateAsync(dto);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region UpdatePatch
+//        #region UpdatePatch
 
-        [SwaggerResponse((int)HttpStatusCode.OK, "Quantity changed sucessfully")]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpPatch("editQuantity")]
-        //[Authorize(Policy = "AdminOrManager")]
-        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO dto)
-        {
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Quantity changed sucessfully")]
+//        [SwaggerResponse((int)HttpStatusCode.BadRequest, "This field is require for only number")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpPatch("editQuantity")]
+//        //[Authorize(Policy = "AdminOrManager")]
+//        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateProductQuantityDTO dto)
+//        {
 
-            var result = await _productService.UpdateQuantityAsync(dto);
-            return result.ToActionResult();
-        }
+//            var result = await _productService.UpdateQuantityAsync(dto);
+//            return result.ToActionResult();
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Delete
-        [SwaggerResponse((int)HttpStatusCode.OK, "Product Deleted")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpDelete("{id:Guid}")]
-        //[Authorize(Policy = "AdminOrManager")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
+//        #region Delete
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Product Deleted")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpDelete("{id:Guid}")]
+//        //[Authorize(Policy = "AdminOrManager")]
+//        public async Task<IActionResult> Delete(Guid id)
+//        {
 
-            var result = await _productService.RemoveAsync(id);
-            return result.ToActionResult();
-        }
-        #endregion
+//            var result = await _productService.RemoveAsync(id);
+//            return result.ToActionResult();
+//        }
+//        #endregion
 
-        #region SoftDelete
-        [SwaggerResponse((int)HttpStatusCode.OK, "Product Deactivated")]
-        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
-        [HttpDelete("deactivate/{id:Guid}")]
+//        #region SoftDelete
+//        [SwaggerResponse((int)HttpStatusCode.OK, "Product Deactivated")]
+//        [SwaggerResponse((int)HttpStatusCode.NotFound, "Product Not Found")]
+//        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
+//        [HttpDelete("deactivate/{id:Guid}")]
 
-        public async Task<IActionResult> SoftDelete(Guid id)
-        {
-            var result = await _productService.SoftDeleteAsync(id);
-            return result.ToActionResult();
-        }
+//        public async Task<IActionResult> SoftDelete(Guid id)
+//        {
+//            var result = await _productService.SoftDeleteAsync(id);
+//            return result.ToActionResult();
+//        }
 
-        #endregion
-    }
-}
+//        #endregion
+//    }
+//}
