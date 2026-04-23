@@ -10,7 +10,6 @@ import SingnUp from "../pages/singnUp";
 import Orders from "../pages/orders";
 import Configuracoes from "../pages/configuracoes";
 
-import Create from "../pages/criar";
 import CriarProduto from "../pages/criar/criarProduto";
 import CriarBrand from "../pages/criar/criarBrand"
 import CriarCategory from "../pages/criar/criarCategory"
@@ -36,7 +35,6 @@ export default function RoutesApp() {
             <Route path="/produtos" element={<Produtos />} />
 
             {/* Rotas de criação */}
-            <Route path="/criar" element={<Create />} /> 
             <Route path="/criar/produto" element={<CriarProduto />} />
             <Route path="/criar/marca" element={<CriarBrand />} />
             <Route path="/criar/categoria" element={<CriarCategory />} />
