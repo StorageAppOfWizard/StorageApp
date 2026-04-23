@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StorageProject.Api.Extensions;
 using StorageProject.Application.Contracts;
 using StorageProject.Application.DTOs.Brand;
@@ -25,7 +26,7 @@ namespace StorageProject.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound, "Brands Not Found")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Unexpected Error")]
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Get(
             [FromQuery, DefaultValue(1)] int page,
             [FromQuery, DefaultValue(20)] int pageQuantity)

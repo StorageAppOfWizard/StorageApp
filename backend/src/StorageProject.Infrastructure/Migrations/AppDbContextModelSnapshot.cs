@@ -92,7 +92,7 @@ namespace StorageProject.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("StorageProject.Domain.Entity.Product", b =>
