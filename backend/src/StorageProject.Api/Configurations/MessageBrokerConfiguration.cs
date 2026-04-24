@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using RabbitMQ.Client;
-using StorageApp.Orders.Domain.Entity;
+using StorageProject.Application.Handler;
+using StorageProject.Domain.Entity.Messages.Order;
 
 namespace StorageProject.Api.Configurations
 {
@@ -10,7 +11,8 @@ namespace StorageProject.Api.Configurations
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<CurrentMessageConsumer>();
+                x.AddConsumers(typeof(Program).Assembly);
+                x.AddConsumer<OrderCreatedMessageHandler>();
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host("localhost", "/", h =>
@@ -27,9 +29,10 @@ namespace StorageProject.Api.Configurations
                         });
 
                         e.ConfigureConsumer<CurrentMessageConsumer>(context);
+                        e.ConfigureConsumer<OrderCreatedMessageHandler>(context);
                     });
 
-                    cfg.Message<OrderMessage>(m => m.SetEntityName("order-created"));
+                    cfg.Message<OrderCreatedMessage>(m => m.SetEntityName("order-created"));
                 });
 
             });

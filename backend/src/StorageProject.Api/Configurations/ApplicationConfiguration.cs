@@ -11,7 +11,7 @@ namespace StorageProject.Api.Configurations
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<ICategoryService, CategoryService>();
-
+            
             services.AddHttpContextAccessor();
             services.AddScoped<IUserContextAuth, UserContextAuth>();
 
