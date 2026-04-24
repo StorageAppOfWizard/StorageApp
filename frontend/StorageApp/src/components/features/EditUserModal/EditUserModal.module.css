@@ -1,8 +1,17 @@
-/* Overlay */
+/* EditUserModal.module.css
+ *
+ * Visual alinhado com a página de users:
+ *  - Usa --cor-* e --cor-details do root global
+ *  - Faixa colorida no header muda conforme o role (Admin/Manager/Member)
+ *  - Avatar com cor determinística (mesma lógica do UserCard)
+ *  - Sem roxo hardcoded — tudo derivado das variáveis do projeto
+ */
+
+/* ── Overlay ── */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(15, 23, 42, 0.5); /* --cor-900 com opacidade */
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -14,68 +23,85 @@
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
-/* Modal */
+/* ── Modal ── */
 .modal {
-  background: #ffffff;
+  background: var(--cor-50);
   border-radius: 16px;
   width: 100%;
-  max-width: 620px;
+  max-width: 640px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
   animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* Header */
+/* ── Header com faixa colorida ── */
 .header {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/*
+ * Faixa colorida no topo do header.
+ * --header-gradient é injetado via style no JSX de acordo com o role.
+ * Fica sutil (altura pequena) para não dominar o modal.
+ */
+.headerBand {
+  height: 5px;
+  background: var(--header-gradient, linear-gradient(120deg, var(--cor-details), #1a7ba8));
+  transition: background 0.3s ease;
+}
+
+.headerContent {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid #f1f1f1;
-  flex-shrink: 0;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--cor-200);
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
+/* Avatar: mesma forma do UserCard mas circular no modal */
 .avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  font-size: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  letter-spacing: 0.5px;
 }
 
 .title {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #111;
+  color: var(--cor-800);
   margin: 0;
 }
 
 .subtitle {
-  font-size: 12px;
-  color: #888;
+  font-size: 0.78rem;
+  color: var(--cor-500);
   margin: 2px 0 0;
 }
 
@@ -83,45 +109,52 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: none;
-  background: #f5f5f5;
-  color: #555;
+  border: 1.5px solid var(--cor-200);
+  background: transparent;
+  color: var(--cor-500);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
 }
 .closeBtn:hover {
-  background: #ffe4e4;
-  color: #e53e3e;
+  background: #fff0f0;
+  border-color: #fca5a5;
+  color: #e05252;
 }
 
-/* Body */
+/* ── Body ── */
 .body {
-  padding: 20px 24px;
+  padding: 22px 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
+  background: var(--cor-100);
 }
 
-/* Section */
+/* ── Section ── */
 .section {
+  background: var(--cor-50);
+  border: 1px solid var(--cor-200);
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .sectionTitle {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #666;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--cor-500);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   margin: 0;
 }
 
@@ -131,11 +164,11 @@
   gap: 14px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .row { grid-template-columns: 1fr; }
 }
 
-/* Fields */
+/* ── Fields ── */
 .field {
   display: flex;
   flex-direction: column;
@@ -143,55 +176,70 @@
 }
 
 .field label {
-  font-size: 12px;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: #444;
+  color: var(--cor-600);
 }
 
 .field input {
   padding: 9px 12px;
   border-radius: 8px;
-  border: 1.5px solid #e5e5e5;
-  font-size: 14px;
-  color: #111;
-  background: #fafafa;
-  transition: border 0.15s, background 0.15s;
+  border: 1.5px solid var(--cor-200);
+  font-size: 0.88rem;
+  color: var(--cor-800);
+  background: var(--cor-100);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   outline: none;
 }
+
 .field input:focus {
-  border-color: #6366f1;
-  background: #fff;
+  border-color: var(--cor-details);
+  background: var(--cor-50);
+  box-shadow: 0 0 0 3px rgba(28, 153, 214, 0.1);
 }
 
-/* Role buttons */
+.field input::placeholder {
+  color: var(--cor-400);
+}
+
+/* ── Role buttons ── */
 .roleGroup {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .roleBtn {
-  padding: 7px 14px;
+  padding: 6px 14px;
   border-radius: 8px;
-  border: 1.5px solid #e5e5e5;
-  background: #fafafa;
-  font-size: 13px;
+  border: 1.5px solid var(--cor-200);
+  background: var(--cor-100);
+  font-size: 0.82rem;
   font-weight: 500;
-  color: #555;
+  color: var(--cor-600);
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .roleBtn:hover {
-  border-color: #aaa;
-  color: #111;
+  border-color: var(--cor-400);
+  color: var(--cor-800);
+  background: var(--cor-50);
 }
+
+/*
+ * Botão ativo usa --role-accent injetado via style no JSX.
+ * Assim cada role tem sua cor própria (vermelho=Admin,
+ * laranja=Manager, verde=Member) sem hardcode aqui.
+ */
 .roleBtnActive {
-  background: var(--role-color, #6366f1);
-  border-color: var(--role-color, #6366f1);
-  color: #fff !important;
+  background: var(--role-accent, var(--cor-details));
+  border-color: var(--role-accent, var(--cor-details));
+  color: #fff;
   font-weight: 600;
 }
 
-/* Status toggle */
+/* ── Status toggle ── */
 .statusToggle {
   display: inline-flex;
   align-items: center;
@@ -199,23 +247,21 @@
   cursor: pointer;
   padding: 8px 0;
   user-select: none;
+  width: fit-content;
 }
 
-.toggleOn { color: #22c55e; }
-.toggleOff { color: #d1d5db; }
-
-.statusLabelOn {
-  font-size: 14px;
-  font-weight: 600;
-  color: #22c55e;
-}
-.statusLabelOff {
-  font-size: 14px;
-  font-weight: 500;
-  color: #9ca3af;
+.statusToggle:focus-visible {
+  outline: 2px solid var(--cor-details);
+  border-radius: 4px;
 }
 
-/* Permissions */
+.toggleOn  { color: #2eb57a; }
+.toggleOff { color: var(--cor-300); }
+
+.statusLabelOn  { font-size: 0.88rem; font-weight: 600; color: #2eb57a; }
+.statusLabelOff { font-size: 0.88rem; font-weight: 500; color: var(--cor-400); }
+
+/* ── Permissões ── */
 .permHeader {
   display: flex;
   align-items: center;
@@ -230,18 +276,21 @@
 .bulkBtn {
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1.5px solid #e5e5e5;
-  background: #fff;
-  font-size: 11px;
+  border: 1.5px solid var(--cor-200);
+  background: var(--cor-50);
+  font-size: 0.72rem;
   font-weight: 600;
-  color: #555;
+  color: var(--cor-600);
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .bulkBtn:hover:not(:disabled) {
-  border-color: #6366f1;
-  color: #6366f1;
+  border-color: var(--cor-details);
+  color: var(--cor-details);
+  background: rgba(28, 153, 214, 0.06);
 }
+
 .bulkBtnDisabled {
   opacity: 0.35;
   cursor: not-allowed;
@@ -253,7 +302,7 @@
   gap: 8px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .permGrid { grid-template-columns: 1fr; }
 }
 
@@ -263,21 +312,30 @@
   gap: 2px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1.5px solid #ebebeb;
-  background: #fafafa;
+  border: 1.5px solid var(--cor-200);
+  background: var(--cor-100);
   cursor: pointer;
   position: relative;
   transition: all 0.15s;
-}
-.permCard:hover {
-  border-color: #c7d2fe;
-  background: #eef2ff;
-}
-.permCardOn {
-  border-color: #6366f1;
-  background: #eef2ff;
+  outline: none;
 }
 
+.permCard:hover {
+  border-color: var(--cor-details);
+  background: rgba(28, 153, 214, 0.05);
+}
+
+.permCard:focus-visible {
+  box-shadow: 0 0 0 3px rgba(28, 153, 214, 0.15);
+}
+
+/* Card ativo */
+.permCardOn {
+  border-color: var(--cor-details);
+  background: rgba(28, 153, 214, 0.08);
+}
+
+/* Indicador (dot) no canto superior direito */
 .permCardDot {
   position: absolute;
   top: 10px;
@@ -285,69 +343,77 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #d1d5db;
+  background: var(--cor-300);
   transition: background 0.15s;
 }
+
 .permCardOn .permCardDot {
-  background: #6366f1;
+  background: var(--cor-details);
 }
 
 .permCardLabel {
-  font-size: 13px;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #222;
+  color: var(--cor-700);
+  padding-right: 18px; /* espaço pro dot */
 }
+
 .permCardOn .permCardLabel {
-  color: #4338ca;
+  color: var(--cor-800);
 }
 
 .permCardPath {
-  font-size: 11px;
-  color: #aaa;
-  font-family: monospace;
+  font-size: 0.7rem;
+  color: var(--cor-400);
+  font-family: "Courier New", monospace;
 }
 
-/* Footer */
+/* ── Footer ── */
 .footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid #f1f1f1;
+  border-top: 1px solid var(--cor-200);
+  background: var(--cor-50);
   flex-shrink: 0;
 }
 
 .cancelBtn {
   padding: 9px 20px;
   border-radius: 8px;
-  border: 1.5px solid #e5e5e5;
-  background: #fff;
-  font-size: 14px;
+  border: 1.5px solid var(--cor-200);
+  background: transparent;
+  font-size: 0.88rem;
   font-weight: 500;
-  color: #555;
+  color: var(--cor-600);
   cursor: pointer;
   transition: all 0.15s;
 }
+
 .cancelBtn:hover {
-  border-color: #bbb;
-  color: #222;
+  border-color: var(--cor-400);
+  color: var(--cor-800);
+  background: var(--cor-100);
 }
 
 .saveBtn {
-  padding: 9px 20px;
+  padding: 9px 22px;
   border-radius: 8px;
   border: none;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  font-size: 14px;
+  background: var(--cor-details);
+  font-size: 0.88rem;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: background 0.2s, transform 0.1s;
 }
+
 .saveBtn:hover {
-  opacity: 0.92;
+  background: #1a7ba8;
   transform: translateY(-1px);
 }
+
 .saveBtn:active {
   transform: translateY(0);
 }
