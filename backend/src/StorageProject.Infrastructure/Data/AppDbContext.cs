@@ -20,9 +20,7 @@ namespace StorageProject.Infrasctructure.Data
                 .Property(p => p.Status)
                 .HasConversion<string>();
 
-            modelBuilder.Entity<Order>()
-                .Property(p=>p.Status)
-                .HasConversion<string>();
+           
         }
 
     }

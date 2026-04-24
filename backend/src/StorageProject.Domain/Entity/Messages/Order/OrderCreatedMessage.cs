@@ -1,7 +1,7 @@
-﻿namespace StorageApp.Orders.Domain.Entity
+﻿namespace StorageProject.Domain.Entity.Messages.Order
     //mesmo namespace do micro de orders
 {
-    public record class OrderMessage
+    public record class OrderCreatedMessage
     {
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }

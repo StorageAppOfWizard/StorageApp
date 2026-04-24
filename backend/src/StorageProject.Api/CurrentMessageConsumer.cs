@@ -1,11 +1,11 @@
 ﻿using MassTransit;
-using StorageApp.Orders.Domain.Entity;
+using StorageProject.Domain.Entity.Messages.Order;
 
 namespace StorageProject.Api
 {
-    public class CurrentMessageConsumer(ILogger<CurrentMessageConsumer> logger) : IConsumer<OrderMessage>
+    public class CurrentMessageConsumer(ILogger<CurrentMessageConsumer> logger) : IConsumer<OrderCreatedMessage>
     {
-        public async Task Consume(ConsumeContext<OrderMessage> context)
+        public async Task Consume(ConsumeContext<OrderCreatedMessage> context)
         {
             logger.LogInformation("{Message}", context.Message);
 
