@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using RabbitMQ.Client;
+using StorageApp.Shared;
 using StorageProject.Application.Handler;
-using StorageProject.Domain.Entity.Messages.Order;
 
 namespace StorageProject.Api.Configurations
 {
@@ -23,6 +23,7 @@ namespace StorageProject.Api.Configurations
 
                     cfg.ReceiveEndpoint("storage-order-queue", e =>
                     {
+                        e.ConfigureConsumeTopology = false;
                         e.Bind("order-created", x =>
                         {
                             x.ExchangeType = ExchangeType.Fanout;

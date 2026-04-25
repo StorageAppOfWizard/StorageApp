@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
+using StorageApp.Shared;
 using StorageProject.Domain.Contracts;
-using StorageProject.Domain.Entity.Messages.Order;
 using StorageProject.Domain.Entity.Messages.Storage;
 
 namespace StorageProject.Application.Handler
@@ -13,14 +13,26 @@ namespace StorageProject.Application.Handler
         {
             var existingProduct = await _unitOfWork.ProductRepository.GetById(context.Message.ProductId);
             if (existingProduct is null)
-                await context.Publish(new StockRejectedMessage { Id = Guid.NewGuid(), StockAvailable = false, OrderId = context.Message.Id});
-            logger.LogInformation("Order Rejected by Stock");
+            {
+                await context.Publish(new StockRejectedMessage {
+                    Id = Guid.NewGuid(),
+                    StockAvailable = false,
+                    OrderId = context.Message.Id
+                });
+
+                logger.LogInformation("Order Rejected by Stock");
+                return;
+            }
 
             if (existingProduct.Quantity < context.Message.QuantityProduct)
+            {
                 await context.Publish(new StockRejectedMessage { Id = Guid.NewGuid(), StockAvailable = false });
-            logger.LogInformation("Order Rejected by Stock");
+                logger.LogInformation("Order Rejected by Stock");
 
-            existingProduct.Quantity -= context.Message.QuantityProduct;
+                existingProduct.Quantity -= context.Message.QuantityProduct;
+                return;
+            }
+
 
             await _unitOfWork.CommitAsync();
             logger.LogInformation("Stock Reserved Product's Order");
