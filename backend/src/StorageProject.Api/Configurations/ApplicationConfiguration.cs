@@ -1,5 +1,6 @@
 ﻿using StorageProject.Application.Contracts;
 using StorageProject.Application.Services;
+using StorageProject.Domain.Contracts;
 using StorageProject.Infrastructure.Authentication;
 
 namespace StorageProject.Api.Configurations
@@ -14,6 +15,7 @@ namespace StorageProject.Api.Configurations
             
             services.AddHttpContextAccessor();
             services.AddScoped<IUserContextAuth, UserContextAuth>();
+            services.AddScoped<IMessagePublisher, MessagePublisher>();
 
         }
     }

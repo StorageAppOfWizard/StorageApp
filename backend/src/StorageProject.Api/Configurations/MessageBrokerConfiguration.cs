@@ -23,7 +23,6 @@ namespace StorageProject.Api.Configurations
 
                     cfg.ReceiveEndpoint("storage-order-queue", e =>
                     {
-                        e.ConfigureConsumeTopology = false;
                         e.Bind("order-created", x =>
                         {
                             x.ExchangeType = ExchangeType.Fanout;
@@ -33,7 +32,14 @@ namespace StorageProject.Api.Configurations
                         e.ConfigureConsumer<OrderCreatedMessageHandler>(context);
                     });
 
+
                     cfg.Message<OrderCreatedMessage>(m => m.SetEntityName("order-created"));
+                    cfg.Publish<StockAcceptedMessage>(m =>
+                    {
+                        m.ExchangeType = ExchangeType.Fanout;
+
+
+                    });
                 });
 
             });
