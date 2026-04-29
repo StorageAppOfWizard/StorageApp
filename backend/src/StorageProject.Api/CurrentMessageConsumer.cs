@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using StorageApp.Shared;
+using StorageApp.Shared.Message.Order;
 
 namespace StorageProject.Api
 {

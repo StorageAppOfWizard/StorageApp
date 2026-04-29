@@ -1,8 +1,8 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
-using StorageApp.Shared;
+using StorageApp.Shared.Message.Order;
+using StorageApp.Shared.Message.Storage;
 using StorageProject.Domain.Contracts;
-using StorageProject.Domain.Entity.Messages;
 namespace StorageProject.Application.Handler
 {
     public class OrderCreatedMessageHandler(
@@ -17,7 +17,7 @@ namespace StorageProject.Application.Handler
             var existingProduct = await _unitOfWork.ProductRepository.GetById(context.Message.ProductId);
             if (existingProduct is null)
             {
-                await context.Publish(new StockRejectedMessage
+                await context.Publish(new StorageRejectMessage
                 {
                     Id = Guid.NewGuid(),
                     StockAvailable = false,
@@ -30,7 +30,7 @@ namespace StorageProject.Application.Handler
 
             if (existingProduct.Quantity < context.Message.QuantityProduct)
             {
-                await context.Publish(new StockRejectedMessage
+                await context.Publish(new StorageRejectMessage
                 {
                     Id = Guid.NewGuid(),
                     StockAvailable = false,

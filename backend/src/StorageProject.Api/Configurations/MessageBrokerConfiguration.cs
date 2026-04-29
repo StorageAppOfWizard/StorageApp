@@ -1,7 +1,10 @@
 ﻿using MassTransit;
 using RabbitMQ.Client;
-using StorageApp.Shared;
+using StorageApp.Shared.Message.Storage ;
+using StorageApp.Shared.Message.Order;
+using StorageApp.Shared.Message.Storage;
 using StorageProject.Application.Handler;
+
 
 namespace StorageProject.Api.Configurations
 {
@@ -35,6 +38,13 @@ namespace StorageProject.Api.Configurations
 
                     cfg.Message<OrderCreatedMessage>(m => m.SetEntityName("order-created"));
                     cfg.Publish<StockAcceptedMessage>(m =>
+                    {
+                        m.ExchangeType = ExchangeType.Fanout;
+
+
+                    });
+
+                    cfg.Publish<StorageRejectMessage>(m =>
                     {
                         m.ExchangeType = ExchangeType.Fanout;
 
